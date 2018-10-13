@@ -3,9 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "fs": "0.0.1-security",
     "react": "^16.5.2",
+    "react-ace": "^6.2.0",
     "react-dom": "^16.5.2",
-    "react-scripts": "2.0.4"
+    "react-scripts": "2.0.4",
+    "safe-eval": "^0.4.1",
+    "sandbox": "^0.8.6"
   },
   "scripts": {
     "start": "react-scripts start",
