@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+  <title>ACE in Action</title>
+  <link rel="stylesheet" href="/css/master.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="/src-min/ace.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="half">
+      <div id="editor"></div>
+      <select id="theme">
+        <option value="monokai">Escuro</option>
+        <option value="github">Claro</option>
+      </select>
+      <button onclick="run()">
+        Executar
+      </button>
+      <button onclick="reset()">
+        Reiniciar
+      </button>
+      <button onclick="download()">
+        Baixar arquivo
+      </button>
+    </div>
+    <div class="half">
+      <div id="log"></div>
+    </div>
+  </div>
+
+  <script>
+    const editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.session.setMode("ace/mode/javascript");
+    editor.setBehavioursEnabled(false);
+
+    const logger = document.getElementById('log');
+    (function() {
+      console.log = function(message) {
+        if (typeof message == 'object') {
+          logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(message) : message) + '<br />';
+        } else {
+          logger.innerHTML += message + '<br />';
+        }
+      }
+    })();
+
+    window.onerror = function(msg) {
+      if (typeof msg == 'object') {
+        logger.innerHTML += "<span class='errLog'>" + (JSON && JSON.stringify ? JSON.stringify(msg) : msg) + '</span><br />';
+      } else {
+        logger.innerHTML += "<span class='errLog'>" + msg + '</span><br />';
+      }
+    }
+
+    $("#theme").change((e) => {
+      editor.setTheme(`ace/theme/${e.target.value}`);
+    })
+
+    function reset() {
+      logger.innerHTML = "";
+      editor.setValue("");
+    }
+
+    function run() {
+      var code = editor.getValue();
+      $("#script").remove();
+      var script = document.createElement('script');
+      script.setAttribute('id', "script");
+      try {
+        script.appendChild(document.createTextNode(code));
+        document.body.appendChild(script);
+      } catch (e) {
+        script.text = code;
+        document.body.appendChild(script);
+      }
+    }
+
+    function download() {
+      const code = editor.getValue();
+      const element = document.createElement('a');
+      element.setAttribute('href', 'data:text/javascript;charset=utf-8,' + encodeURIComponent(code));
+      element.setAttribute('download', "file.js");
+
+      element.style.display = 'none';
+      document.body.appendChild(element);
+
+      element.click();
+
+      document.body.removeChild(element);
+    }
+
+  </script>
+</body>
+
+</html>
