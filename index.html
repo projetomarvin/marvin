@@ -3,6 +3,7 @@
 
 <head>
   <title>ACE in Action</title>
+  <meta charset="UTF-8">
   <link rel="stylesheet" href="/css/master.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="/src-min/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -11,48 +12,70 @@
 <body>
   <div class="container">
     <div class="half">
-      <div id="editor"></div>
-      <select id="theme">
-        <option value="monokai">Escuro</option>
-        <option value="github">Claro</option>
-      </select>
-      <button onclick="run()">
-        Executar
-      </button>
-      <button onclick="reset()">
-        Reiniciar
-      </button>
-      <button onclick="download()">
-        Baixar arquivo
-      </button>
+      <header class="editor">
+        <p>Editor javascript</p>
+      </header>
+      <div id="editor" />
     </div>
-    <div class="half">
-      <div id="log"></div>
-    </div>
+    <footer>
+      <button onclick="run()" class="run">
+        Executar <span class="icon">&#9654;</span>
+      </button>
+      <button onclick="reset()" class="reset">
+        Reiniciar <span class="icon">&#8634;</span>
+      </button>
+      <button onclick="download()" class="download">
+        Baixar arquivo <span class="icon">&#11015;</span>
+      </button>
+    </footer>
+  </div>
+  <div class="half">
+    <header class="console">
+      Saída do console
+      <button onclick="clearConsole()" class="clear">
+        Limpar
+      </button>
+    </header>
+    <div id="log"></div>
+  </div>
   </div>
 
   <script>
     const editor = ace.edit("editor");
+    const logger = document.getElementById('log');
     editor.setTheme("ace/theme/monokai");
     editor.session.setMode("ace/mode/javascript");
     editor.setBehavioursEnabled(false);
 
-    const logger = document.getElementById('log');
+    document.onkeyup = function(e) {
+      if (e.ctrlKey && e.which === 13) {
+        run()
+      }
+    };
+
+    function addToLog(msg, err) {
+      if (err) {
+        logger.innerHTML = '<p class="error log">' + msg + '</p>' + logger.innerHTML;
+      } else {
+        logger.innerHTML = '<p class="log">' + msg + '</p>' + logger.innerHTML;
+      }
+    }
+
     (function() {
       console.log = function(message) {
         if (typeof message == 'object') {
-          logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(message) : message) + '<br />';
+          addToLog(JSON && JSON.stringify ? JSON.stringify(message) : message);
         } else {
-          logger.innerHTML += message + '<br />';
+          addToLog(message)
         }
       }
     })();
 
     window.onerror = function(msg) {
       if (typeof msg == 'object') {
-        logger.innerHTML += "<span class='errLog'>" + (JSON && JSON.stringify ? JSON.stringify(msg) : msg) + '</span><br />';
+        addToLog(JSON && JSON.stringify ? JSON.stringify(msg) : msg, true);
       } else {
-        logger.innerHTML += "<span class='errLog'>" + msg + '</span><br />';
+        addToLog(msg, true);
       }
     }
 
@@ -63,6 +86,10 @@
     function reset() {
       logger.innerHTML = "";
       editor.setValue("");
+    }
+
+    function clearConsole() {
+      logger.innerHTML = "";
     }
 
     function run() {
