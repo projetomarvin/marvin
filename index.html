@@ -1,126 +1,30 @@
 <!DOCTYPE html>
-<html lang="pt">
-
-<head>
-  <title>ACE in Action</title>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="/css/master.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="/src-min/ace.js" type="text/javascript" charset="utf-8"></script>
-</head>
-
-<body>
-  <div class="container">
-    <div class="half">
-      <header class="editor">
-        <p>Editor javascript</p>
-      </header>
-      <div id="editor" />
-    </div>
-    <footer>
-      <button onclick="run()" class="run">
-        Executar <span class="icon">&#9654;</span>
-      </button>
-      <button onclick="reset()" class="reset">
-        Reiniciar <span class="icon">&#8634;</span>
-      </button>
-      <button onclick="download()" class="download">
-        Baixar arquivo <span class="icon">&#11015;</span>
-      </button>
-    </footer>
-  </div>
-  <div class="half">
-    <header class="console">
-      Saída do console
-      <button onclick="clearConsole()" class="clear">
-        Limpar
-      </button>
+<html lang="pt" dir="ltr">
+  <head>
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/master.css">
+    <meta charset="utf-8">
+    <title>Marvin</title>
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <img src="assets/logo.png" alt="">
+      </div>
     </header>
-    <div id="log"></div>
-  </div>
-  </div>
-
-  <script>
-    const editor = ace.edit("editor");
-    const logger = document.getElementById('log');
-    editor.setTheme("ace/theme/monokai");
-    editor.session.setMode("ace/mode/javascript");
-    editor.setBehavioursEnabled(false);
-
-    document.onkeyup = function(e) {
-      if (e.ctrlKey && e.which === 13) {
-        run()
-      }
-    };
-
-    function addToLog(msg, err) {
-      if (err) {
-        logger.innerHTML = '<p class="error log">' + msg + '</p>' + logger.innerHTML;
-      } else {
-        logger.innerHTML = '<p class="log">' + msg + '</p>' + logger.innerHTML;
-      }
-    }
-
-    (function() {
-      console.log = function(message) {
-        if (typeof message == 'object') {
-          addToLog(JSON && JSON.stringify ? JSON.stringify(message) : message);
-        } else {
-          addToLog(message)
-        }
-      }
-    })();
-
-    window.onerror = function(msg) {
-      if (typeof msg == 'object') {
-        addToLog(JSON && JSON.stringify ? JSON.stringify(msg) : msg, true);
-      } else {
-        addToLog(msg, true);
-      }
-    }
-
-    $("#theme").change((e) => {
-      editor.setTheme(`ace/theme/${e.target.value}`);
-    })
-
-    function reset() {
-      logger.innerHTML = "";
-      editor.setValue("");
-    }
-
-    function clearConsole() {
-      logger.innerHTML = "";
-    }
-
-    function run() {
-      var code = editor.getValue();
-      $("#script").remove();
-      var script = document.createElement('script');
-      script.setAttribute('id', "script");
-      try {
-        script.appendChild(document.createTextNode(code));
-        document.body.appendChild(script);
-      } catch (e) {
-        script.text = code;
-        document.body.appendChild(script);
-      }
-    }
-
-    function download() {
-      const code = editor.getValue();
-      const element = document.createElement('a');
-      element.setAttribute('href', 'data:text/javascript;charset=utf-8,' + encodeURIComponent(code));
-      element.setAttribute('download', "file.js");
-
-      element.style.display = 'none';
-      document.body.appendChild(element);
-
-      element.click();
-
-      document.body.removeChild(element);
-    }
-
-  </script>
-</body>
-
+    <main>
+      <a class="activityButton purple" href="editor.html" target="_blank">
+        <img src="assets/coding.svg" alt="">
+          Acessar o editor
+      </a>
+      <a class="activityButton rose" href="https://clients.amazonworkspaces.com/webclient#/main" target="_blank">
+        <img src="assets/desktop.svg" alt="">
+          Ir para WorkSpace
+      </a>
+      <a class="activityButton green" href="atividades.html">
+        <img src="assets/checklist.svg" alt="">
+          Atividades
+      </a>
+  </main>
+  </body>
 </html>
