@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="assets/favicon.ico">
+  <title>Atividades</title>
+</head>
+
+<body>
+  <header>
+    Atividades
+  </header>
+  <main>
+    <div class="finish">
+      Você está fazendo a fase X.
+      <button onclick="finish()">
+        Finalizar
+      </button>
+    </div>
+  </main>
+  <script type="text/javascript">
+    function finish() {
+      const username = "dantenol";
+      const paths = [
+        "css/in.css",
+        "css/index.css",
+        "css/master.css"
+      ]
+      const url = `https://api.github.com/repos/${username}/marvin/contents/`;
+      let i = 0;
+      while (i < paths.length) {
+        fetch(url + paths[i] + '?access_token=4f7d4aee42d7e1fa0d31e6e21f9cf2488ade58d4')
+          .then(e => console.log(e.url.split('contents/')[1].split('?')[0], e.ok));
+        i++;
+      }
+    }
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt" dir="ltr">
+  <head>
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/master.css">
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="assets/favicon.ico">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>Marvin</title>
+  </head>
+  <body>
+    <header>
+      <div class="logo welcome">
+        <img src="assets/logo.png" alt="">
+        <p>Bem vindo(a) de volta, </p>
+      </div>
+      <div class="logout">
+        <button type="button" class="wine" onclick="logout()">Sair</button>
+      </div>
+    </header>
+    <main>
+      <a class="activityButton purple" href="editor.html">
+        <img src="assets/coding.svg" alt="">
+          Acessar o editor
+      </a>
+      <a class="activityButton rose" style="cursor: not-allowed;">
+        <img src="assets/desktop.svg" alt="">
+          Ir para WorkSpace
+      </a>
+      <a class="activityButton green" href="atividades.html">
+        <img src="assets/checklist.svg" alt="">
+          Atividades
+      </a>
+  </main>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (!localStorage.access_token) {
+        alert('É preciso estar logado para acessar!')
+        localStorage.removeItem('userId');
+        localStorage.removeItem('access_token');
+        history.back();
+      } else {
+        $.ajax({
+          type: 'GET',
+          url: 'http://localhost:443/api/students/' + localStorage.userId  + '?access_token=' + localStorage.access_token,
+          crossDomain: true,
+          success: function(responseData, textStatus, jqXHR) {
+            console.log(responseData);
+            $('.welcome p').append(responseData.username);
+          },
+          error: function (responseData, textStatus, errorThrown) {
+            alert('Algo deu errado. Faça o login novamente');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('access_token');
+            history.back();
+          }
+        })
+      }
+    })
+
+    function logout() {
+      localStorage.removeItem('userId');
+      localStorage.removeItem('access_token');
+      location.href = '/index.html'
+    }
+  </script>
+  </body>
+</html>
