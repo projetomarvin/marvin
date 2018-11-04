@@ -35,10 +35,9 @@
   <script type="text/javascript">
     $(document).ready(function () {
       if (!localStorage.access_token) {
-        alert('É preciso estar logado para acessar!')
         localStorage.removeItem('userId');
         localStorage.removeItem('access_token');
-        history.back();
+        location.href = '/index.html'
       } else {
         $.ajax({
           type: 'GET',
@@ -46,7 +45,11 @@
           crossDomain: true,
           success: function(responseData, textStatus, jqXHR) {
             console.log(responseData);
-            $('.welcome p').append(responseData.username);
+            if (responseData.username) {
+              $('.welcome p').append(responseData.username);
+            } else {
+              location.href = '/github-link.html';
+            }
           },
           error: function (responseData, textStatus, errorThrown) {
             alert('Algo deu errado. Faça o login novamente');

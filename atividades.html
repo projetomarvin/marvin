@@ -3,38 +3,99 @@
 
 <head>
   <meta charset="utf-8">
+  <link rel="stylesheet" href="/css/master.css">
+  <link rel="stylesheet" href="/css/index.css">
+  <link rel="stylesheet" href="/css/collapsable.css">
   <link rel="shortcut icon" href="assets/favicon.ico">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <title>Atividades</title>
 </head>
 
 <body>
-  <header>
+  <header class="header editor">
+    <a class="white_back" href="/home.html">
+      &#11013;
+    </a>
     Atividades
   </header>
-  <main>
+  <main class="vertical">
+    <h1 id="course_name"></h1>
+    <div id="activities">
+
+    </div>
+  </main>
+  <footer>
     <div class="finish">
-      Você está fazendo a fase X.
-      <button onclick="finish()">
+      <p>
+        Você está fazendo a fase
+      </p>
+      <button onclick="finish()" class="green">
         Finalizar
       </button>
     </div>
-  </main>
+  </footer>
   <script type="text/javascript">
     function finish() {
-      const username = "dantenol";
-      const paths = [
-        "css/in.css",
-        "css/index.css",
-        "css/master.css"
-      ]
-      const url = `https://api.github.com/repos/${username}/marvin/contents/`;
-      let i = 0;
-      while (i < paths.length) {
-        fetch(url + paths[i] + '?access_token=4f7d4aee42d7e1fa0d31e6e21f9cf2488ade58d4')
-          .then(e => console.log(e.url.split('contents/')[1].split('?')[0], e.ok));
-        i++;
-      }
+
     }
+    function getCourseActivities(courseId, currentLevel) {
+      $.ajax({
+        type: 'GET',
+        url: 'http://localhost:443/api/courses/' + courseId + '?filter=%7B%22include%22%3A%22activities%22%7D&access_token=' + localStorage.access_token,
+        crossDomain: true,
+        success: function(res, textStatus, jqXHR) {
+          console.log(res);
+          $('#course_name').append(res.name);
+          res.activities.map((r, i) => {
+            let position;
+            if (i < currentLevel) {
+              position = 'done';
+            } else if (i === currentLevel) {
+              position = 'current';
+            } else {
+              position = 'disabled';
+            }
+            $('#activities').append('<div class="wrap-collabsible ' + position + '">'+
+                  '<input id="' + r.id + '" class="toggle" type="checkbox">' +
+                  '<label for="' + r.id + '" class="lbl-toggle">fase ' + i + '</label>' +
+                  '<div class="collapsible-content">'+
+                    '<div class="content-inner">' +
+                      '<h2>' + r.name +'</h2>' +
+                      '<p>' +
+                        r.description +
+                      '</p>' +
+                      '<a href="'+ r.PDFurl + '" target="_blank">Ver desafios da fase</a>'+
+                    '</div>' +
+                  '</div>'+
+                '</div>')
+            if (position === 'disabled') $('#' + r.id).attr('disabled', true);
+          })
+        },
+        error: function(responseData, textStatus, errorThrown) {
+          console.log(responseData);
+        }
+      })
+    }
+    $(document).ready(function() {
+      $.ajax({
+        type: 'GET',
+        url: 'http://localhost:443/api/students/' + localStorage.userId + '?access_token=' + localStorage.access_token,
+        crossDomain: true,
+        success: function(responseData, textStatus, jqXHR) {
+          console.log(responseData);
+          if (responseData.username) {
+            $('.finish p').append(responseData.activityNumber);
+            getCourseActivities(responseData.courseId, responseData.activityNumber)
+          } else {
+            location.href = '/home.html';
+          }
+        },
+        error: function(responseData, textStatus, errorThrown) {
+          alert('Algo deu errado.');
+          history.back();
+        }
+      })
+    })
 
   </script>
 </body>

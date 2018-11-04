@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt" dir="ltr">
+
+<head>
+  <link rel="stylesheet" href="/css/index.css">
+  <link rel="stylesheet" href="/css/master.css">
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="assets/favicon.ico">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <title>Marvin</title>
+</head>
+
+<body>
+  <main class="fullwidth">
+    <div class="login">
+      <h5>Parece que esse é seu primeiro acesso.
+        <br>
+        <br>
+        Conforme indicado na primeira fase,
+        <br>
+        digite aqui seu nome de usuário do github</h5>
+      <form class="loginForm">
+        <input type="text" name="username" placeholder="usuário do Github" />
+        <br>
+        <button type="submit" class="full-green">contunuar</button>
+      </form>
+    </div>
+  </main>
+  <script type="text/javascript">
+    function updateUsername(usr) {
+      $.ajax({
+        type: 'patch',
+        url: 'http://localhost:443/api/students/' + localStorage.userId + '?access_token=' + localStorage.access_token,
+        crossDomain: true,
+        data: {
+          username: usr,
+          activityNumber: 1
+        },
+        success: function(responseData, textStatus, jqXHR) {
+          console.log(responseData);
+          alert('Conta vinculada com sucesso!')
+          window.location.href = '/home.html';
+        },
+        error: function(responseData, textStatus, errorThrown) {
+          console.log(responseData);
+        }
+      })
+    }
+
+    $('.loginForm').on('submit', function(e) {
+      e.preventDefault()
+      const usr = $('input[name=username]').val();
+      $.ajax({
+        type: 'get',
+        url: 'http://localhost:443/api/students/checkRepository' + '?username=' + usr + '&access_token=' + localStorage.access_token,
+        crossDomain: true,
+        success: function(responseData, textStatus, jqXHR) {
+          console.log(responseData);
+          updateUsername(usr);
+        },
+        error: function(responseData, textStatus, errorThrown) {
+          console.log(responseData);
+          alert('Usuário ou repositório não encontrado. Verifique e tente novamente.');
+        }
+      })
+    })
+
+  </script>
+</body>
+
+</html>
