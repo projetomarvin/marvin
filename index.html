@@ -33,7 +33,7 @@
       const pwd = $('input[name=password]').val();
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:443/api/students/login',
+        url: 'https://localhost/api/students/login',
         crossDomain: true,
         data: {user: usr, password: pwd},
         success: function(responseData, textStatus, jqXHR) {
@@ -43,8 +43,8 @@
           window.location.href = '/home.html';
         },
         error: function (responseData, textStatus, errorThrown) {
-          console.log(responseData);
-          alert('POST failed.');
+          console.log(responseData.statusCode());
+          alert('Login inválido');
         }
       })
     })

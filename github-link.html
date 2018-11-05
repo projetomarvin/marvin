@@ -30,7 +30,7 @@
     function updateUsername(usr) {
       $.ajax({
         type: 'patch',
-        url: 'http://localhost:443/api/students/' + localStorage.userId + '?access_token=' + localStorage.access_token,
+        url: 'https://localhost/api/students/' + localStorage.userId + '?access_token=' + localStorage.access_token,
         crossDomain: true,
         data: {
           username: usr,
@@ -52,7 +52,7 @@
       const usr = $('input[name=username]').val();
       $.ajax({
         type: 'get',
-        url: 'http://localhost:443/api/students/checkRepository' + '?username=' + usr + '&access_token=' + localStorage.access_token,
+        url: 'https://localhost/api/students/checkRepository' + '?username=' + usr + '&access_token=' + localStorage.access_token,
         crossDomain: true,
         success: function(responseData, textStatus, jqXHR) {
           console.log(responseData);
