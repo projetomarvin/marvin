@@ -31,6 +31,10 @@
         <img src="assets/checklist.svg" alt="">
           Atividades
       </a>
+      <a class="activityButton orange" href="material-suporte.html">
+        <img src="assets/book.svg" alt="">
+          Material de suporte
+      </a>
   </main>
   <script type="text/javascript">
     $(document).ready(function () {
@@ -41,7 +45,7 @@
       } else {
         $.ajax({
           type: 'GET',
-          url: 'http://localhost:443/api/students/' + localStorage.userId  + '?access_token=' + localStorage.access_token,
+          url: 'https://localhost:443/api/students/' + localStorage.userId  + '?access_token=' + localStorage.access_token,
           crossDomain: true,
           success: function(responseData, textStatus, jqXHR) {
             console.log(responseData);
