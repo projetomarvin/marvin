@@ -80,6 +80,11 @@ input[type='checkbox'].toggle {
   font-size: 18px;
 }
 
+.PDFlink {
+  background-color: white;
+  padding: 4px;
+}
+
 .toggle:checked+.lbl-toggle+.collapsible-content {
   max-height: 350px;
 }
