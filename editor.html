@@ -28,7 +28,10 @@
       </div>
       <div class="githubPath" hidden>
         <input type="text" name="githubPath" placeholder="caminho e nome do arquivo">
+        <br>
         <input type="text" name="message" placeholder="mensagem do commit">
+        <br>
+        <br>
         <button class="green" onclick="saveGithub()">Salvar</button>
       </div>
     </div>
@@ -107,6 +110,9 @@
           console.log(res);
           alert('Commit criado com sucesso! Veja em seu repositório');
           $('#saveDialog').toggle();
+          $('.githubPath').toggle();
+          $('input[name=githubPath]').val("");
+          $('input[name=message]').val("");
         },
         error: function (res, txt, jsXHR) {
           console.log(res);
