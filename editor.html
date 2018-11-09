@@ -12,10 +12,31 @@
 </head>
 
 <body>
+  <div id="saveDialog" style="display:none">
+    <div class="dialog">
+      <button id="closeButton">&times;</button>
+      <h2>
+        Como você deseja salvar seu código?
+      </h2>
+      <div class="buttons">
+        <button onclick="download()" class="purple">
+          Baixar <span class="icon">&#11015;</span>
+        </button>
+        <button onclick="github()" class="purple">
+          Github <img src="assets/github.svg" alt="">
+        </button>
+      </div>
+      <div class="githubPath" hidden>
+        <input type="text" name="githubPath" placeholder="caminho e nome do arquivo">
+        <input type="text" name="message" placeholder="mensagem do commit">
+        <button class="green" onclick="saveGithub()">Salvar</button>
+      </div>
+    </div>
+  </div>
   <div class="container">
     <div class="half">
       <header class="header editor">
-        <a class="white_back" href="http://app.projetomarvin.com">
+        <a class="white_back" href="/home.html">
           &#11013;
         </a>
         <p>Editor javascript</p>
@@ -29,8 +50,8 @@
       <button onclick="reset()" class="rose">
         Reiniciar <span class="icon">&#8634;</span>
       </button>
-      <button onclick="download()" class="purple">
-        Baixar arquivo <span class="icon">&#11015;</span>
+      <button onclick="save()" class="purple">
+        Salvar arquivo <span class="icon">&#11015;</span>
       </button>
     </footer>
   </div>
@@ -55,8 +76,43 @@
     document.onkeyup = function(e) {
       if (e.ctrlKey && e.which === 13) {
         run()
+      } else if (e.altKey && e.which === 83) {
+        e.preventDefault();
+        save();
       }
     };
+
+    function save() {
+      $('#saveDialog').show();
+    }
+
+    $('#closeButton').click(() => {
+      $('#saveDialog').toggle();
+    })
+
+    function github() {
+      $('.githubPath').toggle();
+    }
+
+    function saveGithub() {
+      const code = editor.getValue();
+      const path = $('input[name=githubPath]').val()
+      const msg = $('input[name=message]').val()
+      $.ajax({
+        type: 'post',
+        url: 'https://localhost/api/students/' + localStorage.userId + '/pushToGit?access_token=' + localStorage.access_token,
+        crossDomain: true,
+        data: {content: btoa(code), path: path, message: msg},
+        success: function (res, txt, jsXHR) {
+          console.log(res);
+          alert('Commit criado com sucesso! Veja em seu repositório');
+          $('#saveDialog').toggle();
+        },
+        error: function (res, txt, jsXHR) {
+          console.log(res);
+        },
+      })
+    }
 
     function addToLog(msg, err) {
       if (err) {
@@ -83,10 +139,6 @@
         addToLog(msg, true);
       }
     }
-
-    $("#theme").change((e) => {
-      editor.setTheme(`ace/theme/${e.target.value}`);
-    })
 
     function reset() {
       logger.innerHTML = "";

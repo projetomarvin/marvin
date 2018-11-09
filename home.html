@@ -1,43 +1,62 @@
 <!DOCTYPE html>
 <html lang="pt" dir="ltr">
-  <head>
-    <link rel="stylesheet" href="/css/index.css">
-    <link rel="stylesheet" href="/css/master.css">
-    <meta charset="utf-8">
-    <link rel="shortcut icon" href="assets/favicon.ico">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <title>Marvin</title>
-  </head>
-  <body>
-    <header>
-      <div class="logo welcome">
-        <img src="assets/logo.png" alt="">
-        <p>Bem vindo(a) de volta, </p>
-      </div>
-      <div class="logout">
-        <button type="button" class="wine" onclick="logout()">Sair</button>
-      </div>
-    </header>
-    <main>
-      <a class="activityButton purple" href="editor.html">
-        <img src="assets/coding.svg" alt="">
-          Acessar o editor
-      </a>
-      <a class="activityButton rose" style="cursor: not-allowed;">
-        <img src="assets/desktop.svg" alt="">
-          Ir para WorkSpace
-      </a>
-      <a class="activityButton green" href="atividades.html">
-        <img src="assets/checklist.svg" alt="">
-          Atividades
-      </a>
-      <a class="activityButton orange" href="material-suporte.html">
-        <img src="assets/book.svg" alt="">
-          Material de suporte
-      </a>
+
+<head>
+  <link rel="stylesheet" href="/css/index.css">
+  <link rel="stylesheet" href="/css/master.css">
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="assets/favicon.ico">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <title>Marvin</title>
+</head>
+
+<body>
+  <header>
+    <div class="logo welcome">
+      <img src="assets/logo.png" alt="">
+      <p>Bem vindo(a) de volta, </p>
+    </div>
+    <div class="logout">
+      <button type="button" class="wine" onclick="logout()">Sair</button>
+    </div>
+  </header>
+  <main>
+    <a class="activityButton purple" href="editor.html">
+      <img src="assets/coding.svg" alt="">
+      Acessar o editor
+    </a>
+    <a class="activityButton rose" id="repo">
+      <img src="assets/desktop.svg" alt="">
+      Ir para repositório
+    </a>
+    <a class="activityButton green" href="atividades.html">
+      <img src="assets/checklist.svg" alt="">
+      Atividades
+    </a>
+    <a class="activityButton orange" href="material-suporte.html">
+      <img src="assets/book.svg" alt="">
+      Material de suporte
+    </a>
   </main>
   <script type="text/javascript">
-    $(document).ready(function () {
+    $(document).ready(function() {
+      if (location.href.includes('code=')) {
+        const token = location.href.split('code=')[1];
+        $.ajax({
+          type: 'patch',
+          url: 'https://localhost:443/api/students/' + localStorage.userId + '?access_token=' + localStorage.access_token,
+          crossDomain: true,
+          data: {
+            githubAccessToken: token
+          },
+          success: function(responseData, textStatus, jqXHR) {
+            console.log(responseData);
+          },
+          error: function(responseData, textStatus, errorThrown) {
+            console.log(responseData);
+          }
+        })
+      }
       if (!localStorage.access_token) {
         localStorage.removeItem('userId');
         localStorage.removeItem('access_token');
@@ -45,17 +64,18 @@
       } else {
         $.ajax({
           type: 'GET',
-          url: 'https://localhost:443/api/students/' + localStorage.userId  + '?access_token=' + localStorage.access_token,
+          url: 'https://localhost:443/api/students/' + localStorage.userId + '?access_token=' + localStorage.access_token,
           crossDomain: true,
           success: function(responseData, textStatus, jqXHR) {
             console.log(responseData);
             if (responseData.username) {
               $('.welcome p').append(responseData.username);
+              $("#repo").attr("href", "http://www.github.com/" + responseData.username + '/marvin')
             } else {
               location.href = '/github-link.html';
             }
           },
-          error: function (responseData, textStatus, errorThrown) {
+          error: function(responseData, textStatus, errorThrown) {
             alert('Algo deu errado. Faça o login novamente');
             localStorage.removeItem('userId');
             localStorage.removeItem('access_token');
@@ -70,6 +90,8 @@
       localStorage.removeItem('access_token');
       location.href = '/index.html'
     }
+
   </script>
-  </body>
+</body>
+
 </html>

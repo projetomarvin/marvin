@@ -27,40 +27,26 @@
     </div>
   </main>
   <script type="text/javascript">
-    function updateUsername(usr) {
-      $.ajax({
-        type: 'patch',
-        url: 'https://localhost/api/students/' + localStorage.userId + '?access_token=' + localStorage.access_token,
-        crossDomain: true,
-        data: {
-          username: usr,
-          activityNumber: 1
-        },
-        success: function(responseData, textStatus, jqXHR) {
-          console.log(responseData);
-          alert('Conta vinculada com sucesso!')
-          window.location.href = '/home.html';
-        },
-        error: function(responseData, textStatus, errorThrown) {
-          console.log(responseData);
-        }
-      })
-    }
-
     $('.loginForm').on('submit', function(e) {
       e.preventDefault()
       const usr = $('input[name=username]').val();
       $.ajax({
         type: 'get',
-        url: 'https://localhost/api/students/checkRepository' + '?username=' + usr + '&access_token=' + localStorage.access_token,
+        url: 'https://localhost/api/students/' + localStorage.userId + '/checkRepository' + '?username=' + usr + '&access_token=' + localStorage.access_token,
         crossDomain: true,
         success: function(responseData, textStatus, jqXHR) {
           console.log(responseData);
-          updateUsername(usr);
+          if (responseData === "not found") {
+            alert('Usuário ou repositório não encontrado. Verifique e tente novamente.')
+          } else {
+            console.log(responseData);
+            alert('Conta vinculada com sucesso! Agora você deve vincular sua conta com o Github.')
+            window.location.href = 'https://github.com/login/oauth/authorize?client_id=71f8116e373c16f3eb11&scope=repo&login=' + usr;
+          }
         },
         error: function(responseData, textStatus, errorThrown) {
           console.log(responseData);
-          alert('Usuário ou repositório não encontrado. Verifique e tente novamente.');
+          alert('Algo deu errado, tente novamente.');
         }
       })
     })

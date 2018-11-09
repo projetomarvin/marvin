@@ -15,6 +15,10 @@
   width: 100%;
 }
 
+#atividades {
+  margin-bottom: 112px;
+}
+
 .logo.welcome {
   display: flex;
   justify-content: center;
@@ -123,6 +127,7 @@ main.fullwidth {
   padding: 8px;
   font-size: 24px;
 }
+
 .finish {
   position: fixed;
   bottom: 0;
@@ -136,8 +141,7 @@ main.fullwidth {
   font-size: 24px;
 }
 
-
-.footer button:hover, .finish button:hover {
+.footer button:hover, .finish button:hover, .dialog button:hover {
   background: #747969;
 }
 
@@ -206,4 +210,52 @@ main.fullwidth {
 .log::before {
   content: ">";
   padding-right: 8px;
+}
+
+#saveDialog {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  background: rgba(203, 203, 203, 0.88);
+  z-index: 5;
+}
+
+#saveDialog .dialog{
+  max-width: 50vw;
+  background: rgb(89, 89, 89);
+  color: white;
+  padding: 24px;
+  box-shadow: 0 0 20px 2px white;
+  text-align: center;
+}
+
+#saveDialog img {
+  fill: red;
+  width: 22px;
+}
+
+.buttons button, .githubPath button {
+  border: solid 2px;
+  font-size: 24px;
+}
+
+#closeButton {
+  border: none;
+  color: red;
+  font-size: 30px;
+  position: relative;
+  right: -212px;
+  top: -16px;
+}
+
+.githubPath input {
+  background: white;
+  border: 2px solid rgb(154, 154, 154);
+  border-radius: 2px;
+  margin-top: 16px;
+  font-size: 20px;
+  padding: 8px;
 }

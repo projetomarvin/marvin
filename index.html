@@ -24,6 +24,8 @@
         <br>
         <button type="submit" class="full-green">Entrar</button>
       </form>
+      <br>
+      <a href="http://projetomarvin.com">Voltar para o site</a>
     </div>
   </main>
   <script type="text/javascript">
@@ -47,6 +49,10 @@
           alert('Login inválido');
         }
       })
+    })
+
+    $(document).ready(function () {
+      if (localStorage.access_token) location.href = '/home.html'
     })
   </script>
 </body>

@@ -18,7 +18,7 @@
     </a>
     Atividades
   </header>
-  <main class="vertical">
+  <main class="vertical" id="atividades">
     <h1 id="course_name"></h1>
     <div id="activities">
 
@@ -35,16 +35,27 @@
     </div>
   </footer>
   <script type="text/javascript">
+  let studentActivityId;
     function finish() {
-
+      $.ajax({
+        type: "put",
+        url: 'https://localhost/api/studentActivities/' + studentActivityId + '/finish?filter=%7B%22include%22%3A%22activities%22%7D&access_token=' + localStorage.access_token,
+        crossDomain: true,
+        success: function(res, txt, jqXHR) {
+          console.log(res);
+        },
+        error: function(responseData, textStatus, errorThrown) {
+          console.log(responseData);
+        },
+      })
     }
+
     function getCourseActivities(courseId, currentLevel) {
       $.ajax({
         type: 'GET',
         url: 'https://localhost/api/courses/' + courseId + '?filter=%7B%22include%22%3A%22activities%22%7D&access_token=' + localStorage.access_token,
         crossDomain: true,
         success: function(res, textStatus, jqXHR) {
-          console.log(res);
           $('#course_name').append(res.name);
           res.activities.map((r, i) => {
             let position;
@@ -55,19 +66,19 @@
             } else {
               position = 'disabled';
             }
-            $('#activities').append('<div class="wrap-collabsible ' + position + '">'+
-                  '<input id="' + r.id + '" class="toggle" type="checkbox">' +
-                  '<label for="' + r.id + '" class="lbl-toggle">fase ' + i + '</label>' +
-                  '<div class="collapsible-content">'+
-                    '<div class="content-inner">' +
-                      '<h2>' + r.name +'</h2>' +
-                      '<p>' +
-                        r.description +
-                      '</p>' +
-                      '<a href="'+ r.PDFurl + '" target="_blank">Ver desafios da fase</a>'+
-                    '</div>' +
-                  '</div>'+
-                '</div>')
+            $('#activities').append('<div class="wrap-collabsible ' + position + '">' +
+              '<input id="' + r.id + '" class="toggle" type="checkbox">' +
+              '<label for="' + r.id + '" class="lbl-toggle">fase ' + i + '</label>' +
+              '<div class="collapsible-content">' +
+              '<div class="content-inner">' +
+              '<h2>' + r.name + '</h2>' +
+              '<p>' +
+              r.description +
+              '</p>' +
+              '<a href="' + r.PDFurl + '" target="_blank">Ver desafios da fase</a>' +
+              '</div>' +
+              '</div>' +
+              '</div>')
             if (position === 'disabled') $('#' + r.id).attr('disabled', true);
             if (position === 'current') $('#' + r.id).attr('checked', true);
           })
@@ -80,13 +91,15 @@
     $(document).ready(function() {
       $.ajax({
         type: 'GET',
-        url: 'https://localhost/api/students/' + localStorage.userId + '?access_token=' + localStorage.access_token,
+        url: 'https://localhost/api/students/' + localStorage.userId + '?filter=%7B%22include%22%3A%22studentActivities%22%7D&access_token=' + localStorage.access_token,
         crossDomain: true,
-        success: function(responseData, textStatus, jqXHR) {
-          console.log(responseData);
-          if (responseData.username) {
-            $('.finish p').append(responseData.activityNumber);
-            getCourseActivities(responseData.courseId, responseData.activityNumber)
+        success: function(res, textStatus, jqXHR) {
+          console.log(res);
+          console.log(res.studentActivities);
+          studentActivityId = res.studentActivities[res.studentActivities.length - 1].id;
+          if (res.username) {
+            $('.finish p').append(res.activityNumber);
+            getCourseActivities(res.courseId, res.activityNumber)
           } else {
             location.href = '/home.html';
           }
