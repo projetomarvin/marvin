@@ -92,7 +92,7 @@
         crossDomain: true,
         success: function(res, txt, jqXHR) {
           console.log(res);
-          alert("Sua atividade foi finalizada. Continue para a correção com" + corrector.username)
+          alert("Sua atividade foi finalizada. Continue para a correção com " + res.corrector.username)
         },
         error: function(res, txt, jqXHR) {
           console.log(res, txt);
