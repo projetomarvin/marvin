@@ -12,6 +12,34 @@
 </head>
 
 <body>
+  <div id="saveDialog" style="display:none">
+    <div class="dialog">
+      <button onclick="closeDialog()" id="closeButton">&times;</button>
+      <h2 class="loading">
+        Verificando arquivos...
+      </h2>
+      <div id="finish" style="display:none;">
+        <h2 id="all-ok" style="display:none;">
+          Ótimo, todos os arquivos estão no git.
+        </h2>
+        <h2 id="error-file" style="display:none;">
+          Oops, parece que o seguinte arquivo está faltando: <span></span>.
+        </h2>
+        <br>
+        <h3>
+          Tem certeza que quer finalizar essa fase e ir para a correção?
+        </h3>
+        <div class="buttons">
+          <button onclick="closeDialog()" class="wine">
+            Não
+          </button>
+          <button onclick="finish()" class="green">
+            Sim
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
   <header class="header editor">
     <a class="white_back" href="/home.html">
       &#11013;
@@ -29,25 +57,57 @@
       <p>
         Você está fazendo a fase
       </p>
-      <button onclick="finish()" class="green">
+      <button onclick="checkFiles()" class="green">
         Finalizar
       </button>
     </div>
   </footer>
   <script type="text/javascript">
-  let studentActivityId;
+    let studentActivityId;
+
+    function checkFiles() {
+      $('#saveDialog').toggle();
+      $.ajax({
+        type: "get",
+        url: 'https://localhost/api/studentActivities/' + studentActivityId + '/checkFiles?access_token=' + localStorage.access_token,
+        crossDomain: true,
+        success: function(res, txt, jqXHR) {
+          $(".loading").hide();
+          $("#finish").show();
+          $("#all-ok").show();
+        },
+        error: function(responseData, textStatus, errorThrown) {
+          $(".loading").hide();
+          $("#finish").show();
+          $("#error-file").show();
+          $("#error-file span").html(responseData.responseJSON.error.message.split(" ")[3])
+        },
+      })
+    }
+
     function finish() {
       $.ajax({
-        type: "put",
-        url: 'https://localhost/api/studentActivities/' + studentActivityId + '/finish?filter=%7B%22include%22%3A%22activities%22%7D&access_token=' + localStorage.access_token,
+        type: 'put',
+        url: 'https://localhost/api/studentActivities/' + studentActivityId + '/finish?access_token=' + localStorage.access_token,
         crossDomain: true,
         success: function(res, txt, jqXHR) {
           console.log(res);
+          alert("Sua atividade foi finalizada. Continue para a correção com" + corrector.username)
         },
-        error: function(responseData, textStatus, errorThrown) {
-          console.log(responseData);
+        error: function(res, txt, jqXHR) {
+          console.log(res, txt);
+          if (res.responseJSON.error.message === "atividade já finalizada") alert('Você já terminou a atividade');
+          else alert('Algo deu errado, tente novamente.');
         },
       })
+    }
+
+    function closeDialog() {
+      $('#saveDialog').toggle();
+      $(".loading").toggle();
+      $("#finish").toggle();
+      $("#all-ok").hide();
+      $("#error-file").hide();
     }
 
     function getCourseActivities(courseId, currentLevel) {

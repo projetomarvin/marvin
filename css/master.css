@@ -17,6 +17,10 @@ input, button {
   outline: none;
 }
 
+button {
+  cursor: pointer;
+}
+
 p {
   margin: 0;
 }

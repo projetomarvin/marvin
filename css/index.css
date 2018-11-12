@@ -218,7 +218,7 @@ main.fullwidth {
   justify-content: center;
   width: 100vw;
   height: 100vh;
-  position: absolute;
+  position: fixed;
   background: rgba(203, 203, 203, 0.88);
   z-index: 5;
 }
