@@ -145,6 +145,10 @@ main.fullwidth {
   background: #747969;
 }
 
+.doing, .done{
+  all: inherit;
+}
+
 .container {
   display: flex;
   width: 100%;

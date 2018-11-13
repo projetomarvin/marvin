@@ -49,17 +49,23 @@
   <main class="vertical" id="atividades">
     <h1 id="course_name"></h1>
     <div id="activities">
-
     </div>
   </main>
   <footer>
     <div class="finish">
-      <p>
-        Você está fazendo a fase
-      </p>
-      <button onclick="checkFiles()" class="green">
-        Finalizar
-      </button>
+      <div class="doing">
+        <p>
+          Você está fazendo a fase
+        </p>
+        <button onclick="checkFiles()" class="green">
+          Finalizar
+        </button>
+      </div>
+      <div class="correction" hidden>
+        <p>
+          Parabéns, você terminou essa fase! Sua correção será por
+        </p>
+      </div>
     </div>
   </footer>
   <script type="text/javascript">
@@ -93,6 +99,8 @@
         success: function(res, txt, jqXHR) {
           console.log(res);
           alert("Sua atividade foi finalizada. Continue para a correção com " + res.corrector.username)
+          closeDialog();
+          location.reload();
         },
         error: function(res, txt, jqXHR) {
           console.log(res, txt);
@@ -108,6 +116,20 @@
       $("#finish").toggle();
       $("#all-ok").hide();
       $("#error-file").hide();
+    }
+
+    function getCorrector(id) {
+      $.ajax({
+        type: 'GET',
+        url: 'https://localhost/api/students/' + id + '?access_token=' + localStorage.access_token,
+        crossDomain: true,
+        success: function(res, textStatus, jqXHR) {
+          $('.correction p').append(res.username);
+        },
+        error: function(responseData, textStatus, errorThrown) {
+          console.log(responseData.data);
+        }
+      })
     }
 
     function getCourseActivities(courseId, currentLevel) {
@@ -148,18 +170,23 @@
         }
       })
     }
+
     $(document).ready(function() {
       $.ajax({
         type: 'GET',
         url: 'https://localhost/api/students/' + localStorage.userId + '?filter=%7B%22include%22%3A%22studentActivities%22%7D&access_token=' + localStorage.access_token,
         crossDomain: true,
         success: function(res, textStatus, jqXHR) {
-          console.log(res);
-          console.log(res.studentActivities);
-          studentActivityId = res.studentActivities[res.studentActivities.length - 1].id;
+          const currentActivity = res.studentActivities[res.studentActivities.length - 1];
+          studentActivityId = currentActivity.id;
+          if (currentActivity.correctorId) {
+            $('.doing').hide();
+            $('.correction').show();
+            getCorrector(currentActivity.correctorId);
+          };
           if (res.username) {
-            $('.finish p').append(res.activityNumber);
-            getCourseActivities(res.courseId, res.activityNumber)
+            $('.doing p').append(res.activityNumber);
+            getCourseActivities(res.courseId, res.activityNumber);
           } else {
             location.href = '/home.html';
           }
