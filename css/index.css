@@ -64,7 +64,7 @@ main.fullwidth {
   width: 100%;
 }
 
-.loginForm input {
+.loginForm input, .passwordForm input {
   background-color: white;
   margin-bottom: 12px;
   padding: 4px;
@@ -73,7 +73,7 @@ main.fullwidth {
   font-size: 20px;
 }
 
-.loginForm button {
+.loginForm button, .passwordForm button {
   background-color: rgb(11, 126, 29);
   border-radius: 8px;
   color: #fff;
@@ -83,7 +83,7 @@ main.fullwidth {
   text-transform: uppercase;
 }
 
-.loginForm button:hover {
+.loginForm button:hover, .passwordForm button:hover {
   background-color: rgb(1, 75, 13);
   box-shadow: 3px 2px 7px 0px grey;
   cursor: pointer;
