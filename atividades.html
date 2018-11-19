@@ -121,10 +121,10 @@
     function getCorrector(id) {
       $.ajax({
         type: 'GET',
-        url: 'https://localhost/api/students/' + id + '?access_token=' + localStorage.access_token,
+        url: 'https://localhost/api/students/' + id + '/username?access_token=' + localStorage.access_token,
         crossDomain: true,
         success: function(res, textStatus, jqXHR) {
-          $('.correction p').append(res.username);
+          $('.correction p').append(res);
         },
         error: function(responseData, textStatus, errorThrown) {
           console.log(responseData.data);
