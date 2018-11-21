@@ -15,27 +15,31 @@
   <div id="saveDialog" style="display:none">
     <div class="dialog">
       <button id="closeButton">&times;</button>
-      <h2>
-        Como você deseja salvar seu código?
-      </h2>
-      <div class="buttons">
-        <button onclick="download()" class="purple">
-          Baixar <span class="icon">&#11015;</span>
-        </button>
-        <button onclick="github()" class="purple">
-          Github <img src="assets/github.svg" alt="">
-        </button>
+      <div id="upload">
+        <h2>
+          Como você deseja salvar seu código?
+        </h2>
+        <div class="buttons">
+          <button onclick="download()" class="purple">
+            Baixar <span class="icon">&#11015;</span>
+          </button>
+          <button onclick="github()" class="purple">
+            Github <img src="assets/github.svg" alt="">
+          </button>
+        </div>
+        <div class="githubPath" hidden>
+          <input type="text" name="githubPath" placeholder="caminho e nome do arquivo">
+          <br>
+          <input type="text" name="message" placeholder="mensagem do commit">
+          <br>
+          <br>
+          <button class="green" onclick="saveGithub()">Salvar</button>
+        </div>
+        <br>
+        <p style="color: darkred;">LEMBRE-SE DE NÃO INCLUIR A LINHA DE INVOCAÇÃO DA FUNÇÃO</p>
       </div>
-      <div class="githubPath" hidden>
-        <input type="text" name="githubPath" placeholder="caminho e nome do arquivo">
-        <br>
-        <input type="text" name="message" placeholder="mensagem do commit">
-        <br>
-        <br>
-        <button class="green" onclick="saveGithub()">Salvar</button>
+      <div class="buttons" id="custommsg" hidden>
       </div>
-      <br>
-      <p style="color: darkred;">LEMBRE-SE DE NÃO INCLUIR A LINHA DE INVOCAÇÃO DA FUNÇÃO</p>
     </div>
   </div>
   <div class="container">
@@ -89,10 +93,14 @@
 
     function save() {
       $('#saveDialog').show();
+      $('#upload').show();
     }
 
     $('#closeButton').click(() => {
       $('#saveDialog').toggle();
+      $('input[name=githubPath]').val("");
+      $('input[name=message]').val("");
+      $('.githubPath').toggle();
     })
 
     function github() {
@@ -107,8 +115,12 @@
         type: 'post',
         url: 'https://localhost/api/students/' + localStorage.userId + '/pushToGit?access_token=' + localStorage.access_token,
         crossDomain: true,
-        data: {content: btoa(code), path: path, message: msg},
-        success: function (res, txt, jsXHR) {
+        data: {
+          content: btoa(code),
+          path: path,
+          message: msg
+        },
+        success: function(res, txt, jsXHR) {
           console.log(res);
           alert('Commit criado com sucesso! Veja em seu repositório');
           $('#saveDialog').toggle();
@@ -116,10 +128,23 @@
           $('input[name=githubPath]').val("");
           $('input[name=message]').val("");
         },
-        error: function (res, txt, jsXHR) {
-          console.log(res);
+        error: function(res, txt, jsXHR) {
+          if (res.responseJSON.error.statusCode === 401) {
+            const goToLink = (
+              '<h3>Algo deu errado no upload para o github. Você deve autorizar o acesso novamemte.</h3>' +
+              '<button onclick="linkToGit()" class="green">Clique aqui para continuar</button>'
+            )
+            $('#upload').hide();
+            $('#custommsg').append(goToLink);
+            $('#custommsg').show();
+          }
         },
       })
+    }
+
+    function linkToGit() {
+      window.open('/github-link.html', '_blank');
+      $('#closeButton').trigger("click");
     }
 
     function addToLog(msg, err) {
