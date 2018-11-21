@@ -263,3 +263,11 @@ main.fullwidth {
   font-size: 20px;
   padding: 8px;
 }
+
+select#corrector {
+  background: white;
+  padding: 2px;
+  margin: 16px;
+  font-size: 20px;
+  margin: 1px solid black;
+}

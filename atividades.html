@@ -25,16 +25,15 @@
         <h2 id="error-file" style="display:none;">
           Oops, parece que o seguinte arquivo está faltando: <span></span>.
         </h2>
-        <br>
         <h3>
-          Tem certeza que quer finalizar essa fase e ir para a correção?
+          Escolha quem vai te corrigir e finalize a atividade
         </h3>
+        <select id="corrector">
+          <option disabled selected value></option>
+        </select>
         <div class="buttons">
-          <button onclick="closeDialog()" class="wine">
-            Não
-          </button>
           <button onclick="finish()" class="green">
-            Sim
+            Finalizar
           </button>
         </div>
       </div>
@@ -70,6 +69,7 @@
   </footer>
   <script type="text/javascript">
     let studentActivityId;
+    let students;
 
     function checkFiles() {
       $('#saveDialog').toggle();
@@ -88,13 +88,17 @@
           $("#error-file").show();
           $("#error-file span").html(responseData.responseJSON.error.message.split(" ")[3])
         },
-      })
+      });
+      for(var i = 0; i < students.length; i++) {
+         $('select#corrector').append('<option value='+students[i].id+'>'+students[i].username+'</option>');
+      }
     }
 
     function finish() {
       $.ajax({
         type: 'put',
         url: 'https://localhost/api/studentActivities/' + studentActivityId + '/finish?access_token=' + localStorage.access_token,
+        data: {userId: $('select#corrector').val()},
         crossDomain: true,
         success: function(res, txt, jqXHR) {
           console.log(res);
@@ -107,7 +111,7 @@
           if (res.responseJSON.error.message === "atividade já finalizada") alert('Você já terminou a atividade');
           else alert('Algo deu errado, tente novamente.');
         },
-      })
+      });
     }
 
     function closeDialog() {
@@ -135,9 +139,12 @@
     function getCourseActivities(courseId, currentLevel) {
       $.ajax({
         type: 'GET',
-        url: 'https://localhost/api/courses/' + courseId + '?filter=%7B%22include%22%3A%22activities%22%7D&access_token=' + localStorage.access_token,
+        url: 'https://localhost/api/courses/' + courseId + '?filter=%7B%22include%22%3A%20%5B%22students%22%2C%20%22activities%22%5D%7D&access_token=' + localStorage.access_token,
         crossDomain: true,
         success: function(res, textStatus, jqXHR) {
+          students = $.grep(res.students, function(e) {
+            return e.id != localStorage.userId && e.username;
+          });
           $('#course_name').append(res.name);
           res.activities.map((r, i) => {
             let position;
