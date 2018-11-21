@@ -67,6 +67,7 @@
           url: 'https://localhost:443/api/students/' + localStorage.userId + '?access_token=' + localStorage.access_token,
           crossDomain: true,
           success: function(responseData, textStatus, jqXHR) {
+            localStorage.setItem("courseId", responseData.courseId);
             console.log(responseData);
             if (responseData.username) {
               $('.welcome p').append(responseData.username);
