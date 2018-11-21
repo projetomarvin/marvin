@@ -79,7 +79,7 @@
             alert('Algo deu errado. Faça o login novamente');
             localStorage.removeItem('userId');
             localStorage.removeItem('access_token');
-            history.back();
+            location.href = '/index.html';
           }
         })
       }
