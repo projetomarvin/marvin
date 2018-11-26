@@ -195,8 +195,8 @@ main.fullwidth {
 }
 
 .wine {
-  border: 2px solid #7b0000;
-  color: #7b0000;
+  border: 2px solid #c90000;
+  color: #c90000;
 }
 
 .clear:hover {
@@ -270,4 +270,32 @@ select#corrector {
   margin: 16px;
   font-size: 20px;
   margin: 1px solid black;
+}
+
+#content .post {
+  background-color: white;
+  padding: 16px;
+  margin-top: 32px;
+}
+
+#content .post * {
+  font-family: monospace;
+  font-size: 20px;
+}
+
+#content .post a:link {
+  color: rgb(39, 50, 148);
+}
+
+#content .post a:visited {
+  color: rgb(39, 50, 148);
+}
+
+#content .post .link {
+  background-color: rgb(170, 170, 170);
+  padding: 4px;
+}
+
+#content .post p {
+  margin-bottom: 16px;
 }
