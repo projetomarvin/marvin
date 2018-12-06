@@ -38,7 +38,7 @@
 }
 
 .welcome p {
-  color: #fff;
+  color: #5dff43;
   font-size: 24px;
   padding-top: 8px;
 }
@@ -298,4 +298,23 @@ select#corrector {
 
 #content .post p {
   margin-bottom: 16px;
+}
+
+.progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+#progressBarBg {
+  width: 30vw;
+  height: 8px;
+  background-color: #b1b1b1;
+}
+
+#progressBar {
+  height: 8px;
+  background-color: rgb(27, 147, 46);
 }

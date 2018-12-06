@@ -15,6 +15,13 @@
     <div class="logo welcome">
       <img src="assets/logo.png" alt="">
       <p>Bem vindo(a) de volta, </p>
+      <div class="progress">
+        <h2 id="currentLevel">Nível </h2>
+        <div id="progressBarBg">
+          <div id="progressBar"></div>
+        </div>
+        <h4 id="currentXP"></h4>
+      </div>
     </div>
     <div class="logout">
       <button type="button" class="wine" onclick="logout()">Sair</button>
@@ -25,7 +32,7 @@
       <img src="assets/coding.svg" alt="">
       Acessar o editor
     </a>
-    <a class="activityButton rose" id="repo">
+    <a class="activityButton rose" id="repo" target="_blank">
       <img src="assets/desktop.svg" alt="">
       Ir para repositório
     </a>
@@ -39,6 +46,26 @@
     </a>
   </main>
   <script type="text/javascript">
+    function getLevel(xp) {
+      switch (true) {
+        case xp<100:
+          return 1;
+          break;
+        case xp<250:
+          return 2;
+          break;
+        case xp<450:
+          return 3;
+          break;
+        case xp<700:
+          return 4;
+          break;
+        case xp<1000:
+          return 5;
+          break;
+      }
+    }
+
     $(document).ready(function() {
       if (location.href.includes('code=')) {
         const token = location.href.split('code=')[1];
@@ -67,11 +94,14 @@
           url: 'https://localhost:443/api/students/' + localStorage.userId + '?access_token=' + localStorage.access_token,
           crossDomain: true,
           success: function(responseData, textStatus, jqXHR) {
+            const n = getLevel(responseData.XPPoints);
             localStorage.setItem("courseId", responseData.courseId);
-            console.log(responseData);
             if (responseData.username) {
               $('.welcome p').append(responseData.username);
               $("#repo").attr("href", "http://www.github.com/" + responseData.username + '/marvin')
+              $('#currentLevel').append(getLevel(responseData.XPPoints))
+              $('#currentXP').append(responseData.XPPoints - (50 * ((n * (n+1)) / 2 - 1)) + '/' + 50 * (n + 1))
+              $('#progressBar').width(eval($('#currentXP').html())*$(document).width()*0.3)
             } else {
               location.href = '/github-link.html';
             }
