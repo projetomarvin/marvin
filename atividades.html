@@ -64,6 +64,9 @@
         <p>
           Parabéns, você terminou essa fase! Sua correção será por
         </p>
+        <button onclick="cancelCorrection()" class="wine">
+          Cancelar
+        </button>
       </div>
     </div>
   </footer>
@@ -177,6 +180,25 @@
         }
       })
     }
+
+    function cancelCorrection() {
+      const retVal = confirm("Tem certeza que quer cancelar a correção?");
+      if(retVal == true ){
+        $.ajax({
+          type: 'patch',
+          url: 'https://localhost/api/studentActivities/' + studentActivityId + '?access_token=' + localStorage.access_token,
+          data: {correctorId: null, finishedAt: null},
+          crossDomain: true,
+          success: function (res, txt, jqXHR) {
+            console.log(res);
+            location.reload();
+          },
+          error: function (err, txt, errorThrown) {
+            console.log(err);
+          }
+        })
+      }
+  }
 
     $(document).ready(function() {
       $.ajax({
