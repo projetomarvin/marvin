@@ -127,7 +127,7 @@
               $('#progressBar').width(eval($('#currentXP').html())*$(document).width()*0.3)
               responseData.notifications.map(msg => {
                 $("#msg-box .messages").append(
-                  `<a class="message" href="${msg.targetURL}">
+                  `<a target="_blank" class="message" href="${msg.targetURL}">
                     ${msg.message}
                   </a>`
                 )
