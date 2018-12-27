@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt" dir="ltr">
+  <head>
+    <title>Marvi - Correção</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/master.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="/src-min/ace.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="shortcut icon" href="assets/favicon.ico">
+  </head>
+  <body>
+    <div class="header editor">
+      <a class="white_back" href="/home.html">
+        &#11013;
+      </a>
+      Correção
+    </div>
+    <header class="intro-text">
+      <h1 id="level">Correção: </h1>
+      <br>
+      <p>
+        . Para acessar o PDF da fase, <a id="pdf" href="#" target="_blank">clique aqui</a>.
+        <br>
+        O link dos arquivos está disponível <a href="#" id="files">aqui.</a>
+      </p>
+    </header>
+    <main class="content">
+      <div class="container">
+        <div id="questions"></div>
+        <div>
+          <h1>Considerações finais</h1>
+          <div class="comments">
+            <p>Comentários*</p>
+            <textarea name="comments" rows="2" cols="80"></textarea>
+            <br>
+            <br>
+            <p>Outros (use com cuidado):</p>
+            <div class="question" style="display:inline-block">
+              <div class="buttons">
+                <input type="checkbox" id="copy" name="final" value="copy"/>
+                <label for="copy">Foi identificado plágio</label>
+                <input type="checkbox" id="cheat" name="final" value="cheat"/>
+                <label for="cheat">Não conseguiu explicar</label>
+              </div>
+            </div>
+          </div>
+          <button id="finish-correction" onclick="submit()">FINALIZAR</button>
+        </div>
+      </div>
+    </main>
+
+    <script type="text/javascript">
+      let numberOfExercises;
+      function submit() {
+        const sure = confirm("Tem certeza que quer terminar a correção?");
+        if (!sure) return false;
+        let payload = {};
+        for (var i = 0; i < numberOfExercises; i++) {
+          let asr = $(`input[name=ex${i}]:checked`).val();
+          if (asr) {
+            payload['ex0'+i] = {works: asr}
+          } else {
+            alert("Oops, parece que você esqueceu de algum exercício");
+            return false;
+          }
+        }
+        let comm = $('textarea').val();
+        if (comm) {
+          payload.comment = comm
+        } else {
+          alert("Oops, o campo de comentários é obrigatório");
+          return false;
+        }
+        payload.cheat = $(`input[name=final]:checked`).val();
+        console.log(payload);
+        $.ajax({
+          type: 'patch',
+          url: 'https://localhost/api/corrections/' + location.search.replace("?", ''),
+          crossDomain: true,
+          data: payload,
+          success: function(res, textStatus, jqXHR) {
+            console.log(res);
+            window.location.href = '/home.html'
+          }
+        })
+      }
+
+      $(document).ready(function() {
+        $.ajax({
+          type: 'GET',
+          url: 'https://localhost/api/corrections/' + location.search.replace("?", '') + '?filter[include][studentActivity]=student',
+          crossDomain: true,
+          success: function(res, textStatus, jqXHR) {
+              $.ajax({
+                type: 'GET',
+                url: 'https://localhost/api/activities/' + res.studentActivity.activityId + '?access_token=' + localStorage.access_token,
+                crossDomain: true,
+                success: function(r, textStatus, jqXHR) {
+                  console.log(r);
+                  $("#level").append(r.name)
+                  $(".intro-text p").prepend("Você está corrigindo <b>" + res.studentActivity.student.username +"</b> na fase "+ res.studentActivity.student.activityNumber)
+                  $("#pdf").attr("href", r.PDFurl)
+                  $("#files").attr("href", 'https://s3-sa-east-1.amazonaws.com/marvin-files/' + res.studentActivityId + '.zip')
+                  numberOfExercises = r.exercises.length;
+                  r.exercises.map((q, i) => {
+                    $("#questions").append(
+                      `<div class="question">
+                        <h1>Exercício 0${i}</h1>
+                        <div style="display:flex">
+                          <div class="text">
+                            <p>
+                              O código executa e atende a TODOS os requesitos do exercício?
+                            </p>
+                          </div>
+                          <div class="buttons">
+                            <input type="radio" id="ex${i}true" name="ex${i}" value="Sim"/>
+                            <label for="ex${i}true">SIM</label>
+                            <input type="radio" id="ex${i}false" name="ex${i}" value="Não"/>
+                            <label for="ex${i}false">NÃO</label>
+                          </div>
+                        </div>
+                      </div>`
+                    )
+                  });
+                },
+              })
+            },
+          error: function(responseData, textStatus, errorThrown) {
+            console.log(responseData);
+          }
+        })
+      })
+    </script>
+  </body>
+</html>

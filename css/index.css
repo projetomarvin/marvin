@@ -364,11 +364,155 @@ select#corrector {
 a.message {
   text-decoration: none;
   color: black;
-  padding: 4px;
+  padding: 8px;
   display: block;
-  border-top: 1px solid #5c5c5c
+  border-top: 1px solid #5c5c5c;
+  text-align: left;
+  font-size: 16px;
+}
+
+a.message .date{
+  font-size: 12px;
+  color: #6a6a6a;
 }
 
 a.message:hover {
   background-color: #adadad
+}
+
+header.intro-text {
+  display: block;
+  background-color: #acacac;
+}
+
+#questions {
+  display: block;
+}
+
+#questions .question .text {
+  flex: 1;
+  padding: 8px;
+}
+
+#questions .question input[type='radio'], .comments .question input[type='checkbox']{
+  display: none;
+}
+
+#questions .question label,
+.comments .question label {
+  border: 1px solid #00A032;
+  background: white;
+  padding: 16px;
+  color: #00A032;
+  cursor: pointer;
+  min-width: 200px;
+  float: left;
+  text-align: center;
+  flex: 1;
+}
+
+.container #questions input:checked+label,
+.container .comments input:checked+label {
+  border: 1px solid white;
+  background: #00A032;
+  color: white;
+  font-weight: bold;
+}
+
+textarea[name='comments'] {
+  width: 100%;
+  padding: 8px;
+  font-size: 20px;
+}
+
+#questions .question label:first-of-type,
+.comments .question label:first-of-type {
+  border-radius: 8px 0 0 8px;
+  border-right: none;
+}
+
+#questions .question label:last-of-type,
+.comments .question label:last-of-type {
+  border-radius: 0 8px 8px 0;
+}
+
+.content .container {
+  width: 900px;
+  display: block;
+}
+
+#finish-correction {
+  color: white;
+  background: #00A032;
+  border-radius: 8px;
+  padding: 20px;
+  font-size: 20px;
+  float: right;
+  margin-top: 24px;
+}
+
+
+#feedback-questions .question {
+  display: flex;
+  flex-direction: column;
+}
+
+#feedback-questions .question .picker {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#feedback-questions .question .picker .radios {
+  background: #c5c5c5;
+  flex: 4;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 48px;
+}
+
+.picker p {
+  flex: 1;
+  text-align: center;
+}
+
+.picker input[type="radio"] {
+  display: none;
+  margin: 0;
+}
+
+.radios label {
+  border: 2px solid #00AF35;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  position: relative;
+}
+
+.picker input[type="radio"]+label::after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 13px;
+  left: 13px;
+  border-radius: 50%;
+  background: #00AF35;
+  transition: all 0.1s ease;
+}
+
+.picker input[type="radio"]:checked+label::after {
+  width: 14px;
+  height: 14px;
+  top: 3px;
+  left: 3px;
+}
+
+.question .title {
+  font-size: 22px;
+  margin-top: 40px;
+  padding-bottom: 24px;
 }

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt" dir="ltr">
+  <head>
+    <title>Marvi - Correção</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/master.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="/src-min/ace.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="shortcut icon" href="assets/favicon.ico">
+  </head>
+  <body>
+    <div class="header editor">
+      <a class="white_back" href="/home.html">
+        &#11013;
+      </a>
+      Feedback
+    </div>
+    <header class="intro-text">
+      <h1 id="level">Feedback de correção </h1>
+    </header>
+    <main class="content">
+      <div class="container">
+        <div id="feedback-questions">
+          <div class="question">
+            <p class="title">A pessoa que fez correção chegou no horário e não enrolou</h2>
+            <div class="picker">
+              <p>Discordo completamente</p>
+              <div class="radios">
+                <input type="radio" name="time" value="1" id="time1">
+                <label for="time1"></label>
+                <input type="radio" name="time" value="2" id="time2">
+                <label for="time2"></label>
+                <input type="radio" name="time" value="3" id="time3">
+                <label for="time3"></label>
+                <input type="radio" name="time" value="4" id="time4">
+                <label for="time4"></label>
+              </div>
+              <p>Concordo completamente</p>
+            </div>
+          </div>
+          <div class="question">
+            <p class="title">A pessoa que fez correção demonstrou interesse no trabalho apresentado</h2>
+            <div class="picker">
+              <p>Discordo completamente</p>
+              <div class="radios">
+                <input type="radio" name="interest" value="1" id="interest1">
+                <label for="interest1"></label>
+                <input type="radio" name="interest" value="2" id="interest2">
+                <label for="interest2"></label>
+                <input type="radio" name="interest" value="3" id="interest3">
+                <label for="interest3"></label>
+                <input type="radio" name="interest" value="4" id="interest4">
+                <label for="interest4"></label>
+              </div>
+              <p>Concordo completamente</p>
+            </div>
+          </div>
+          <div class="question">
+            <p class="title">A pessoa que fez correção questionou e discutiu as respostas elaboradas</h2>
+            <div class="picker">
+              <p>Discordo completamente</p>
+              <div class="radios">
+                <input type="radio" name="discuss" value="1" id="discuss1">
+                <label for="discuss1"></label>
+                <input type="radio" name="discuss" value="2" id="discuss2">
+                <label for="discuss2"></label>
+                <input type="radio" name="discuss" value="3" id="discuss3">
+                <label for="discuss3"></label>
+                <input type="radio" name="discuss" value="4" id="discuss4">
+                <label for="discuss4"></label>
+              </div>
+              <p>Concordo completamente</p>
+            </div>
+          </div>
+          <div class="question">
+            <p class="title">A pessoa que fez correção foi agradável e educada enquanto corrigia</h2>
+            <div class="picker">
+              <p>Discordo completamente</p>
+              <div class="radios">
+                <input type="radio" name="polite" value="1" id="polite1">
+                <label for="polite1"></label>
+                <input type="radio" name="polite" value="2" id="polite2">
+                <label for="polite2"></label>
+                <input type="radio" name="polite" value="3" id="polite3">
+                <label for="polite3"></label>
+                <input type="radio" name="polite" value="4" id="polite4">
+                <label for="polite4"></label>
+              </div>
+              <p>Concordo completamente</p>
+            </div>
+          </div>
+          <div class="question">
+            <p class="title">Comentários*</p>
+            <textarea name="comments" rows="2" cols="80"></textarea>
+          </div>
+          <button id="finish-correction" onclick="submit()">FINALIZAR</button>
+        </div>
+      </div>
+    </main>
+
+    <script type="text/javascript">
+      function submit() {
+        let payload = {};
+        $('input[type="radio"]:checked').map((i, e) => {
+          if (!e) {
+            alert('Você deve avaliar o corretor em todos os critérios');
+            return false;
+          }
+          payload[e.name]= e.value
+        })
+        if (!$('textarea').val()) {
+          alert('Oops, o campo de comentários é obrigatório');
+          return false;
+        } else {
+          payload.comment = $('textarea').val();
+        }
+        console.log(payload);
+        $.ajax({
+          type: 'post',
+          url: 'https://localhost/api/corrections/' + location.search.replace("?", '') + '/feedbacks',
+          crossDomain: true,
+          data: payload,
+          success: function(res, textStatus, jqXHR) {
+            console.log(res);
+            $.ajax({
+              type: 'post',
+              url: 'https://localhost/api/corrections/' + location.search.replace("?", '') + '/finish',
+              crossDomain: true,
+              data: payload,
+              success: function(responseData, textStatus, jqXHR) {
+                console.log(responseData);
+                window.location.href = '/home.html'
+              }
+            })
+          }
+        })
+      }
+
+      $(document).ready(function() {
+        $.ajax({
+          type: 'GET',
+          url: 'https://localhost/api/corrections/' + location.search.replace("?", '') + '?filter[include][studentActivity]=student',
+          crossDomain: true,
+          success: function(res, textStatus, jqXHR) {
+              console.log(res);
+            },
+          error: function(responseData, textStatus, errorThrown) {
+            console.log(responseData);
+          }
+        })
+      })
+    </script>
+  </body>
+</html>
