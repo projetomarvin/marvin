@@ -44,7 +44,7 @@
 }
 
 .logo img {
-  width: 80px;
+  width: 160px;
   height: auto;
 }
 
@@ -322,4 +322,53 @@ select#corrector {
 #progressBar {
   height: 8px;
   background-color: rgb(27, 147, 46);
+}
+
+.name-msg {
+  display: inherit;
+}
+
+#msg {
+  height: 32px;
+  width: auto;
+  margin-left: 8px;
+  margin-top: 6px;
+  display: block;
+}
+
+#msg-box {
+  position: absolute;
+	background: #ececec;
+  border: 1px solid #858585;
+  box-shadow: 2px 2px 5px #404040;
+  border-radius: 4px;
+  margin-top: 16px;
+  width: 250px;
+  top: 215px;
+}
+
+#msg-box:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 20px;
+	width: 0;
+	height: 0;
+	border: 10px solid transparent;
+	border-bottom-color: #ececec;
+	border-top: 0;
+	margin-left: -10px;
+	margin-top: -10px;
+}
+
+a.message {
+  text-decoration: none;
+  color: black;
+  padding: 4px;
+  display: block;
+  border-top: 1px solid #5c5c5c
+}
+
+a.message:hover {
+  background-color: #adadad
 }
