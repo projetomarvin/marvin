@@ -107,10 +107,7 @@
       $('.githubPath').toggle();
     }
 
-    function saveGithub() {
-      const code = editor.getValue();
-      const path = $('input[name=githubPath]').val()
-      const msg = $('input[name=message]').val()
+    function pushToGit() {
       $.ajax({
         type: 'post',
         url: 'https://localhost/api/students/' + localStorage.userId + '/pushToGit?access_token=' + localStorage.access_token,
@@ -140,6 +137,20 @@
           }
         },
       })
+    }
+
+    function saveGithub() {
+      const code = editor.getValue();
+      const path = $('input[name=githubPath]').val()
+      const msg = $('input[name=message]').val()
+      if (code.match(/(fun.*{[\s\S]*}[\s]*$)/g))
+      pushToGit();
+      else if (!code.match(/(fun.*{[\s\S]*}[\s]*$)/g) && confirm('Oops, parece que seu código não segue as normas de envio, tem certeza que quer continuar?'))
+      pushToGit();
+      else {
+        $('#saveDialog').toggle();
+        $('.githubPath').toggle();
+      }
     }
 
     function linkToGit() {
