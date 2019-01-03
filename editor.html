@@ -149,9 +149,9 @@
 
     function addToLog(msg, err) {
       if (err) {
-        logger.innerHTML = '<p class="error log">' + msg + '</p>' + logger.innerHTML;
+        logger.innerHTML = logger.innerHTML + '<p class="error log">' + msg + '</p>';
       } else {
-        logger.innerHTML = '<p class="log">' + msg + '</p>' + logger.innerHTML;
+        logger.innerHTML = logger.innerHTML + '<p class="log">' + msg + '</p>';
       }
     }
 
