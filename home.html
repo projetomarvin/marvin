@@ -120,6 +120,7 @@
             const n = getLevel(responseData.XPPoints);
             localStorage.setItem("courseId", responseData.courseId);
             if (responseData.username) {
+              localStorage.setItem('user', JSON.stringify(responseData));
               $('.welcome p').append(responseData.username);
               $("#repo").attr("href", "http://www.github.com/" + responseData.username + '/marvin')
               $('#currentLevel').append(getLevel(responseData.XPPoints))
