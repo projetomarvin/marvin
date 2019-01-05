@@ -92,9 +92,6 @@
           $("#error-file span").html(responseData.responseJSON.error.message.split(" ")[3])
         },
       });
-      for(var i = 0; i < students.length; i++) {
-         $('select#corrector').append('<option value='+students[i].id+'>'+students[i].username+'</option>');
-      }
     }
 
     function finish() {
@@ -145,9 +142,11 @@
         url: 'https://localhost/api/courses/' + courseId + '?filter=%7B%22include%22%3A%20%5B%22students%22%2C%20%22activities%22%5D%7D&access_token=' + localStorage.access_token,
         crossDomain: true,
         success: function(res, textStatus, jqXHR) {
-          students = $.grep(res.students, function(e) {
-            return e.id != localStorage.userId && e.username;
-          });
+          res.students.map(e => {
+            if (e.id !== localStorage.userId && e.username)
+            $('select#corrector').append('<option value='+e.id+'>'+e.username+'</option>');
+
+          })
           $('#course_name').append(res.name);
           res.activities.map((r, i) => {
             let position;
