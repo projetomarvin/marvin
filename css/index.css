@@ -167,7 +167,7 @@ main.fullwidth {
 
 #editor {
   width: 100%;
-  height: calc(100vh - 128px);
+  height: calc(100vh - 129px);
 }
 
 .ace_editor * {
@@ -210,6 +210,10 @@ main.fullwidth {
 
 #log {
   padding: 8px;
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-y: auto;
+  max-height: calc(100vh - 45px);
 }
 
 .log.error {
@@ -239,6 +243,7 @@ main.fullwidth {
   padding: 24px;
   box-shadow: 0 0 20px 2px white;
   text-align: center;
+  min-width: 486px;
 }
 
 #saveDialog img {
@@ -269,7 +274,7 @@ main.fullwidth {
   padding: 8px;
 }
 
-select#corrector {
+select#corrector, select#file {
   background: white;
   padding: 2px;
   margin: 16px;
@@ -489,6 +494,7 @@ textarea[name='comments'] {
   width: 24px;
   height: 24px;
   position: relative;
+  cursor: pointer;
 }
 
 .picker input[type="radio"]+label::after {
@@ -515,4 +521,8 @@ textarea[name='comments'] {
   font-size: 22px;
   margin-top: 40px;
   padding-bottom: 24px;
+}
+
+#github-file img {
+  width: 24px;
 }
