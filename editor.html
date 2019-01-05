@@ -15,7 +15,7 @@
   <div id="saveDialog" style="display:none">
     <div class="dialog">
       <button id="closeButton">&times;</button>
-      <div id="upload">
+      <div id="upload" style="display:none">
         <h2>
           Como você deseja salvar seu código?
         </h2>
@@ -38,6 +38,15 @@
         <br>
         <p style="color: darkred;">LEMBRE-SE DE NÃO INCLUIR A LINHA DE INVOCAÇÃO DA FUNÇÃO</p>
       </div>
+      <div id="githubLoad" style="display:none">
+        <h2>Qual arquvo você quer abrir?</h2>
+        <select id="file">
+          <option disabled selected value></option>
+        </select>
+        <div class="buttons">
+          <button onclick="loadFile()" class="green">Abrir</button>
+        </div>
+      </div>
       <div class="buttons" id="custommsg" hidden>
       </div>
     </div>
@@ -49,6 +58,9 @@
           &#11013;
         </a>
         <p>Editor javascript</p>
+        <button onclick="toggleGithub()" id="github-file">
+          <img src="assets/github.svg" alt="">
+        </button>
       </header>
       <div id="editor" />
     </div>
@@ -101,13 +113,17 @@
       $('input[name=githubPath]').val("");
       $('input[name=message]').val("");
       $('.githubPath').toggle();
+      $('#upload').hide();
+      $('#githubLoad').hide();
     })
 
     function github() {
       $('.githubPath').toggle();
     }
 
-    function pushToGit() {
+    function pushToGit(code) {
+      const path = $('input[name=githubPath]').val()
+      const msg = $('input[name=message]').val()
       $.ajax({
         type: 'post',
         url: 'https://localhost/api/students/' + localStorage.userId + '/pushToGit?access_token=' + localStorage.access_token,
@@ -118,10 +134,10 @@
           message: msg
         },
         success: function(res, txt, jsXHR) {
-          console.log(res);
           alert('Commit criado com sucesso! Veja em seu repositório');
           $('#saveDialog').toggle();
           $('.githubPath').toggle();
+          $('#upload').toggle();
           $('input[name=githubPath]').val("");
           $('input[name=message]').val("");
         },
@@ -139,17 +155,62 @@
       })
     }
 
+    function checkFileIsCurrent(obj) {
+      return obj.mode === '100644' && obj.path.includes("fase0" + JSON.parse(localStorage.user).activityNumber)
+    }
+
+    function toggleGithub() {
+      const user = JSON.parse(localStorage.user);
+      $('#saveDialog').show();
+      $('#githubLoad').show();
+      $.ajax({
+        url: 'https://api.github.com/repos/'+ user.username +'/marvin/commits',
+        crossDomain: true,
+        success: function (res, txt, jsXHR) {
+          $.ajax({
+            url: 'https://api.github.com/repos/'+ user.username +'/marvin/git/trees/' +
+            res[0].sha + '?recursive=1',
+            crossDomain: true,
+            success: function (r, t) {
+              const files = r.tree.filter(checkFileIsCurrent);
+              if ($("select#file option").length === 1) {
+                for(var i = 0; i < files.length; i++) {
+                  $('select#file').append('<option value='+files[i].path+'>'+files[i].path+'</option>');
+                }
+              }
+            }
+          })
+        },
+        error: function (res, txt, jsXHR) {
+          console.log(res);
+        }
+      })
+    }
+
+    function loadFile() {
+      const user = JSON.parse(localStorage.user);
+      const path = $('select#file').val();
+      $.ajax({
+        url: 'https://api.github.com/repos/' + user.username + '/marvin/contents/' + path,
+        crossDomain: true,
+        success: function (res) {
+          editor.getSession().setValue(atob(res.content))
+          $('#closeButton').trigger("click");
+          $('input[name=githubPath]').val(path)
+        }
+      })
+    }
+
     function saveGithub() {
       const code = editor.getValue();
-      const path = $('input[name=githubPath]').val()
-      const msg = $('input[name=message]').val()
       if (code.match(/(fun.*{[\s\S]*}[\s]*$)/g))
-      pushToGit();
+      pushToGit(code);
       else if (!code.match(/(fun.*{[\s\S]*}[\s]*$)/g) && confirm('Oops, parece que seu código não segue as normas de envio, tem certeza que quer continuar?'))
-      pushToGit();
+      pushToGit(code);
       else {
         $('#saveDialog').toggle();
-        $('.githubPath').toggle();
+        $('#upload').toggle();
+        $('.githubPath').hide();
       }
     }
 
