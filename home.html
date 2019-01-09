@@ -145,13 +145,17 @@
               $('#currentXP').append(responseData.XPPoints - (50 * ((n * (n+1)) / 2 - 1)) + '/' + 50 * (n + 1))
               $('#progressBar').width(eval($('#currentXP').html())*$(document).width()*0.3)
               responseData.notifications.map((msg, i) => {
+                let btn = '';
+                if (msg.targetURL === '#') {
+                  btn = `<span class="delete-msg" onclick="del('${msg.id}', ${i})">&times;</span>`
+                }
+
                 $("#msg-box .messages").append(
-                  `<div class="message">
-                  <span class="delete-msg" onclick="del('${msg.id}', ${i})">&times;</span>
-                  <a target="_blank" href="${msg.targetURL}">
-                    ${msg.message}
-                  </a>
-                  </div>`
+                  '<div class="message">' +
+                  btn +
+                  `<a target="_blank" href="${msg.targetURL}">` +
+                    msg.message +
+                  '</a></div>'
                 )
               })
             } else {
