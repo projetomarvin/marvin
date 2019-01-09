@@ -82,8 +82,25 @@
       return false;
     }
 
+    function del(msgId, i) {
+      $.ajax({
+        type: "delete",
+        url: 'https://localhost/api/students/' + localStorage.userId + '/notifications/' + msgId + '?access_token=' + localStorage.access_token,
+        crossDomain: true,
+        success: function(responseData, textStatus, jqXHR) {
+          $(".message:eq(" + i + ")").remove()
+        },
+        error: function(responseData, textStatus, errorThrown) {
+          console.log(responseData);
+        }
+      })
+    }
+
     $(document).on('click', function(evt) {
-        if(!$(evt.target).is('#msg') && !$(evt.target).is('.message') && $('#msg-box').is(':visible')) {
+        if(!$(evt.target).is('#msg') &&
+        !$(evt.target).is('.message') &&
+        !$(evt.target).is('.delete-msg') &&
+        $('#msg-box').is(':visible')) {
           $('#msg-box').hide()
           return false;
         }
@@ -126,11 +143,14 @@
               $('#currentLevel').append(getLevel(responseData.XPPoints))
               $('#currentXP').append(responseData.XPPoints - (50 * ((n * (n+1)) / 2 - 1)) + '/' + 50 * (n + 1))
               $('#progressBar').width(eval($('#currentXP').html())*$(document).width()*0.3)
-              responseData.notifications.map(msg => {
+              responseData.notifications.map((msg, i) => {
                 $("#msg-box .messages").append(
-                  `<a target="_blank" class="message" href="${msg.targetURL}">
+                  `<div class="message">
+                  <span class="delete-msg" onclick="del('${msg.id}', ${i})">&times;</span>
+                  <a target="_blank" href="${msg.targetURL}">
                     ${msg.message}
-                  </a>`
+                  </a>
+                  </div>`
                 )
               })
             } else {

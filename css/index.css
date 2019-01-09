@@ -366,22 +366,25 @@ select#corrector, select#file {
 	margin-top: -10px;
 }
 
-a.message {
-  text-decoration: none;
-  color: black;
+div.message {
   padding: 8px;
   display: block;
   border-top: 1px solid #5c5c5c;
   text-align: left;
+
+}
+div.message a {
+  text-decoration: none;
+  color: black;
   font-size: 16px;
 }
 
-a.message .date{
+div.message .date{
   font-size: 12px;
   color: #6a6a6a;
 }
 
-a.message:hover {
+div.message:hover {
   background-color: #adadad
 }
 
@@ -525,4 +528,17 @@ textarea[name='comments'] {
 
 #github-file img {
   width: 24px;
+}
+
+div.message .delete-msg {
+  position: absolute;
+  right: 4px;
+  font-size: 10px;
+  width: 12px;
+  text-align: center;
+}
+
+div.message .delete-msg:hover {
+  background-color: #b10000;
+  border-radius: 50%;
 }
