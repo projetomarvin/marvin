@@ -98,7 +98,7 @@
 
     $(document).on('click', function(evt) {
         if(!$(evt.target).is('#msg') &&
-        !$(evt.target).is('.message') &&
+        !$(evt.target).is('.message a') &&
         !$(evt.target).is('.delete-msg') &&
         $('#msg-box').is(':visible')) {
           $('#msg-box').hide()
