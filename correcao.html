@@ -130,6 +130,16 @@
             console.log(responseData);
           }
         })
+        $.ajax({
+          type: 'post',
+          url: 'https://localhost/api/corrections/' + location.search.replace("?", '') + '/start',
+          success: function (res) {
+            console.log(res);
+          },
+          error: function (res) {
+            console.log(res);
+          }
+        })
       })
     </script>
   </body>
