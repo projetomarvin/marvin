@@ -159,6 +159,7 @@
                   '</a></div>'
                 )
               })
+              if (!responseData.notifications.length) $('#msg').hide();
             } else {
               location.href = '/github-link.html';
             }
