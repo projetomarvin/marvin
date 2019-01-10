@@ -144,8 +144,8 @@
         crossDomain: true,
         success: function(res, textStatus, jqXHR) {
           res.students.map(e => {
-            if (e.id !== localStorage.userId && e.username && e.id !== lastActivity.correctorId)
-            $('select#corrector').append('<option value='+e.id+'>'+e.username+'</option>');
+            if (e.id !== localStorage.userId && e.username && lastActivity && e.id !== lastActivity.correctorId)
+              $('select#corrector').append('<option value='+e.id+'>'+e.username+'</option>');
 
           })
           $('#course_name').append(res.name);
