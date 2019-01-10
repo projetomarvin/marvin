@@ -207,7 +207,7 @@
         success: function(res, textStatus, jqXHR) {
           const currentActivity = res.studentActivities[res.studentActivities.length - 1];
           lastActivity = res.studentActivities[res.studentActivities.length - 2];
-          if (!lastActivity.correctorId) lastActivity.correctorId = '';
+          if (!lastActivity) lastActivity = {correctorId: ''};
           studentActivityId = currentActivity.id;
           if (currentActivity.correctorId) {
             $('.doing').hide();
