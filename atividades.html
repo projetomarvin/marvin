@@ -208,8 +208,7 @@
         crossDomain: true,
         success: function(res, textStatus, jqXHR) {
           const currentActivity = res.studentActivities[res.studentActivities.length - 1];
-          lastActivity = res.studentActivities[res.studentActivities.length - 2];
-          if (!lastActivity) lastActivity = {correctorId: ''};
+          lastActivity = res.studentActivities[res.studentActivities.length - 2] || {correctorId: ''};
           studentActivityId = currentActivity.id;
           if (currentActivity.correctorId) {
             $('.doing').hide();
