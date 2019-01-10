@@ -143,7 +143,7 @@
               $('.welcome p').append(responseData.username);
               $("#repo").attr("href", "http://www.github.com/" + responseData.username + '/marvin')
               $('#currentLevel').append(getLevel(responseData.XPPoints))
-              $('#currentXP').append(responseData.XPPoints - (50 * ((n * (n+1)) / 2 - 1)) + '/' + 50 * (n + 1))
+              $('#currentXP').append(Math.floor(responseData.XPPoints - (50 * ((n * (n+1)) / 2 - 1))) + '/' + 50 * (n + 1))
               $('#progressBar').width(eval($('#currentXP').html())*$(document).width()*0.3)
               responseData.notifications.map((msg, i) => {
                 let btn = '';
