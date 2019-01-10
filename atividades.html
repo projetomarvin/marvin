@@ -73,7 +73,7 @@
   <script type="text/javascript">
     let studentActivityId;
     let students;
-    let lastActivity;
+    let lastActivity = {};
 
     function checkFiles() {
       $('#saveDialog').toggle();
@@ -184,9 +184,8 @@
       const retVal = confirm("Tem certeza que quer cancelar a correção?");
       if(retVal == true ){
         $.ajax({
-          type: 'patch',
-          url: 'https://localhost/api/studentActivities/' + studentActivityId + '?access_token=' + localStorage.access_token,
-          data: {correctorId: null, finishedAt: null},
+          type: 'put',
+          url: 'https://localhost/api/studentActivities/' + studentActivityId + '/cancelCorrection?access_token=' + localStorage.access_token,
           crossDomain: true,
           success: function (res, txt, jqXHR) {
             console.log(res);
@@ -194,6 +193,9 @@
           },
           error: function (err, txt, errorThrown) {
             console.log(err);
+            if (err.status === 403) {
+              alert('Sua correção já foi iniciada. Você não pode mais cancelar');
+            }
           }
         })
       }
