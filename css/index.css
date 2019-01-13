@@ -64,7 +64,8 @@ main.fullwidth {
   width: 100%;
 }
 
-.loginForm input, .passwordForm input {
+.loginForm input,
+.passwordForm input {
   background-color: white;
   margin-bottom: 12px;
   padding: 4px;
@@ -73,7 +74,8 @@ main.fullwidth {
   font-size: 20px;
 }
 
-.loginForm button, .passwordForm button {
+.loginForm button,
+.passwordForm button {
   background-color: rgb(11, 126, 29);
   border-radius: 8px;
   color: #fff;
@@ -83,7 +85,8 @@ main.fullwidth {
   text-transform: uppercase;
 }
 
-.loginForm button:hover, .passwordForm button:hover {
+.loginForm button:hover,
+.passwordForm button:hover {
   background-color: rgb(1, 75, 13);
   box-shadow: 3px 2px 7px 0px grey;
   cursor: pointer;
@@ -94,7 +97,7 @@ main.fullwidth {
 }
 
 .header.editor {
-  background: #31332C;
+  background: #31332c;
   color: rgb(193, 193, 193);
   padding: 8px;
   font-size: 24px;
@@ -119,10 +122,11 @@ main.fullwidth {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  background-color: #373A32;
+  background-color: #373a32;
 }
 
-.footer button, .finish button {
+.footer button,
+.finish button {
   border: solid 2px;
   padding: 8px;
   font-size: 24px;
@@ -141,16 +145,18 @@ main.fullwidth {
   font-size: 24px;
 }
 
-
 .correction {
   display: contents;
 }
 
-.footer button:hover, .finish button:hover, .dialog button:hover {
+.footer button:hover,
+.finish button:hover,
+.dialog button:hover {
   background: #747969;
 }
 
-.doing, .done{
+.doing,
+.done {
   all: inherit;
 }
 
@@ -180,8 +186,8 @@ main.fullwidth {
 }
 
 .orange {
-  border-color: #E8CB63;
-  color: #E8CB63;
+  border-color: #e8cb63;
+  color: #e8cb63;
 }
 
 .rose {
@@ -236,7 +242,7 @@ main.fullwidth {
   z-index: 5;
 }
 
-#saveDialog .dialog{
+#saveDialog .dialog {
   max-width: 50vw;
   background: rgb(89, 89, 89);
   color: white;
@@ -251,7 +257,8 @@ main.fullwidth {
   width: 22px;
 }
 
-.buttons button, .githubPath button {
+.buttons button,
+.githubPath button {
   border: solid 2px;
   font-size: 24px;
 }
@@ -274,7 +281,8 @@ main.fullwidth {
   padding: 8px;
 }
 
-select#corrector, select#file {
+select#corrector,
+select#file {
   background: white;
   padding: 2px;
   margin: 16px;
@@ -343,7 +351,7 @@ select#corrector, select#file {
 
 #msg-box {
   position: absolute;
-	background: #ececec;
+  background: #ececec;
   border: 1px solid #858585;
   box-shadow: 2px 2px 5px #404040;
   border-radius: 4px;
@@ -353,17 +361,17 @@ select#corrector, select#file {
 }
 
 #msg-box:after {
-	content: '';
-	position: absolute;
-	top: 0;
-	left: 20px;
-	width: 0;
-	height: 0;
-	border: 10px solid transparent;
-	border-bottom-color: #ececec;
-	border-top: 0;
-	margin-left: -10px;
-	margin-top: -10px;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 20px;
+  width: 0;
+  height: 0;
+  border: 10px solid transparent;
+  border-bottom-color: #ececec;
+  border-top: 0;
+  margin-left: -10px;
+  margin-top: -10px;
 }
 
 div.message {
@@ -371,7 +379,6 @@ div.message {
   display: block;
   border-top: 1px solid #5c5c5c;
   text-align: left;
-
 }
 div.message a {
   text-decoration: none;
@@ -379,13 +386,13 @@ div.message a {
   font-size: 16px;
 }
 
-div.message .date{
+div.message .date {
   font-size: 12px;
   color: #6a6a6a;
 }
 
 div.message:hover {
-  background-color: #adadad
+  background-color: #adadad;
 }
 
 header.intro-text {
@@ -402,16 +409,17 @@ header.intro-text {
   padding: 8px;
 }
 
-#questions .question input[type='radio'], .comments .question input[type='checkbox']{
+#questions .question input[type="radio"],
+.comments .question input[type="checkbox"] {
   display: none;
 }
 
 #questions .question label,
 .comments .question label {
-  border: 1px solid #00A032;
+  border: 1px solid #00a032;
   background: white;
   padding: 16px;
-  color: #00A032;
+  color: #00a032;
   cursor: pointer;
   min-width: 200px;
   float: left;
@@ -419,15 +427,15 @@ header.intro-text {
   flex: 1;
 }
 
-.container #questions input:checked+label,
-.container .comments input:checked+label {
+.container #questions input:checked + label,
+.container .comments input:checked + label {
   border: 1px solid white;
-  background: #00A032;
+  background: #00a032;
   color: white;
   font-weight: bold;
 }
 
-textarea[name='comments'] {
+textarea[name="comments"] {
   width: 100%;
   padding: 8px;
   font-size: 20px;
@@ -451,14 +459,13 @@ textarea[name='comments'] {
 
 #finish-correction {
   color: white;
-  background: #00A032;
+  background: #00a032;
   border-radius: 8px;
   padding: 20px;
   font-size: 20px;
   float: right;
   margin-top: 24px;
 }
-
 
 #feedback-questions .question {
   display: flex;
@@ -492,7 +499,7 @@ textarea[name='comments'] {
 }
 
 .radios label {
-  border: 2px solid #00AF35;
+  border: 2px solid #00af35;
   border-radius: 50%;
   width: 24px;
   height: 24px;
@@ -500,7 +507,7 @@ textarea[name='comments'] {
   cursor: pointer;
 }
 
-.picker input[type="radio"]+label::after {
+.picker input[type="radio"] + label::after {
   content: "";
   display: block;
   position: absolute;
@@ -509,11 +516,11 @@ textarea[name='comments'] {
   top: 13px;
   left: 13px;
   border-radius: 50%;
-  background: #00AF35;
+  background: #00af35;
   transition: all 0.1s ease;
 }
 
-.picker input[type="radio"]:checked+label::after {
+.picker input[type="radio"]:checked + label::after {
   width: 14px;
   height: 14px;
   top: 3px;
