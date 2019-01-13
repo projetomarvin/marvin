@@ -245,6 +245,11 @@
       }
     }
 
+    function saveCode() {
+      var code = editor.getValue();
+      localStorage.setItem('code', code);
+    }
+
     function reset() {
       location.reload();
     }
@@ -254,6 +259,7 @@
     }
 
     function run() {
+      saveCode();
       var code = editor.getValue();
       $("#script").remove();
       var script = document.createElement('script');
@@ -282,7 +288,8 @@
     }
 
     $(document).ready(function() {
-      editor.setValue("");
+      editor.setValue(localStorage.code || '');
+      setInterval(function(){saveCode()}, 30000);
     })
   </script>
 </body>
