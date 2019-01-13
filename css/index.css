@@ -542,3 +542,21 @@ div.message .delete-msg:hover {
   background-color: #b10000;
   border-radius: 50%;
 }
+
+button.border {
+  border: 2px solid;
+}
+
+#HTMLview {
+  border: none;
+  width: 100%;
+  height: calc(100vh - 50px);
+}
+
+#split-bar {
+  flex: 0 0 auto;
+  width: 18px;
+  background: url(https://raw.githubusercontent.com/RickStrahl/jquery-resizable/master/assets/vsizegrip.png) center center no-repeat #535353;
+  min-height: 200px;
+  cursor: col-resize;
+}

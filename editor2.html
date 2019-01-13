@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+  <title>Marvi - Editor</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="/css/index.css">
+  <link rel="stylesheet" href="/css/master.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="/src-min/ace.js" type="text/javascript" charset="utf-8"></script>
+  <link rel="shortcut icon" href="assets/favicon.ico">
+</head>
+
+<body>
+  <div id="saveDialog" style="display:none">
+    <div class="dialog">
+      <button id="closeButton">&times;</button>
+      <div id="upload" style="display:none">
+        <h2>
+          Como você deseja salvar seu código?
+        </h2>
+        <div class="buttons">
+          <button onclick="download()" class="purple">
+            Baixar <span class="icon">&#11015;</span>
+          </button>
+          <button onclick="github()" class="purple">
+            Github <img src="assets/github.svg" alt="">
+          </button>
+        </div>
+        <div class="githubPath" hidden>
+          <input type="text" name="githubPath" placeholder="caminho e nome do arquivo">
+          <br>
+          <input type="text" name="message" placeholder="mensagem do commit">
+          <br>
+          <br>
+          <button class="green" onclick="saveGithub()">Salvar</button>
+        </div>
+        <br>
+        <p style="color: darkred;">LEMBRE-SE DE NÃO INCLUIR A LINHA DE INVOCAÇÃO DA FUNÇÃO</p>
+      </div>
+      <div id="githubLoad" style="display:none">
+        <h2>Qual arquvo você quer abrir?</h2>
+        <select id="file">
+          <option disabled selected value></option>
+        </select>
+        <div class="buttons">
+          <button onclick="loadFile()" class="green">Abrir</button>
+        </div>
+      </div>
+      <div class="buttons" id="custommsg" hidden>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="half" id="left-side">
+      <header class="header editor">
+        <a class="white_back" href="/home.html">
+          &#11013;
+        </a>
+        <p>Editor HTML</p>
+        <button onclick="toggleGithub()" id="github-file">
+          <img src="assets/github.svg" alt="">
+        </button>
+      </header>
+      <div id="editor" />
+    </div>
+    <footer class="footer">
+      <button onclick="run()" class="green">
+        Executar <span class="icon">&#9654;</span>
+      </button>
+      <button onclick="reset()" class="rose">
+        Reiniciar <span class="icon">&#8634;</span>
+      </button>
+      <button onclick="save()" class="purple">
+        Salvar arquivo <span class="icon">&#11015;</span>
+      </button>
+    </footer>
+  </div>
+  <div id="split-bar"></div>
+  <div class="half" id="right-side">
+    <header class="header console">
+      Visualização de código
+      <button onclick="openOnWindow()" class="green border">
+        Abrir em nova janela
+      </button>
+    </header>
+    <iframe id="HTMLview"></iframe>
+  </div>
+  </div>
+
+  <script>
+    const editor = ace.edit("editor");
+    const logger = document.getElementById('log');
+    var newWindow;
+    editor.setTheme("ace/theme/monokai");
+    editor.session.setMode("ace/mode/html");
+    editor.setBehavioursEnabled(false);
+
+    document.onkeyup = function(e) {
+      if (e.ctrlKey && e.which === 13) {
+        run()
+      } else if (e.altKey && e.which === 83) {
+        e.preventDefault();
+        save();
+      }
+    };
+
+    function save() {
+      $('#saveDialog').show();
+      $('#upload').show();
+    }
+
+    $('#closeButton').click(() => {
+      $('#saveDialog').toggle();
+      $('input[name=githubPath]').val("");
+      $('input[name=message]').val("");
+      $('.githubPath').toggle();
+      $('#upload').hide();
+      $('#githubLoad').hide();
+    })
+
+    function github() {
+      $('.githubPath').toggle();
+    }
+
+    function pushToGit(code, path) {
+      const msg = $('input[name=message]').val()
+      $.ajax({
+        type: 'post',
+        url: 'https://localhost/api/students/' + localStorage.userId + '/pushToGit?access_token=' + localStorage.access_token,
+        crossDomain: true,
+        data: {
+          content: btoa(code),
+          path: path,
+          message: msg
+        },
+        success: function(res, txt, jsXHR) {
+          alert('Commit criado com sucesso! Veja em seu repositório');
+          $('#saveDialog').toggle();
+          $('.githubPath').toggle();
+          $('#upload').toggle();
+          $('input[name=githubPath]').val("");
+          $('input[name=message]').val("");
+        },
+        error: function(res, txt, jsXHR) {
+          if (res.responseJSON.error.statusCode === 401) {
+            const goToLink = (
+              '<h3>Algo deu errado no upload para o github. Você deve autorizar o acesso novamemte.</h3>' +
+              '<button onclick="linkToGit()" class="green">Clique aqui para continuar</button>'
+            )
+            $('#upload').hide();
+            $('#custommsg').append(goToLink);
+            $('#custommsg').show();
+          }
+        },
+      })
+    }
+
+    function checkFileIsCurrent(obj) {
+      return obj.mode === '100644' && obj.path.includes("fase0" + JSON.parse(localStorage.user).activityNumber)
+    }
+
+    function toggleGithub() {
+      const user = JSON.parse(localStorage.user);
+      $('#saveDialog').show();
+      $('#githubLoad').show();
+      $.ajax({
+        url: 'https://api.github.com/repos/'+ user.username +'/marvin/commits',
+        crossDomain: true,
+        success: function (res, txt, jsXHR) {
+          $.ajax({
+            url: 'https://api.github.com/repos/'+ user.username +'/marvin/git/trees/' +
+            res[0].sha + '?recursive=1',
+            crossDomain: true,
+            success: function (r, t) {
+              const files = r.tree.filter(checkFileIsCurrent);
+              if ($("select#file option").length === 1) {
+                for(var i = 0; i < files.length; i++) {
+                  $('select#file').append('<option value='+files[i].path+'>'+files[i].path+'</option>');
+                }
+              }
+            }
+          })
+        },
+        error: function (res, txt, jsXHR) {
+          console.log(res);
+        }
+      })
+    }
+
+    function loadFile() {
+      const user = JSON.parse(localStorage.user);
+      const path = $('select#file').val();
+      $.ajax({
+        url: 'https://api.github.com/repos/' + user.username + '/marvin/contents/' + path,
+        crossDomain: true,
+        success: function (res) {
+          editor.getSession().setValue(atob(res.content))
+          $('#closeButton').trigger("click");
+          $('input[name=githubPath]').val(path)
+        }
+      })
+    }
+
+    function saveGithub() {
+      const code = editor.getValue();
+      const path = $('input[name=githubPath]').val()
+      if (code.match(/(fun.*{[\s\S]*}[\s]*$)/g))
+      pushToGit(code, path.replace(/\s/g, ''));
+      else if (!code.match(/(fun.*{[\s\S]*}[\s]*$)/g) && confirm('Oops, parece que seu código não segue as normas de envio, tem certeza que quer continuar?'))
+      pushToGit(code, path.replace(/\s/g, ''));
+      else {
+        $('#saveDialog').toggle();
+        $('#upload').toggle();
+        $('.githubPath').hide();
+      }
+    }
+
+    function linkToGit() {
+      window.open('/github-link.html', '_blank');
+      $('#closeButton').trigger("click");
+    }
+
+    function reset() {
+      $('#HTMLview').attr('srcdoc', '');
+    }
+
+
+    function run() {
+      var code = editor.getValue();
+      $('#HTMLview').attr('srcdoc', code);
+    }
+
+    function openOnWindow() {
+      var code = editor.getValue();
+      if (newWindow) newWindow.close();
+      newWindow = window.open();
+      newWindow.document.write(code);
+    }
+
+    function download() {
+      const code = editor.getValue();
+      const element = document.createElement('a');
+      element.setAttribute('href', 'data:text/javascript;charset=utf-8,' + encodeURIComponent(code));
+      element.setAttribute('download', "file.js");
+
+      element.style.display = 'none';
+      document.body.appendChild(element);
+
+      element.click();
+
+      document.body.removeChild(element);
+    }
+
+    $(document).ready(function() {
+      editor.setValue("");
+    })
+
+    $('#split-bar').mousedown(function (e) {
+        e.preventDefault();
+        $(document).mousemove(function (e) {
+            e.preventDefault();
+            var x = e.pageX - $('#left-side').offset().left;
+            $('#left-side').css("width", x);
+            $('#right-side').css("width", window.innerWidth - x - 18);
+        })
+    });
+
+    $(document).mouseup(function (e) {
+        $(document).unbind('mousemove');
+    });
+  </script>
+</body>
+
+</html>
