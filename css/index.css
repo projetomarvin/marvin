@@ -567,3 +567,11 @@ button.border {
   min-height: 200px;
   cursor: col-resize;
 }
+
+#CPoints {
+  color: white;
+  position: absolute;
+  right: 32px;
+  top: 56px;
+  cursor: help;
+}

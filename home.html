@@ -38,6 +38,9 @@
     <div class="logout">
       <button type="button" class="wine" onclick="logout()">Sair</button>
     </div>
+    <div id="CPoints">
+      <h3 title="Quantas correções você pode fazer">Pontos de correção: </h3>
+    </div>
   </header>
   <main>
     <a class="activityButton purple" href="editor.html">
@@ -133,6 +136,7 @@
               $('.welcome p').append(responseData.username);
               $("#repo").attr("href", "http://www.github.com/" + responseData.username + '/marvin')
               $('#currentLevel').append(getLevel(responseData.XPPoints))
+              $('#CPoints h3').append(responseData.correctionPoints)
               $('#currentXP').append(Math.floor(responseData.XPPoints - (50 * ((n * (n+1)) / 2 - 1))) + '/' + 50 * (n + 1))
               $('#progressBar').width(eval($('#currentXP').html())*$(document).width()*0.3)
               responseData.notifications.map((msg, i) => {
