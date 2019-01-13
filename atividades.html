@@ -109,8 +109,11 @@
         },
         error: function(res, txt, jqXHR) {
           console.log(res, txt);
-          if (res.responseJSON.error.message === "atividade já finalizada") alert('Você já terminou a atividade');
-          else alert('Algo deu errado, tente novamente.');
+          if (res.responseJSON.error.message === "atividade já finalizada") {
+            alert('Você já terminou a atividade');
+          } else if (res.responseJSON.error.message === 'pontos de correção insuficientes') {
+            alert('Pontos de correção insuficientes! Você deve corrigir seus colegas para conseguir mais pontos e continuar');
+          } else alert('Algo deu errado, tente novamente.');
         },
       });
     }
