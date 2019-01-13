@@ -58,25 +58,15 @@
     </a>
   </main>
   <script type="text/javascript">
-    function getLevel(xp) {
-      switch (true) {
-        case xp<100:
-          return 1;
-          break;
-        case xp<250:
-          return 2;
-          break;
-        case xp<450:
-          return 3;
-          break;
-        case xp<700:
-          return 4;
-          break;
-        case xp<1000:
-          return 5;
-          break;
-      }
-    }
+  function getLevel(currXP) {
+  let level = 0;
+  let xp = currXP;
+  while (xp > 0) {
+      xp -= 100 + level * 50;
+      level++;
+  }
+  return level;
+}
 
     function toggleMsg() {
       $("#msg-box").toggle()
