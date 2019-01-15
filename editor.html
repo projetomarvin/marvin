@@ -163,12 +163,12 @@
       $('#saveDialog').show();
       $('#githubLoad').show();
       $.ajax({
-        url: 'https://api.github.com/repos/'+ user.username +'/marvin/commits',
+        url: 'https://api.github.com/repos/'+ user.username +'/marvin/commits?access_token=' + JSON.parse(localStorage.user).githubAccessToken,
         crossDomain: true,
         success: function (res, txt, jsXHR) {
           $.ajax({
             url: 'https://api.github.com/repos/'+ user.username +'/marvin/git/trees/' +
-            res[0].sha + '?recursive=1',
+            res[0].sha + '?recursive=1&access_token=' + JSON.parse(localStorage.user).githubAccessToken,
             crossDomain: true,
             success: function (r, t) {
               const files = r.tree.filter(checkFileIsCurrent);
