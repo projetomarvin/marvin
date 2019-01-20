@@ -93,6 +93,7 @@
     editor.setTheme("ace/theme/monokai");
     editor.session.setMode("ace/mode/javascript");
     editor.setBehavioursEnabled(false);
+    editor.focus();
 
     document.onkeyup = function(e) {
       if (e.ctrlKey && e.which === 13) {
@@ -229,6 +230,7 @@
 
     (function() {
       console.log = function(message) {
+        message = message.replace("\n", "<br>&nbsp;&nbsp;&nbsp;&nbsp;")
         if (typeof message == 'object') {
           addToLog(JSON && JSON.stringify ? JSON.stringify(message) : message);
         } else {
