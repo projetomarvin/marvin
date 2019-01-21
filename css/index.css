@@ -347,6 +347,7 @@ select#file {
   margin-left: 8px;
   margin-top: 6px;
   display: block;
+  cursor: pointer;
 }
 
 #msg-box {
