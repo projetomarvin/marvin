@@ -230,7 +230,9 @@
 
     (function() {
       console.log = function(message) {
-        message = message.replace("\n", "<br>&nbsp;&nbsp;&nbsp;&nbsp;")
+        if (typeof message === 'string') {
+          message = message.replace("\n", "<br>&nbsp;&nbsp;&nbsp;&nbsp;")
+        }
         if (typeof message == 'object') {
           addToLog(JSON && JSON.stringify ? JSON.stringify(message) : message);
         } else {
