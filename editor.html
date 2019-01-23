@@ -231,7 +231,7 @@
     (function() {
       console.log = function(message) {
         if (typeof message === 'string') {
-          addToLog(message.replace("\n", "<br>&nbsp;&nbsp;&nbsp;&nbsp;"));
+          addToLog(message.replace(/\n/g, "<br>&nbsp;&nbsp;"));
         } else if (typeof message == 'object') {
           addToLog(JSON && JSON.stringify ? JSON.stringify(message) : message);
         } else {

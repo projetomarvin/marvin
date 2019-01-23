@@ -226,6 +226,10 @@ main.fullwidth {
   color: red;
 }
 
+.log {
+  font-family: monospace;
+}
+
 .log::before {
   content: ">";
   padding-right: 8px;
