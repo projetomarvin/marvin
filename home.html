@@ -82,7 +82,7 @@
         url: 'https://localhost/api/students/' + localStorage.userId + '/notifications/' + msgId + '?access_token=' + localStorage.access_token,
         crossDomain: true,
         success: function(responseData, textStatus, jqXHR) {
-          $(".message:eq(" + i + ")").remove()
+          $(`#msg${i}`).remove()
         },
         error: function(responseData, textStatus, errorThrown) {
           console.log(responseData);
@@ -146,11 +146,11 @@
                 }
 
                 $("#msg-box .messages").append(
+                  `<a href="${msg.targetURL}" id="msg${i}">` +
                   '<div class="message">' +
-                  btn +
-                  `<a href="${msg.targetURL}">` +
+                    btn +
                     msg.message +
-                  '</a></div>'
+                  '</div></a>'
                 )
               })
               if (!responseData.notifications.length) $('#msg').hide();
