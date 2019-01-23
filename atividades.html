@@ -32,7 +32,7 @@
           <option disabled selected value></option>
         </select>
         <div class="buttons">
-          <button onclick="finish()" class="green">
+          <button onclick="finish()" class="green" id="finishButton">
             Finalizar
           </button>
         </div>
@@ -96,6 +96,7 @@
     }
 
     function finish() {
+      $('#finishButton').attr("disabled", true);
       $.ajax({
         type: 'put',
         url: 'https://localhost/api/studentActivities/' + studentActivityId + '/finish?access_token=' + localStorage.access_token,

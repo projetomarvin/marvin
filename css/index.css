@@ -580,3 +580,11 @@ button.border {
   top: 56px;
   cursor: help;
 }
+
+button:disabled,
+button[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #3d3d3d;
+  cursor: not-allowed;
+}
