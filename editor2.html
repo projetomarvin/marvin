@@ -54,15 +54,26 @@
   <div class="container">
     <div class="half" id="left-side">
       <header class="header editor">
-        <a class="white_back" href="/home.html">
-          &#11013;
+        <div>
+          <a class="white_back" href="/home.html">
+            &#11013;
+          </a>
+          <p>Editor HTML</p>
+          <button onclick="toggleGithub()" id="github-file">
+            <img src="assets/github.svg" alt="">
+          </button>
+        </div>
+        <a href="/editor.html">
+          <img src="assets/arrows.svg" alt="">
         </a>
-        <p>Editor HTML</p>
-        <button onclick="toggleGithub()" id="github-file">
-          <img src="assets/github.svg" alt="">
-        </button>
       </header>
-      <div id="editor" />
+      <div class="editor-container">
+      <ul class="editor-tabs">
+        <li id="edit-html" class="editor-tab editor-tab--right-border editor-tab--active">HTML</li>
+        <li id="edit-css" class="editor-tab editor-tab--right-border">CSS</li>
+      </ul>
+      <div id="editor" class="editor-body active">
+      </div>
     </div>
     <footer class="footer">
       <button onclick="run()" class="green">
@@ -84,17 +95,46 @@
         Abrir em nova janela
       </button>
     </header>
-    <iframe id="HTMLview"></iframe>
+    <iframe id="HTMLview" name="iframe1"></iframe>
   </div>
   </div>
 
   <script>
     const editor = ace.edit("editor");
-    const logger = document.getElementById('log');
+    editor.focus();
     var newWindow;
     editor.setTheme("ace/theme/monokai");
-    editor.session.setMode("ace/mode/html");
     editor.setBehavioursEnabled(false);
+
+    var html = new ace.EditSession(``);
+    html.setMode('ace/mode/html');
+    var css = new ace.EditSession(``);
+    css.setMode('ace/mode/css');
+    editor.setSession(html);
+
+    const codeTab = document.getElementById('edit-html');
+    const cssTab = document.getElementById('edit-css');
+
+    const selectTab = function (tabId) {
+        const lastSelectedTab = document.getElementsByClassName('editor-tab--active');
+      for (let i = 0; i < lastSelectedTab.length; i += 1) {
+        lastSelectedTab[i].classList.remove('editor-tab--active');
+      }
+      const tab = document.getElementById(tabId);
+      tab.classList.add('editor-tab--active');
+      editor.focus();
+    }
+
+    codeTab.addEventListener('click', () => {
+      selectTab('edit-html');
+      editor.setSession(html);
+    });
+    cssTab.addEventListener('click', () => {
+      selectTab('edit-css');
+      editor.setSession(css);
+    });
+
+
 
     document.onkeyup = function(e) {
       if (e.ctrlKey && e.which === 13) {
@@ -227,8 +267,14 @@
 
 
     function run() {
-      var code = editor.getValue();
-      $('#HTMLview').attr('srcdoc', code);
+      editor.setSession(html)
+      let htmlCode = editor.getValue();
+      editor.setSession(css)
+      const cssCode = editor.getValue();
+      $('#edit-html').click()
+      htmlCode = htmlCode.replace('</head>', '<style>' + cssCode + '</style></head>');
+      console.log(htmlCode);
+      $('#HTMLview').attr('srcdoc', htmlCode);
     }
 
     function openOnWindow() {

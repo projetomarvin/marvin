@@ -102,7 +102,11 @@ main.fullwidth {
   padding: 8px;
   font-size: 24px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
+}
+
+.header.editor div {
+  display: flex
 }
 
 .header.console {
@@ -173,7 +177,7 @@ main.fullwidth {
 
 #editor {
   width: 100%;
-  height: calc(100vh - 129px);
+  height: calc(100vh - 169px);
 }
 
 .ace_editor * {
@@ -586,4 +590,59 @@ button[disabled]{
   background-color: #cccccc;
   color: #3d3d3d;
   cursor: not-allowed;
+}
+
+.editor a img {
+    width: 24px;
+}
+
+/* EDITOR */
+.editor-container {
+  position: relative;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.editor-tabs {
+  padding: 0px;
+  margin: 0;
+	display: flex;
+	background: #2f3240;
+  color: #f8f8f2;
+	width: 100%;
+  height: 40px;
+  font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+}
+
+.editor-tab {
+  position: relative;
+  appearance: none;
+  list-style: none;
+  background: transparent;
+  padding: 1em 0;
+  border: none;
+  font: inherit;
+  border-radius: 0;
+  cursor: pointer;
+  outline: none;
+  flex-grow: 1;
+  text-align: center;
+  transition: color .3s ease;
+  z-index: 1;
+}
+
+.editor-tab--active {
+  background-color: #282a36;
+}
+
+.editor-tab--right-border {
+  border-right-color: #121319;
+  border-right-width: 1px;
+  border-right-style: solid;
+}
+
+.editor-body {
+  position: relative;
 }
