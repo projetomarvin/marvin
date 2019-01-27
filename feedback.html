@@ -100,6 +100,9 @@
     </main>
 
     <script type="text/javascript">
+      let isManual = false;
+      let isLast = false;
+
       function submit() {
         let payload = {};
         $('input[type="radio"]:checked').map((i, e) => {
@@ -123,27 +126,45 @@
           data: payload,
           success: function(res, textStatus, jqXHR) {
             console.log(res);
-            $.ajax({
-              type: 'post',
-              url: 'https://localhost/api/corrections/' + location.search.replace("?", '') + '/finish',
-              crossDomain: true,
-              data: payload,
-              success: function(responseData, textStatus, jqXHR) {
-                console.log(responseData);
-                window.location.href = '/home.html'
-              }
-            })
+            let url = 'https://localhost/api/corrections/' + location.search.replace("?", '') + '/finish'
+            if (isLast) {
+              url = 'https://localhost/api/corrections/' + location.search.replace("?", '') + '/finishManual'
+            }
+            if (!isManual || isLast)
+              $.ajax({
+                type: 'post',
+                url: url,
+                crossDomain: true,
+                data: payload,
+                success: function(responseData, textStatus, jqXHR) {
+                  console.log(responseData);
+                  window.location.href = '/home.html'
+                }
+              })
+            else
+              window.location.href = '/home.html'
           }
         })
       }
 
       $(document).ready(function() {
         $.ajax({
-          type: 'GET',
-          url: 'https://localhost/api/corrections/' + location.search.replace("?", '') + '?filter[include][studentActivity]=student',
+          url: 'https://localhost/api/corrections/' + location.search.replace("?", '') + '?filter[include]=studentActivity',
           crossDomain: true,
           success: function(res, textStatus, jqXHR) {
-              console.log(res);
+              $.ajax({
+                url: 'https://localhost/api/activities/' + res.studentActivity.activityId + '?access_token=' + localStorage.access_token,
+                crossDomain: true,
+                success: function (re) {
+                  console.log(re);
+                  if (!re.exercises[0].tests) {
+                    isManual = true;
+                  }
+                  if (res.studentActivity.corrector2Id) {
+                    isLast = true;
+                  }
+                }
+              })
             },
           error: function(responseData, textStatus, errorThrown) {
             console.log(responseData);
