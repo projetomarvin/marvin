@@ -285,10 +285,15 @@
     }
 
     function openOnWindow() {
-      var code = editor.getValue();
+      editor.setSession(html)
+      let htmlCode = editor.getValue();
+      editor.setSession(css)
+      const cssCode = editor.getValue();
+      $('#edit-html').click();
+      htmlCode = htmlCode.replace('</head>', '<style>' + cssCode + '</style></head>');
       if (newWindow) newWindow.close();
       newWindow = window.open();
-      newWindow.document.write(code);
+      newWindow.document.write(htmlCode);
     }
 
     function download() {
