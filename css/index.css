@@ -177,6 +177,11 @@ main.fullwidth {
 
 #editor {
   width: 100%;
+  height: calc(100vh - 129px);
+}
+
+#editor2 {
+  width: 100%;
   height: calc(100vh - 169px);
 }
 
