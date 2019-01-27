@@ -28,7 +28,8 @@
           </button>
         </div>
         <div class="githubPath" hidden>
-          <input type="text" name="githubPath" placeholder="caminho e nome do arquivo">
+          <input type="text" name="githubPath" placeholder="caminho e nome do arquivo CSS">
+          <input type="text" name="githubPath2" placeholder="caminho e nome do arquivo HTML">
           <br>
           <input type="text" name="message" placeholder="mensagem do commit">
           <br>
@@ -197,7 +198,8 @@
     }
 
     function checkFileIsCurrent(obj) {
-      return obj.mode === '100644' && obj.path.includes("fase0" + JSON.parse(localStorage.user).activityNumber)
+      return (obj.mode === '100644' && (obj.path.includes("fase0" + JSON.parse(localStorage.user).activityNumber)
+      || '100644' && obj.path.includes("fase" + JSON.parse(localStorage.user).activityNumber)))
     }
 
     function toggleGithub() {
@@ -243,17 +245,22 @@
     }
 
     function saveGithub() {
-      const code = editor.getValue();
+      editor.setSession(html)
+      let htmlCode = editor.getValue();
+      editor.setSession(css)
+      const cssCode = editor.getValue();
+      $('#edit-html').click();
       const path = $('input[name=githubPath]').val()
-      if (code.match(/(fun.*{[\s\S]*}[\s]*$)/g))
-      pushToGit(code, path.replace(/\s/g, ''));
-      else if (!code.match(/(fun.*{[\s\S]*}[\s]*$)/g) && confirm('Oops, parece que seu código não segue as normas de envio, tem certeza que quer continuar?'))
-      pushToGit(code, path.replace(/\s/g, ''));
-      else {
-        $('#saveDialog').toggle();
-        $('#upload').toggle();
-        $('.githubPath').hide();
+      const filename = path.match((/\/(\w+).css/i));
+      if (!filename[1]) {
+        return alert('Camiho do arquivo CSS invlido')
       }
+      const path2 = $('input[name=githubPath2]').val()
+      htmlCode = htmlCode.replace('</head>', `<link rel="stylesheet" type="text/css" href="${filename[1]}.css" />\n</head>`);
+      if (path && cssCode) {
+        pushToGit(cssCode, path.replace(/\s/g, ''));
+      }
+      pushToGit(htmlCode, path2.replace(/\s/g, ''));
     }
 
     function linkToGit() {
@@ -271,7 +278,7 @@
       let htmlCode = editor.getValue();
       editor.setSession(css)
       const cssCode = editor.getValue();
-      $('#edit-html').click()
+      $('#edit-html').click();
       htmlCode = htmlCode.replace('</head>', '<style>' + cssCode + '</style></head>');
       console.log(htmlCode);
       $('#HTMLview').attr('srcdoc', htmlCode);
@@ -285,21 +292,47 @@
     }
 
     function download() {
-      const code = editor.getValue();
+      editor.setSession(html)
+      let htmlCode = editor.getValue();
+      editor.setSession(css)
+      const cssCode = editor.getValue();
+      $('#edit-html').click();
       const element = document.createElement('a');
-      element.setAttribute('href', 'data:text/javascript;charset=utf-8,' + encodeURIComponent(code));
-      element.setAttribute('download', "file.js");
-
+      if (cssCode) {
+        htmlCode = htmlCode.replace('</head>', '<link rel="stylesheet" type="text/css" href="index.css" />\n</head>');
+        alert('jkbiubsdiubfdiusdfo')
+        element.setAttribute('href', 'data:text/css;charset=utf-8,' + encodeURIComponent(cssCode));
+        element.setAttribute('download', "index.css");
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+      }
+      console.log(htmlCode);
+      element.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(htmlCode));
+      element.setAttribute('download', "index.html");
       element.style.display = 'none';
       document.body.appendChild(element);
-
       element.click();
-
       document.body.removeChild(element);
     }
 
+    function saveCode() {
+      editor.setSession(html)
+      const htmlCode = editor.getValue();
+      editor.setSession(css)
+      const cssCode = editor.getValue();
+      $('#edit-html').click();
+      localStorage.setItem('html', htmlCode);
+      localStorage.setItem('css', cssCode);
+    }
+
     $(document).ready(function() {
-      editor.setValue("");
+      editor.setSession(html);
+      editor.setValue(localStorage.html || '');
+      editor.setSession(css);
+      editor.setValue(localStorage.css || '');
+      $('#edit-html').click();
     })
 
     $('#split-bar').mousedown(function (e) {
