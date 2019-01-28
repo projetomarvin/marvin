@@ -56,6 +56,7 @@
     <script type="text/javascript">
       let studentActivityId;
       let students;
+      let currentActivity;
       let lastActivity = {};
 
       function checkFiles() {
@@ -157,10 +158,16 @@
           crossDomain: true,
           success: function(res, textStatus, jqXHR) {
             res.students.map(e => {
+              let corrs = -1;
+              if (currentActivity.prevCorrectors) {
+                corrs = currentActivity.prevCorrectors.indexOf(e.id)
+              }
               if (
                 e.id !== localStorage.userId &&
                 e.username &&
-                e.id !== lastActivity.correctorId
+                e.id !== lastActivity.correctorId &&
+                corrs < 0 &&
+                e.id !== currentActivity.correctorId
               )
                 $("select#corrector").append(
                   "<option value=" + e.id + ">" + e.username + "</option>"
@@ -250,7 +257,7 @@
             localStorage.access_token,
           crossDomain: true,
           success: function(res, textStatus, jqXHR) {
-            const currentActivity =
+            currentActivity =
               res.studentActivities[res.studentActivities.length - 1];
             console.log(currentActivity);
             lastActivity = res.studentActivities[
@@ -270,6 +277,9 @@
               getCourseActivities(res.courseId, res.activityNumber);
             } else {
               location.href = "/home.html";
+            }
+            if (currentActivity.corrector2Id) {
+              $(".doing p").append(', segunda correção.');
             }
           },
           error: function(responseData, textStatus, errorThrown) {
