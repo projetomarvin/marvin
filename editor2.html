@@ -28,8 +28,9 @@
           </button>
         </div>
         <div class="githubPath" hidden>
-          <input type="text" name="githubPath" placeholder="caminho e nome do arquivo CSS">
-          <input type="text" name="githubPath2" placeholder="caminho e nome do arquivo HTML">
+          <input type="text" name="githubPath" placeholder="caminho e nome CSS">
+          <br>
+          <input type="text" name="githubPath2" placeholder="caminho e nome HTML">
           <br>
           <input type="text" name="message" placeholder="mensagem do commit">
           <br>
@@ -135,14 +136,9 @@
       editor.setSession(css);
     });
 
-
-
     document.onkeyup = function(e) {
       if (e.ctrlKey && e.which === 13) {
         run()
-      } else if (e.altKey && e.which === 83) {
-        e.preventDefault();
-        save();
       }
     };
 
@@ -272,14 +268,21 @@
       $('#HTMLview').attr('srcdoc', '');
     }
 
-    editor.keyBinding.$handlers = [];
-
-    $(document).bind('keydown', 'ctrl+z', function(){
-        editor.execCommand("undo")
+    editor.commands.addCommand({
+      name: "save",
+      bindKey: { win: "Ctrl-S", mac: "Command-S" },
+      exec: function (editor) {
+        save()
+      }
     });
 
-    $(document).bind('keydown', 'ctrl+y', function(){
-        editor.execCommand("redo")
+    editor.commands.addCommand({
+      name: "undoo",
+      bindKey: { win: "Ctrl-Z", mac: "Command-Z" },
+      exec: function () {
+        console.log(12);
+        editor.undo();
+      }
     });
 
     function run() {
