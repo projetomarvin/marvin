@@ -177,12 +177,12 @@ main.fullwidth {
 
 #editor {
   width: 100%;
-  height: calc(100vh - 129px);
+  height: calc(100vh - 130px);
 }
 
 #editor2 {
   width: 100%;
-  height: calc(100vh - 169px);
+  height: calc(100vh - 170px);
 }
 
 .ace_editor * {
