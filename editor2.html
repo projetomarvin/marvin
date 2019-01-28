@@ -272,6 +272,15 @@
       $('#HTMLview').attr('srcdoc', '');
     }
 
+    editor.keyBinding.$handlers = [];
+
+    $(document).bind('keydown', 'ctrl+z', function(){
+        editor.execCommand("undo")
+    });
+
+    $(document).bind('keydown', 'ctrl+y', function(){
+        editor.execCommand("redo")
+    });
 
     function run() {
       editor.setSession(html)
