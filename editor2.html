@@ -281,6 +281,8 @@
       $('#edit-html').click();
       htmlCode = htmlCode.replace('</head>', '<style>' + cssCode + '</style></head>');
       console.log(htmlCode);
+      localStorage.setItem('html', htmlCode);
+      localStorage.setItem('css', cssCode);
       $('#HTMLview').attr('srcdoc', htmlCode);
     }
 
@@ -320,16 +322,6 @@
       document.body.appendChild(element);
       element.click();
       document.body.removeChild(element);
-    }
-
-    function saveCode() {
-      editor.setSession(html)
-      const htmlCode = editor.getValue();
-      editor.setSession(css)
-      const cssCode = editor.getValue();
-      $('#edit-html').click();
-      localStorage.setItem('html', htmlCode);
-      localStorage.setItem('css', cssCode);
     }
 
     $(document).ready(function() {
