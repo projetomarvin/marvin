@@ -150,6 +150,7 @@
     $('#closeButton').click(() => {
       $('#saveDialog').toggle();
       $('input[name=githubPath]').val("");
+      $('input[name=githubPath2]').val("");
       $('input[name=message]').val("");
       $('.githubPath').toggle();
       $('#upload').hide();
@@ -173,9 +174,9 @@
         },
         success: function(res, txt, jsXHR) {
           alert('Commit criado com sucesso! Veja em seu repositório');
-          $('#saveDialog').toggle();
-          $('.githubPath').toggle();
-          $('#upload').toggle();
+          $('#saveDialog').hide();
+          $('.githubPath').hide();
+          $('#upload').hide();
           $('input[name=githubPath]').val("");
           $('input[name=message]').val("");
         },
