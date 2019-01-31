@@ -28,9 +28,9 @@
           </button>
         </div>
         <div class="githubPath" hidden>
-          <input type="text" name="githubPath" placeholder="caminho e nome CSS">
+          <input type="text" name="githubPath" placeholder="caminho e nome do arquivo">
           <br>
-          <input type="text" name="githubPath2" placeholder="caminho e nome HTML">
+          <!-- <input type="text" name="githubPath2" placeholder="caminho e nome HTML"> -->
           <br>
           <input type="text" name="message" placeholder="mensagem do commit">
           <br>
@@ -178,6 +178,7 @@
           $('.githubPath').hide();
           $('#upload').hide();
           $('input[name=githubPath]').val("");
+          $('input[name=githubPath2]').val("");
           $('input[name=message]').val("");
         },
         error: function(res, txt, jsXHR) {
@@ -242,22 +243,17 @@
     }
 
     function saveGithub() {
-      editor.setSession(html)
-      let htmlCode = editor.getValue();
-      editor.setSession(css)
-      const cssCode = editor.getValue();
+      var code = editor.getValue();
       $('#edit-html').click();
       const path = $('input[name=githubPath]').val()
-      const filename = path.match((/\/(\w+).css/i));
-      if (!filename[1]) {
-        return alert('Camiho do arquivo CSS invlido')
+      // const filename = path.match((/\/(\w+).css/i));
+      // if (!filename[1]) {
+      //   return alert('Camiho do arquivo CSS invlido')
+      // }
+      // const path2 = $('input[name=githubPath2]').val()
+      if (path && code) {
+        pushToGit(code, path.replace(/\s/g, ''));
       }
-      const path2 = $('input[name=githubPath2]').val()
-      htmlCode = htmlCode.replace('</head>', `<link rel="stylesheet" type="text/css" href="${filename[1]}.css" />\n</head>`);
-      if (path && cssCode) {
-        pushToGit(cssCode, path.replace(/\s/g, ''));
-      }
-      pushToGit(htmlCode, path2.replace(/\s/g, ''));
     }
 
     function linkToGit() {
@@ -292,10 +288,10 @@
       editor.setSession(css)
       const cssCode = editor.getValue();
       $('#edit-html').click();
-      htmlCode = htmlCode.replace('</head>', '<style>' + cssCode + '</style></head>');
-      console.log(htmlCode);
       localStorage.setItem('html', htmlCode);
       localStorage.setItem('css', cssCode);
+      htmlCode = htmlCode.replace('</head>', '<style>' + cssCode + '</style></head>');
+      console.log(htmlCode);
       $('#HTMLview').attr('srcdoc', htmlCode);
     }
 
