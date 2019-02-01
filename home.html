@@ -6,7 +6,6 @@
   <link rel="stylesheet" href="/css/master.css">
   <meta charset="utf-8">
   <link rel="shortcut icon" href="assets/favicon.ico">
-  <meta http-equiv="refresh" content="60">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <title>Marvin</title>
 </head>
@@ -61,19 +60,45 @@
     </a>
   </main>
   <script type="text/javascript">
-  function getLevel(currXP) {
-  let level = 0;
-  let xp = currXP;
-  while (xp > 0) {
-      xp -= 100 + level * 50;
-      level++;
-  }
-  return level;
-}
+      function getLevel(currXP) {
+      let level = 0;
+      let xp = currXP;
+      while (xp > 0) {
+          xp -= 100 + level * 50;
+          level++;
+      }
+      return level;
+    }
 
     function toggleMsg() {
       $("#msg-box").toggle()
       return false;
+    }
+
+    function getMessages() {
+      $.ajax({
+        url: 'https://localhost:443/api/students/' + localStorage.userId + '?filter=%7B%22include%22%3A%20%22notifications%22%7D&access_token=' + localStorage.access_token,
+        crossDomain: true,
+        success: function (responseData) {
+          if (!responseData.notifications.length) return $('#msg').hide();
+          $('#msg').show();
+          $('.msg').remove();
+          responseData.notifications.map((msg, i) => {
+            let btn = '';
+            if (msg.targetURL === '#') {
+              btn = `<span class="delete-msg" onclick="del('${msg.id}', ${i})">&times;</span>`
+            }
+
+            $("#msg-box .messages").append(
+              `<a href="${msg.targetURL}" class="msg" id="msg${i}">` +
+              '<div class="message">' +
+                btn +
+                msg.message +
+              '</div></a>'
+            )
+          })
+        }
+      })
     }
 
     function del(msgId, i) {
@@ -126,7 +151,7 @@
       } else {
         $.ajax({
           type: 'GET',
-          url: 'https://localhost:443/api/students/' + localStorage.userId + '?filter=%7B%22include%22%3A%20%22notifications%22%7D&access_token=' + localStorage.access_token,
+          url: 'https://localhost:443/api/students/' + localStorage.userId + '?access_token=' + localStorage.access_token,
           crossDomain: true,
           success: function(responseData, textStatus, jqXHR) {
             const n = getLevel(responseData.XPPoints);
@@ -139,21 +164,8 @@
               $('#CPoints h3').append(responseData.correctionPoints)
               $('#currentXP').append(Math.floor(responseData.XPPoints - (50 * ((n * (n+1)) / 2 - 1))) + '/' + 50 * (n + 1))
               $('#progressBar').width(eval($('#currentXP').html())*$(document).width()*0.3)
-              responseData.notifications.map((msg, i) => {
-                let btn = '';
-                if (msg.targetURL === '#') {
-                  btn = `<span class="delete-msg" onclick="del('${msg.id}', ${i})">&times;</span>`
-                }
-
-                $("#msg-box .messages").append(
-                  `<a href="${msg.targetURL}" id="msg${i}">` +
-                  '<div class="message">' +
-                    btn +
-                    msg.message +
-                  '</div></a>'
-                )
-              })
-              if (!responseData.notifications.length) $('#msg').hide();
+              getMessages();
+              setInterval(getMessages, 60*1000);
             } else {
               location.href = '/github-link.html';
             }
