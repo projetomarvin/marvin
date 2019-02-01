@@ -209,6 +209,8 @@
     function saveGithub() {
       const code = editor.getValue();
       const path = $('input[name=githubPath]').val()
+      if (!$('input[name=message]').val())
+        return alert("Você precisa colocar uma mensagem de commit!")
       if (code.match(/(fun.*{[\s\S]*}[\s]*$)/g))
       pushToGit(code, path.replace(/\s/g, ''));
       else if (!code.match(/(fun.*{[\s\S]*}[\s]*$)/g) && confirm('Oops, parece que seu código não segue as normas de envio, tem certeza que quer continuar?'))
