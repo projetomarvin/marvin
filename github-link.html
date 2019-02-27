@@ -51,6 +51,32 @@
       })
     })
 
+    $(document).ready(function() {
+      const userId = location.search.substring(1);
+      const pwd = prompt('LEIA COM ATENÇÃO!\nParece que esse é seu primeiro acesso. ' +
+        'Para mudar sua senha, digite uma nova senha no campo abaixo. Caso queira' +
+        'continiar com a atual, clique em cancelar duas vezes.')
+      const pwd2 = prompt('Agora confirme sua nova senha');
+      if (pwd && pwd === pwd2) {
+        $.ajax({
+          type: 'post',
+          url: 'https://localhost/api/students/reset-password?access_token=' + localStorage.access_token,
+          data: {newPassword: pwd},
+          crossDomain: true,
+          success: function(responseData, textStatus, jqXHR) {
+            console.log(responseData);
+            alert("Senha alterada com sucesso!")
+          },
+          error: function(responseData, textStatus, errorThrown) {
+            console.log(responseData);
+            alert('Algo deu errado, tente novamente.');
+          }
+        })
+      } else {
+        alert('As senhas digitadas não conferem ou você cancelou. ' +
+        'Caso queira tentar novamente, recerregue a página.')
+      }
+    })
   </script>
 </body>
 
