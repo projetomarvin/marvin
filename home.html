@@ -8,6 +8,7 @@
   <link rel="shortcut icon" href="assets/favicon.ico">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <title>Marvin</title>
+  <script src="./helper.js" charset="utf-8"></script>
 </head>
 
 <body>
@@ -84,7 +85,7 @@
 
     function getMessages() {
       $.ajax({
-        url: 'https://localhost:443/api/students/' + localStorage.userId + '?filter=%7B%22include%22%3A%20%22notifications%22%7D&access_token=' + localStorage.access_token,
+        url: url + 'students/' + localStorage.userId + '?filter=%7B%22include%22%3A%20%22notifications%22%7D&access_token=' + localStorage.access_token,
         crossDomain: true,
         success: function (responseData) {
           if (!responseData.notifications.length) return $('#msg').hide();
@@ -113,7 +114,7 @@
       $('.switch input').is(':checked') ? data = new Date(new Date().getTime() + 1800000) : data = 0
       $.ajax({
         type: 'patch',
-        url: 'https://localhost:443/api/students/' + localStorage.userId + '?access_token=' + localStorage.access_token,
+        url: url + 'students/' + localStorage.userId + '?access_token=' + localStorage.access_token,
         crossDomain: true,
         data: {
           availableUntil: data
@@ -140,7 +141,7 @@
     function del(msgId, i) {
       $.ajax({
         type: "delete",
-        url: 'https://localhost/api/students/' + localStorage.userId + '/notifications/' + msgId + '?access_token=' + localStorage.access_token,
+        url: url + 'students/' + localStorage.userId + '/notifications/' + msgId + '?access_token=' + localStorage.access_token,
         crossDomain: true,
         success: function(responseData, textStatus, jqXHR) {
           $(`#msg${i}`).remove()
@@ -174,7 +175,7 @@
         const token = location.href.split('code=')[1];
         $.ajax({
           type: 'patch',
-          url: 'https://localhost:443/api/students/' + localStorage.userId + '?access_token=' + localStorage.access_token,
+          url: url + 'students/' + localStorage.userId + '?access_token=' + localStorage.access_token,
           crossDomain: true,
           data: {
             githubAccessToken: token
@@ -194,7 +195,7 @@
       } else {
         $.ajax({
           type: 'GET',
-          url: 'https://localhost:443/api/students/' + localStorage.userId + '?access_token=' + localStorage.access_token,
+          url: url + 'students/' + localStorage.userId + '?access_token=' + localStorage.access_token,
           crossDomain: true,
           success: function(responseData, textStatus, jqXHR) {
             const n = getLevel(responseData.XPPoints);

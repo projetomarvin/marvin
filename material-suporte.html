@@ -9,6 +9,7 @@
   <link rel="shortcut icon" href="assets/favicon.ico">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <title>Material de suporte</title>
+  <script src="./helper.js" charset="utf-8"></script>
 </head>
 
 <body>
@@ -29,7 +30,7 @@
     function getCourseActivities(courseId, currentLevel) {
       $.ajax({
         type: 'GET',
-        url: 'https://localhost/api/contents?access_token=' +
+        url: url + 'contents?access_token=' +
           localStorage.access_token,
         crossDomain: true,
         success: function(res, textStatus,
@@ -60,7 +61,7 @@
     $(document).ready(function() {
       $.ajax({
         type: 'GET',
-        url: 'https://localhost/api/students/' + localStorage.userId +
+        url: url + 'students/' + localStorage.userId +
           '?access_token=' + localStorage.access_token,
         crossDomain: true,
         success: function(responseData, textStatus, jqXHR) {

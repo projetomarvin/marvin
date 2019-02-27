@@ -8,6 +8,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="/src-min/ace.js" type="text/javascript" charset="utf-8"></script>
     <link rel="shortcut icon" href="assets/favicon.ico">
+    <script src="./helper.js" charset="utf-8"></script>
   </head>
   <body>
     <div class="header editor">
@@ -121,19 +122,19 @@
         console.log(payload);
         $.ajax({
           type: 'post',
-          url: 'https://localhost/api/corrections/' + location.search.replace("?", '') + '/feedbacks',
+          url: url + 'corrections/' + location.search.replace("?", '') + '/feedbacks',
           crossDomain: true,
           data: payload,
           success: function(res, textStatus, jqXHR) {
             console.log(res);
-            let url = 'https://localhost/api/corrections/' + location.search.replace("?", '') + '/finish'
+            let path = url + 'corrections/' + location.search.replace("?", '') + '/finish'
             if (isLast) {
-              url = 'https://localhost/api/corrections/' + location.search.replace("?", '') + '/finishManual'
+              path = url + 'corrections/' + location.search.replace("?", '') + '/finishManual'
             }
             if (!isManual || isLast)
               $.ajax({
                 type: 'post',
-                url: url,
+                url: path,
                 crossDomain: true,
                 data: payload,
                 success: function(responseData, textStatus, jqXHR) {
@@ -149,11 +150,11 @@
 
       $(document).ready(function() {
         $.ajax({
-          url: 'https://localhost/api/corrections/' + location.search.replace("?", '') + '?filter[include]=studentActivity',
+          url: url + 'corrections/' + location.search.replace("?", '') + '?filter[include]=studentActivity',
           crossDomain: true,
           success: function(res, textStatus, jqXHR) {
               $.ajax({
-                url: 'https://localhost/api/activities/' + res.studentActivity.activityId + '?access_token=' + localStorage.access_token,
+                url: url + 'activities/' + res.studentActivity.activityId + '?access_token=' + localStorage.access_token,
                 crossDomain: true,
                 success: function (re) {
                   console.log(re);

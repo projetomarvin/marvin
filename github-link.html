@@ -8,6 +8,7 @@
   <link rel="shortcut icon" href="assets/favicon.ico">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <title>Marvin</title>
+  <script src="./helper.js" charset="utf-8"></script>
 </head>
 
 <body>
@@ -32,7 +33,7 @@
       const usr = $('input[name=username]').val();
       $.ajax({
         type: 'get',
-        url: 'https://localhost/api/students/' + localStorage.userId + '/checkRepository' + '?username=' + usr + '&access_token=' + localStorage.access_token,
+        url: url + 'students/' + localStorage.userId + '/checkRepository' + '?username=' + usr + '&access_token=' + localStorage.access_token,
         crossDomain: true,
         success: function(responseData, textStatus, jqXHR) {
           console.log(responseData);
@@ -60,7 +61,7 @@
       if (pwd && pwd === pwd2) {
         $.ajax({
           type: 'post',
-          url: 'https://localhost/api/students/reset-password?access_token=' + localStorage.access_token,
+          url: url + 'students/reset-password?access_token=' + localStorage.access_token,
           data: {newPassword: pwd},
           crossDomain: true,
           success: function(responseData, textStatus, jqXHR) {
