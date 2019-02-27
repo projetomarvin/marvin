@@ -1,0 +1,75 @@
+#panic {
+  position: absolute;
+  bottom: 32px;
+  right: 32px;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#panic .base {
+  width: 100%;
+  height: 40%;
+  background: #a1a1a1;
+  border-radius: 100%;
+}
+
+#panic .body {
+  width: 80%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  bottom: -45%;
+}
+
+#panic .body *{
+  background: #b30000;
+}
+
+#panic .body .center {
+  width: 100%;
+  height: 40%;
+}
+
+#panic .body .bottom {
+  width: 100%;
+  height: 30%;
+  border-bottom-left-radius: 100%;
+  border-bottom-right-radius: 100%;
+}
+
+#panic .button {
+  width: 80%;
+  height: 30%;
+  line-height: 200%;
+  border-radius: 100%;
+  background: #cd0000;
+  z-index: 2;
+  position: absolute;
+  bottom: 40%;
+  color: white;
+  text-transform: uppercase;
+  font-weight: bolder;
+  font-size: large;
+  text-align: center;
+}
+
+#panic:hover .button {
+  background: #940000;
+}
+
+#panic:active .button {
+  bottom: 25%;
+}
+
+#panic:active .body {
+  bottom: -60%;
+}
+
+#panic:active .center {
+  height: 20%;
+}
