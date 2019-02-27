@@ -720,3 +720,8 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+#saveDialog .loader {
+  height: 50px;
+  width: 50px;
+}

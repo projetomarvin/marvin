@@ -22,6 +22,7 @@
           <h2 id="error-file" style="display:none;">
             Oops, parece que o seguinte arquivo está faltando: <span></span>.
           </h2>
+          <img src="https://i.gifer.com/VAyR.gif" class="loader" style="display:none;">
           <div class="buttons">
             <button onclick="finish()" class="green" id="finishButton">
               Finalizar
@@ -82,6 +83,7 @@
       }
 
       function finish() {
+        $(".loader").show();
         $("#finishButton").attr("disabled", true);
         $.ajax({
           type: "put",
@@ -114,11 +116,13 @@
             } else if (res.responseJSON.error.message === "Não há nenum corretor disponível") {
               alert('Não há nenum corretor disponível.')
             } else alert("Algo deu errado, tente novamente." + res.responseJSON.error.message);
+            $(".loader").hide();
           }
         });
       }
 
       function closeDialog() {
+        $(".loader").hide();
         $("#saveDialog").toggle();
         $(".loading").toggle();
         $("#finish").toggle();
