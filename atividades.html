@@ -8,6 +8,7 @@
     <link rel="shortcut icon" href="assets/favicon.ico" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <title>Atividades</title>
+    <script src="./helper.js" charset="utf-8"></script>
   </head>
 
   <body>
@@ -61,7 +62,7 @@
         $.ajax({
           type: "get",
           url:
-            "https://localhost/api/studentActivities/" +
+            url + "studentActivities/" +
             studentActivityId +
             "/checkFiles?access_token=" +
             localStorage.access_token,
@@ -88,7 +89,7 @@
         $.ajax({
           type: "put",
           url:
-            "https://localhost/api/studentActivities/" +
+            url + "studentActivities/" +
             studentActivityId +
             "/finish?access_token=" +
             localStorage.access_token,
@@ -135,7 +136,7 @@
         $.ajax({
           type: "GET",
           url:
-            "https://localhost/api/students/" +
+            url + "students/" +
             id +
             "/username?access_token=" +
             localStorage.access_token,
@@ -153,7 +154,7 @@
         $.ajax({
           type: "GET",
           url:
-            "https://localhost/api/courses/" +
+            url + "courses/" +
             courseId +
             "?filter=%7B%22include%22%3A%20%5B%22activities%22%5D%7D&access_token=" +
             localStorage.access_token,
@@ -212,7 +213,7 @@
           $.ajax({
             type: "put",
             url:
-              "https://localhost/api/studentActivities/" +
+              url + "studentActivities/" +
               studentActivityId +
               "/cancelCorrection?access_token=" +
               localStorage.access_token,
@@ -237,7 +238,7 @@
         $.ajax({
           type: "GET",
           url:
-            "https://localhost/api/students/" +
+            url + "students/" +
             localStorage.userId +
             "?filter=%7B%22include%22%3A%22studentActivities%22%7D&access_token=" +
             localStorage.access_token,

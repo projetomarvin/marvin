@@ -248,11 +248,6 @@
       const path = $('input[name=githubPath]').val()
       if (!$('input[name=message]').val())
         return alert("Você precisa colocar uma mensagem de commit!")
-      // const filename = path.match((/\/(\w+).css/i));
-      // if (!filename[1]) {
-      //   return alert('Camiho do arquivo CSS invlido')
-      // }
-      // const path2 = $('input[name=githubPath2]').val()
       if (path && code) {
         pushToGit(code, path.replace(/\s/g, ''));
       }

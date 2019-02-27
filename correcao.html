@@ -8,6 +8,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="/src-min/ace.js" type="text/javascript" charset="utf-8"></script>
     <link rel="shortcut icon" href="assets/favicon.ico">
+    <script src="./helper.js" charset="utf-8"></script>
   </head>
   <body>
     <div class="header editor">
@@ -76,7 +77,7 @@
         console.log(payload);
         $.ajax({
           type: 'patch',
-          url: 'https://localhost/api/corrections/' + location.search.replace("?", ''),
+          url: url + 'corrections/' + location.search.replace("?", ''),
           crossDomain: true,
           data: payload,
           success: function(res, textStatus, jqXHR) {
@@ -89,12 +90,12 @@
       $(document).ready(function() {
         $.ajax({
           type: 'GET',
-          url: 'https://localhost/api/corrections/' + location.search.replace("?", '') + '?filter[include][studentActivity]=student',
+          url: url + 'corrections/' + location.search.replace("?", '') + '?filter[include][studentActivity]=student',
           crossDomain: true,
           success: function(res, textStatus, jqXHR) {
               $.ajax({
                 type: 'GET',
-                url: 'https://localhost/api/activities/' + res.studentActivity.activityId + '?access_token=' + localStorage.access_token,
+                url: url + 'activities/' + res.studentActivity.activityId + '?access_token=' + localStorage.access_token,
                 crossDomain: true,
                 success: function(r, textStatus, jqXHR) {
                   console.log(r);
@@ -132,7 +133,7 @@
         })
         $.ajax({
           type: 'post',
-          url: 'https://localhost/api/corrections/' + location.search.replace("?", '') + '/start',
+          url: url + 'corrections/' + location.search.replace("?", '') + '/start',
           success: function (res) {
             console.log(res);
           },
