@@ -22,10 +22,6 @@
           <h2 id="error-file" style="display:none;">
             Oops, parece que o seguinte arquivo está faltando: <span></span>.
           </h2>
-          <h3>Escolha quem vai te corrigir e finalize a atividade</h3>
-          <select id="corrector">
-            <option disabled selected value></option>
-          </select>
           <div class="buttons">
             <button onclick="finish()" class="green" id="finishButton">
               Finalizar
@@ -94,7 +90,6 @@
             studentActivityId +
             "/finish?access_token=" +
             localStorage.access_token,
-          data: { userId: $("select#corrector").val() },
           crossDomain: true,
           success: function(res, txt, jqXHR) {
             console.log(res);
@@ -116,7 +111,9 @@
               alert(
                 "Pontos de correção insuficientes! Você deve corrigir seus colegas para conseguir mais pontos e continuar"
               );
-            } else alert("Algo deu errado, tente novamente.");
+            } else if (res.responseJSON.error.message === "Não há nenum corretor disponível") {
+              alert('Não há nenum corretor disponível.')
+            } else alert("Algo deu errado, tente novamente." + res.responseJSON.error.message);
           }
         });
       }
@@ -127,6 +124,7 @@
         $("#finish").toggle();
         $("#all-ok").hide();
         $("#error-file").hide();
+        $("#finishButton").attr("disabled", false);
       }
 
       function getCorrector(id) {
@@ -153,26 +151,10 @@
           url:
             "https://localhost/api/courses/" +
             courseId +
-            "?filter=%7B%22include%22%3A%20%5B%22students%22%2C%20%22activities%22%5D%7D&access_token=" +
+            "?filter=%7B%22include%22%3A%20%5B%22activities%22%5D%7D&access_token=" +
             localStorage.access_token,
           crossDomain: true,
           success: function(res, textStatus, jqXHR) {
-            res.students.map(e => {
-              let corrs = -1;
-              if (currentActivity.prevCorrectors) {
-                corrs = currentActivity.prevCorrectors.indexOf(e.id)
-              }
-              if (
-                e.id !== localStorage.userId &&
-                e.username &&
-                e.id !== lastActivity.correctorId &&
-                corrs < 0 &&
-                e.id !== currentActivity.correctorId
-              )
-                $("select#corrector").append(
-                  "<option value=" + e.id + ">" + e.username + "</option>"
-                );
-            });
             $("#course_name").append(res.name);
             res.activities.map((r, i) => {
               let position;
