@@ -295,7 +295,11 @@
           } else {
             const r = JSON.parse(res.body)
             r.output.map(l => {
-              addToLog(l.replace(/\n/g, "<br>&nbsp;&nbsp;"))
+              if (typeof l === 'string') {
+                addToLog(l.replace(/\n/g, "<br>&nbsp;&nbsp;"))
+              } else {
+                addToLog(l)
+              }
             })
           }
         },
