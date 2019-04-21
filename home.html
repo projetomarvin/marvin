@@ -93,7 +93,7 @@
           $('.msg').remove();
           responseData.notifications.map((msg, i) => {
             let btn = '';
-            if (msg.targetURL === '#') {
+            if (msg.targetURL === '#' || msg.targetURL.includes("detalheNota")) {
               btn = `<span class="delete-msg" onclick="del('${msg.id}', ${i})">&times;</span>`
             }
 
