@@ -164,7 +164,7 @@
     });
 
     function loadToggle(date) {
-      if (new Date(date).getTime() - 60000 > new Date().getTime()) {
+      if (new Date(date).getTime() > new Date().getTime()) {
         $('.switch input').attr('checked', true);
         $('.available p').html('Disponível')
       }
