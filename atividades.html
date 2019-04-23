@@ -117,7 +117,7 @@
             } else if (res.responseJSON.error.message === "Não há nenum corretor disponível") {
               alert('Não há nenum corretor disponível.')
             } else alert("Algo deu errado, tente novamente." + res.responseJSON.error.message);
-            $(".loader").hide();
+            closeDialog()
           }
         });
       }
