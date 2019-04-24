@@ -134,6 +134,8 @@
           }
           var checkBoxes = $('.switch input');
           checkBoxes.prop("checked", !checkBoxes.prop("checked"));
+          console.log(responseData);
+          alert(responseData.responseJSON.error.message)
         }
       })
     }
