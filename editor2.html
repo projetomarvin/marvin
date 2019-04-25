@@ -74,6 +74,7 @@
       <ul class="editor-tabs">
         <li id="edit-html" class="editor-tab editor-tab--right-border editor-tab--active">HTML</li>
         <li id="edit-css" class="editor-tab editor-tab--right-border">CSS</li>
+        <li id="edit-js" class="editor-tab editor-tab--right-border">JS</li>
       </ul>
       <div id="editor2" class="editor-body active">
       </div>
@@ -113,13 +114,16 @@
     html.setMode('ace/mode/html');
     var css = new ace.EditSession(``);
     css.setMode('ace/mode/css');
+    var js = new ace.EditSession('');
+    js.setMode('ace/mode/javascript');
     editor.setSession(html);
 
     const codeTab = document.getElementById('edit-html');
     const cssTab = document.getElementById('edit-css');
+    const jsTab = document.getElementById('edit-js');
 
     const selectTab = function (tabId) {
-        const lastSelectedTab = document.getElementsByClassName('editor-tab--active');
+      const lastSelectedTab = document.getElementsByClassName('editor-tab--active');
       for (let i = 0; i < lastSelectedTab.length; i += 1) {
         lastSelectedTab[i].classList.remove('editor-tab--active');
       }
@@ -132,9 +136,15 @@
       selectTab('edit-html');
       editor.setSession(html);
     });
+
     cssTab.addEventListener('click', () => {
       selectTab('edit-css');
       editor.setSession(css);
+    });
+
+    jsTab.addEventListener('click', () => {
+      selectTab('edit-js');
+      editor.setSession(js);
     });
 
     document.onkeyup = function(e) {
@@ -285,10 +295,15 @@
       let htmlCode = editor.getValue();
       editor.setSession(css)
       const cssCode = editor.getValue();
+      editor.setSession(js)
+      const jsCode = editor.getValue();
       $('#edit-html').click();
       localStorage.setItem('html', htmlCode);
       localStorage.setItem('css', cssCode);
-      htmlCode = htmlCode.replace('</head>', '<style>' + cssCode + '</style></head>');
+      localStorage.setItem('js', jsCode);
+      htmlCode = htmlCode.replace('</head>', '<style>' + cssCode + '</style>\n</head>');
+      htmlCode = htmlCode.replace(/<\/body>/, '<scrip>' + jsCode + "</scrip>\n<" + "/body>");
+      htmlCode = htmlCode.replace(/scrip>/g, "script>");
       console.log(htmlCode);
       $('#HTMLview').attr('srcdoc', htmlCode);
     }
@@ -335,6 +350,8 @@
       editor.setValue(localStorage.html || '');
       editor.setSession(css);
       editor.setValue(localStorage.css || '');
+      editor.setSession(js);
+      editor.setValue(localStorage.js || '');
       $('#edit-html').click();
     })
 
