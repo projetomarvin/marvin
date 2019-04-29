@@ -108,6 +108,7 @@
     editor.session.setMode("ace/mode/python");
     editor.setBehavioursEnabled(false);
     editor.focus();
+    const files = [];
 
     document.onkeyup = function(e) {
       if (e.ctrlKey && e.which === 13) {
@@ -121,6 +122,24 @@
     function save() {
       $('#saveDialog').show();
       $('#upload').show();
+      $.ajax({
+        url:
+          url +
+          "courses/" +
+          localStorage.courseId +
+          "?filter[include]=activities&access_token=" +
+          localStorage.access_token,
+        crossDomain: true,
+        success: res => {
+          res.activities.map(a => {
+            if (a.exercises) {
+              a.exercises.map(e => {
+                files.push(e.file);
+              });
+            }
+          });
+        }
+      });
     }
 
     function panic() {
@@ -237,10 +256,12 @@
       const path = $('input[name=githubPath]').val()
       if (!$('input[name=message]').val())
         return alert("Você precisa colocar uma mensagem de commit!")
-      if (code.match(/(fun.*{[\s\S]*}[\s]*$)/g))
-      pushToGit(code, path.replace(/\s/g, ''));
-      else if (!code.match(/(fun.*{[\s\S]*}[\s]*$)/g) && confirm('Oops, parece que seu código não segue as normas de envio, tem certeza que quer continuar?'))
-      pushToGit(code, path.replace(/\s/g, ''));
+      if (files.includes(path) ||
+        (!files.includes(path) &&
+          confirm(
+            "Parece que você digitou um caminho de arquivo que não corresponde a nenhum exercício. Tem certeza que quer continuar?"
+          )))
+        pushToGit(code, path.replace(/\s/g, ''));
       else {
         $('#saveDialog').toggle();
         $('#upload').toggle();
