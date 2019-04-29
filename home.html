@@ -90,7 +90,7 @@
         success: function (responseData) {
           if (!responseData.notifications.length) return $('#msg').hide();
           $('#msg').show();
-          $('.msg').remove();
+          $('.messages').empty();
           responseData.notifications.map((msg, i) => {
             let btn = '';
             if (msg.targetURL === '#' || msg.targetURL.includes("detalheNota")) {
@@ -212,7 +212,7 @@
               $('#progressBar').width(eval($('#currentXP').html())*$(document).width()*0.3)
               loadToggle(responseData.availableUntil)
               getMessages();
-              setInterval(getMessages, 60*1000);
+              setInterval(getMessages, 5*1000);
             } else {
               location.href = '/github-link.html?' + responseData.id;
             }
