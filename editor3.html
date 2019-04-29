@@ -293,12 +293,17 @@
           if (res.errorMessage) {
             addToLog(res.errorMessage, true)
           } else {
-            const r = JSON.parse(res.body)
+            const r = JSON.parse(res.body);
             r.output.map(l => {
+              console.log(l, typeof l);
               if (typeof l === 'string') {
-                addToLog(l.replace(/\n/g, "<br>&nbsp;&nbsp;"))
+                if (/<(.*)>/g.test(l)) {
+                  addToLog(/<(.*)>/g.exec(l)[1])
+                } else {
+                  addToLog(l.replace(/\n/g, "<br>&nbsp;&nbsp;"))
+                }
               } else {
-                addToLog(l)
+                addToLog(JSON.stringify(l))
               }
             })
           }
