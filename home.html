@@ -176,11 +176,11 @@
       if (location.href.includes('code=')) {
         const token = location.href.split('code=')[1];
         $.ajax({
-          type: 'patch',
-          url: url + 'students/' + localStorage.userId + '?access_token=' + localStorage.access_token,
+          type: 'post',
+          url: url + 'students/' + localStorage.userId + '/linkGithub?access_token=' + localStorage.access_token,
           crossDomain: true,
           data: {
-            githubAccessToken: token
+            token: token
           },
           success: function(responseData, textStatus, jqXHR) {
             console.log(responseData);
