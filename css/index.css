@@ -725,3 +725,23 @@ input:checked + .slider:before {
   height: 50px;
   width: 50px;
 }
+
+#data {
+  width: 80%;
+}
+
+#data > div {
+  background-color: #4d6a56;
+  color: white;
+  font-size: 20px;
+  padding: 14px;
+  display: flex;
+}
+
+#data > div:nth-child(even) {
+  background-color: #7bac7c;
+}
+
+#data > div > div:nth-child(1) {
+  width: 120px;
+}

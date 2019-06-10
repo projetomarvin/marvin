@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <title>Histórico | Projero Marvin</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/master.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="shortcut icon" href="assets/favicon.ico">
+    <script src="./helper.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <header class="header editor">
+      <a class="white_back" href="/home.html">
+        &#11013;
+      </a>
+      Histórico de atividades
+    </header>
+    <main class="vertical">
+      <h2>Histórico de correções</h2>
+      <div id="data"></div>
+    </main>
+    <script type="text/javascript">
+      let nomes = {};
+      $.ajax({
+        url: url + 'courses/' + localStorage.courseId + '?filter[include]=students&access_token=' + localStorage.access_token,
+        crossDomain: true,
+        success: function (res, text) {
+          const n = res.students;
+          n.map(i => {
+            nomes[i.id] = i.username;
+          })
+          listCorrs()
+        }
+      })
+
+      Date.prototype.formatar = function() {
+        const mm = this.getMonth() + 1; // getMonth() is zero-based
+        const dd = this.getDate();
+
+        return '' + dd + '/' + mm + '/' + this.getFullYear();
+      };
+
+      function porcentagem(n) {
+        return Math.ceil(n * 100);
+      }
+
+      function listCorrs() {
+        $.ajax({
+          url: url + 'corrections/' + localStorage.userId + '/own?access_token=' + localStorage.access_token,
+          crossDomain: true,
+          success: function(res, textStatus, jqXHR) {
+            res.map(c => {
+              if (c.correctedAt) {
+                let text
+                if (c.studentActivity.studentId === localStorage.userId) {
+                  text = `${nomes[c.correctorId]} corrigiu você  (${porcentagem(c.grade)}%)`
+                } else {
+                  text = "Você corrigiu " + nomes[c.studentActivity.studentId]
+                }
+                $('#data').append(`
+                    <div>
+                      <div>${new Date(c.createdAt).formatar()}</div>
+                      <div>${text}</div>
+                    </div>
+                  `)
+                }
+              })
+          },
+          error: function(responseData, textStatus, errorThrown) {
+            console.log(responseData);
+          }
+        })
+      }
+    </script>
+  </body>
+</html>
