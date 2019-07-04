@@ -15,19 +15,28 @@
     <div id="saveDialog" style="display:none">
       <div class="dialog">
         <button onclick="closeDialog()" id="closeButton">&times;</button>
-        <h2 class="loading">Verificando arquivos...</h2>
-        <div id="finish" style="display:none;">
-          <h2 id="all-ok" style="display:none;">
-            Ótimo, todos os arquivos estão no git.
-          </h2>
-          <h2 id="error-file" style="display:none;">
-            Oops, parece que o seguinte arquivo está faltando: <span></span>.
-          </h2>
-          <img src="https://i.gifer.com/VAyR.gif" class="loader" style="display:none;">
+        <div id="saveView">
+          <h2 class="loading">Verificando arquivos...</h2>
+          <div id="finish" style="display:none;">
+            <h2 id="all-ok" style="display:none;">
+              Ótimo, todos os arquivos estão no git.
+            </h2>
+            <h2 id="error-file" style="display:none;">
+              Oops, parece que o seguinte arquivo está faltando: <span></span>.
+            </h2>
+            <img src="https://i.gifer.com/VAyR.gif" class="loader" style="display:none;">
+            <div class="buttons">
+              <button onclick="finish()" class="green" id="finishButton">
+                Finalizar
+              </button>
+            </div>
+          </div>
+        </div>
+        <div id="langView">
+          <h1>Escolha a linguagem que vai fazer essa fase</h1>
           <div class="buttons">
-            <button onclick="finish()" class="green" id="finishButton">
-              Finalizar
-            </button>
+            <button class="rose" onclick="setLang('py')">Python</button>
+            <button class="purple" onclick="setLang('js')">JavaScript</button>
           </div>
         </div>
       </div>
@@ -43,6 +52,7 @@
       <div class="finish">
         <div class="doing">
           <p>Você está fazendo a fase </p>
+          <button class="orange" id="chooseLang" onclick="chooseLang()" hidden>Escolher ling.</button>
           <button onclick="checkFiles()" class="green">Finalizar</button>
         </div>
         <div class="correction" hidden>
@@ -59,6 +69,7 @@
 
       function checkFiles() {
         $("#saveDialog").toggle();
+        $('#langView').hide();
         $.ajax({
           type: "get",
           url:
@@ -130,6 +141,7 @@
         $("#all-ok").hide();
         $("#error-file").hide();
         $("#finishButton").attr("disabled", false);
+        $('#langView').hide();
       }
 
       function getCorrector(id) {
@@ -148,6 +160,29 @@
             console.log(responseData.data);
           }
         });
+      }
+
+      function setLang(lang) {
+        const sure = confirm("Você tem certeza? Uma vez que escolheu não será mais possível alterar a linguagem para essa fase!")
+        if (sure)
+          $.ajax({
+              type: "patch",
+              url:
+                url + "studentActivities/" +
+                studentActivityId +
+                "?access_token=" +
+                localStorage.access_token,
+              crossDomain: true,
+              data: {language: lang},
+              success: function(res, txt, jqXHR) {
+                console.log(res);
+                alert('Escolha salva com sucesso!')
+                location.reload();
+              },
+              error: function(err, txt, errorThrown) {
+                console.log(err);
+              }
+            });
       }
 
       function getCourseActivities(courseId, currentLevel) {
@@ -234,6 +269,12 @@
         }
       }
 
+      function chooseLang() {
+        $('#saveDialog').show();
+        $('#saveView').hide();
+        $('#langView').show();
+      }
+
       $(document).ready(function() {
         $.ajax({
           type: "GET",
@@ -267,6 +308,11 @@
             }
             if (currentActivity.corrector2Id) {
               $(".doing p").append(', segunda correção.');
+            }
+            if (!currentActivity.language) {
+              $('#chooseLang').show()
+            } else {
+              $(".doing p").append(` em ${currentActivity.language}`);
             }
           },
           error: function(responseData, textStatus, errorThrown) {
