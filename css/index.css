@@ -30,11 +30,17 @@
   position: absolute;
   top: 16px;
   right: 16px;
+  color: white;
 }
 
 .logout button {
   font-size: 24px;
   text-transform: uppercase;
+  float: right;
+}
+
+.logout a{
+  color: #1edbb9;
 }
 
 .welcome p {
@@ -556,6 +562,7 @@ div.message .delete-msg {
   font-size: 10px;
   width: 12px;
   text-align: center;
+  z-index: 9999;
 }
 
 div.message .delete-msg:hover {
@@ -583,9 +590,6 @@ button.border {
 
 #CPoints {
   color: white;
-  position: absolute;
-  right: 32px;
-  top: 56px;
 }
 
 button:disabled,
@@ -738,10 +742,15 @@ input:checked + .slider:before {
   display: flex;
 }
 
+#data a {
+  text-decoration: inherit;
+  color: inherit;
+}
+
 #data > div:nth-child(even) {
   background-color: #7bac7c;
 }
 
 #data > div > div:nth-child(1) {
-  width: 120px;
+  width: 200px;
 }
