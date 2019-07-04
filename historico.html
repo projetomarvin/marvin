@@ -37,8 +37,11 @@
       Date.prototype.formatar = function() {
         const mm = this.getMonth() + 1; // getMonth() is zero-based
         const dd = this.getDate();
+        const h = this.getHours();
+        let m = '0' + this.getMinutes();
+        m = m.slice(-2);
 
-        return '' + dd + '/' + mm + '/' + this.getFullYear();
+        return `${dd}/${mm}/${this.getFullYear()} às ${h}:${m}`;
       };
 
       function porcentagem(n) {
@@ -55,13 +58,14 @@
                 let text
                 if (c.studentActivity.studentId === localStorage.userId) {
                   text = `${nomes[c.correctorId]} corrigiu você  (${porcentagem(c.grade)}%)`
+                  text = `<a href="/detalheNota.html?${c.id}">${text}</a>`
                 } else {
-                  text = "Você corrigiu " + nomes[c.studentActivity.studentId]
+                  text = "<div>Você corrigiu " + nomes[c.studentActivity.studentId] + "</div>"
                 }
                 $('#data').append(`
                     <div>
                       <div>${new Date(c.createdAt).formatar()}</div>
-                      <div>${text}</div>
+                      ${text}
                     </div>
                   `)
                 }
