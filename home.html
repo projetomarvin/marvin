@@ -27,26 +27,17 @@
         </div>
       </div>
       </span>
-      <a class="progress" href="historico.html">
-        <h2 id="currentLevel">Nível </h2>
-        <div id="progressBarBg">
-          <div id="progressBar"></div>
-        </div>
-        <h4 id="currentXP"></h4>
-      </a>
+      <div class="coins">
+        <h3 id="CPoints">Pontos de correção: </h3>
+
+      </div>
     </div>
     <div class="logout">
       <button type="button" class="wine" onclick="logout()">Sair</button>
-    </div>
-    <div id="CPoints">
-      <h3 title="Quantas correções você pode fazer">Pontos de correção: </h3>
-      <div class="available">
-        <label class="switch">
-          <input type="checkbox" onclick="toggleAvailable()">
-          <span class="slider round"></span>
-        </label>
-        <p>Indisponível</p>
-      </div>
+      <br>
+      <br>
+      <h3>Disponível para correção</h3>
+      <a href="/historico.html"><h3>Histórico de correções</h3></a>
     </div>
   </header>
   <main>
@@ -68,16 +59,6 @@
     </a>
   </main>
   <script type="text/javascript">
-      function getLevel(currXP) {
-      let level = 0;
-      let xp = currXP;
-      while (xp > 0) {
-          xp -= 100 + level * 50;
-          level++;
-      }
-      return level;
-    }
-
     function toggleMsg() {
       $("#msg-box").toggle()
       return false;
@@ -165,13 +146,6 @@
         }
     });
 
-    function loadToggle(date) {
-      if (new Date(date).getTime() > new Date().getTime()) {
-        $('.switch input').attr('checked', true);
-        $('.available p').html('Disponível')
-      }
-    }
-
     $(document).ready(function() {
       if (location.href.includes('code=')) {
         const token = location.href.split('code=')[1];
@@ -200,17 +174,13 @@
           url: url + 'students/' + localStorage.userId + '?access_token=' + localStorage.access_token,
           crossDomain: true,
           success: function(responseData, textStatus, jqXHR) {
-            const n = getLevel(responseData.XPPoints);
             localStorage.setItem("courseId", responseData.courseId);
             if (responseData.username) {
               localStorage.setItem('user', JSON.stringify(responseData));
               $('.welcome p').append(responseData.username);
               $("#repo").attr("href", "http://www.github.com/" + responseData.username + '/marvin')
-              $('#currentLevel').append(getLevel(responseData.XPPoints))
-              $('#CPoints h3').append(responseData.correctionPoints)
-              $('#currentXP').append(Math.floor(responseData.XPPoints - (50 * ((n * (n+1)) / 2 - 1))) + '/' + 50 * (n + 1))
-              $('#progressBar').width(eval($('#currentXP').html())*$(document).width()*0.3)
-              loadToggle(responseData.availableUntil)
+              $('#currentLevel').append(responseData.XPPoints)
+              $('#CPoints').append(responseData.correctionPoints)
               getMessages();
               setInterval(getMessages, 5*1000);
             } else {
