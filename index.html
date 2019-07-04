@@ -50,6 +50,7 @@
         },
         error: function (responseData, textStatus, errorThrown) {
           console.log(responseData.statusCode());
+          $('input[name=password]').val('')
           alert('Login inválido');
         }
       })
