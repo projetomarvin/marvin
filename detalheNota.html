@@ -39,6 +39,9 @@
           console.log(responseData);
           msg = responseData.message
           msg = msg.replace(/\n/g, "<br>")
+          msg += `<br><br><a href="https://s3-sa-east-1.amazonaws.com/marvin-files/${
+            responseData.studentActivityId
+          }.zip">Código avaliado</a> às ${responseData.correctedAt}`
           $("#content").append(msg)
         },
         error: function(responseData, textStatus,
