@@ -5,6 +5,7 @@
   background-color: #707070;
   transition: 0.2s;
   font-size: 24px;
+  cursor: pointer;
 }
 
 .activityButton:hover {
@@ -592,8 +593,9 @@ button.border {
   cursor: col-resize;
 }
 
-#CPoints {
+#CPoints, #coins {
   color: white;
+  text-align: center;
 }
 
 button:disabled,
@@ -757,4 +759,10 @@ input:checked + .slider:before {
 
 #data > div > div:nth-child(1) {
   width: 200px;
+}
+
+.grid {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }

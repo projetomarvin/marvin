@@ -29,7 +29,7 @@
       </span>
       <div class="coins">
         <h3 id="CPoints">Pontos de correção: </h3>
-
+        <h3 id="coins">Moedas: </h3>
       </div>
     </div>
     <div class="logout">
@@ -181,6 +181,7 @@
               $("#repo").attr("href", "http://www.github.com/" + responseData.username + '/marvin')
               $('#currentLevel').append(responseData.XPPoints)
               $('#CPoints').append(responseData.correctionPoints)
+              $('#coins').append(responseData.coins + '&nbsp;<a href="/moedas.html" class="orange">Loja</a>')
               getMessages();
               setInterval(getMessages, 5*1000);
             } else {

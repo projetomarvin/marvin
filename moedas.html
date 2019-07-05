@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="/css/master.css">
+  <link rel="stylesheet" href="/css/index.css">
+  <link rel="stylesheet" href="/css/collapsable.css">
+  <link rel="shortcut icon" href="assets/favicon.ico">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <title>Loja</title>
+  <script src="./helper.js" charset="utf-8"></script>
+</head>
+
+<body>
+  <header class="header editor">
+    <a class="white_back" href="/home.html">
+      &#11013;
+    </a>
+    Loja
+  </header>
+  <main class="vertical">
+    <h2 id="coin">Você tem </h2>
+    <div class="grid">
+      <a class="activityButton orange" onclick="buyCPoint()">
+        <img src="assets/correct.svg" alt="">
+        Ponto de correção
+        <br>
+        <br>
+        $80
+      </a>
+      <a class="activityButton green" onclick="transferCoins()">
+        <img src="assets/exchange.svg" alt="">
+        Transferir moedas
+      </a>
+    </div>
+  </main>
+  <script type="text/javascript">
+    function buyCPoint() {
+      const sure = confirm("Tem certeza que quer comprar um ponto de correção?")
+      if (sure && confirm("Tem MUITA certeza que quer gastar suas moedas com isso?"))
+      $.ajax({
+        url: url + '/students/' + localStorage.userId + '/buyCPoint?access_token=' + localStorage.access_token,
+        type: 'put',
+        crossDomain: true,
+        success: function (res) {
+          console.log(res);
+          alert("Ponto de correção comprado com sucesso!")
+        },
+        error: function (msg) {
+          alert(msg.responseJSON.error.message)
+        }
+      })
+    }
+
+    function transferCoins() {
+      const data = {}
+      data.to = prompt("Digite o nome de usuário para quem você deseja transferir medas")
+      data.value = Number(prompt("Quantas moedas você quer transferir?"))
+      if (data.to && data.value && confirm("Tem MUITA certeza que quer gastar suas moedas com isso?"))
+      $.ajax({
+        url: url + '/students/' + localStorage.userId + '/transferCoins?access_token=' + localStorage.access_token,
+        type: 'put',
+        crossDomain: true,
+        data,
+        success: function (res) {
+          console.log(res);
+          alert("Moedas transferidas com sucesso!")
+        },
+        error: function (msg) {
+          alert(msg.responseJSON.error.message)
+        }
+      })
+    }
+
+    $(document).ready(function() {
+      $.ajax({
+        type: 'GET',
+        url: url + 'students/' + localStorage.userId +
+          '?access_token=' + localStorage.access_token,
+        crossDomain: true,
+        success: function(responseData, textStatus, jqXHR) {
+          console.log(responseData);
+          $("#coin").append(responseData.coins + " moedas")
+        },
+        error: function(responseData, textStatus,
+          errorThrown) {
+          alert('Algo deu errado.');
+          history.back();
+        }
+      })
+    })
+  </script>
+</body>
+
+</html>
