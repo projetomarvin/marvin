@@ -51,8 +51,8 @@ function level() {
     data: {
       student: JSON.parse(localStorage.user).username,
       level: JSON.parse(localStorage.user).activityNumber,
-      timestamp: new Date(),
-      //separar data e hora
+      hour: `${new Date().getHours()}:${new Date().getMinutes()}`,
+      date: `${new Date().getDate()}/${new Date().getMonth() + 1}/${new Date().getFullYear()}`,
     },
   })
 }
