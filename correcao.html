@@ -53,6 +53,8 @@
 
     <script type="text/javascript">
       let numberOfExercises;
+      let isLast = false;
+      let isManual = false;
       function submit() {
         const sure = confirm("Tem certeza que quer terminar a correção?");
         if (!sure) return false;
@@ -83,6 +85,23 @@
           success: function(res, textStatus, jqXHR) {
             console.log(res);
             window.location.href = '/home.html'
+            let path = url + 'corrections/' + location.search.replace("?", '') + '/finish'
+            if (isLast) {
+              path = url + 'corrections/' + location.search.replace("?", '') + '/finishManual'
+            }
+            if (!isManual || isLast)
+              $.ajax({
+                type: 'post',
+                url: path,
+                crossDomain: true,
+                data: payload,
+                success: function(responseData, textStatus, jqXHR) {
+                  console.log(responseData);
+                  window.location.href = '/home.html'
+                }
+              })
+            else
+              window.location.href = '/home.html'
           }
         })
       }
@@ -90,7 +109,7 @@
       $(document).ready(function() {
         $.ajax({
           type: 'GET',
-          url: url + 'corrections/' + location.search.replace("?", '') + '?filter[include][studentActivity]=student',
+          url: url + 'corrections/' + location.search.replace("?", '') + '?filter[include][studentActivity]=student&filter[include]studentActivity',
           crossDomain: true,
           success: function(res, textStatus, jqXHR) {
               $.ajax({
@@ -99,6 +118,12 @@
                 crossDomain: true,
                 success: function(r, textStatus, jqXHR) {
                   console.log(r);
+                  if (!r.exercises[0].tests) {
+                    isManual = true;
+                  }
+                  if (res.studentActivity.corrector2Id) {
+                    isLast = true;
+                  }
                   $("#level").append(r.name)
                   $(".intro-text p").prepend("Você está corrigindo <b>" + res.studentActivity.student.username +"</b> na fase "+ res.studentActivity.student.activityNumber)
                   $("#pdf").attr("href", r.PDFurl)
