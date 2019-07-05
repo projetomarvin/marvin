@@ -471,6 +471,10 @@ textarea[name="comments"] {
   border-radius: 0 8px 8px 0;
 }
 
+#questions a {
+  color: #3ddd0d;
+}
+
 .content .container {
   width: 900px;
   display: block;

@@ -398,7 +398,13 @@
       }
 
       $(document).ready(function() {
-        editor.setValue(localStorage.code || "");
+        let code = location.search.substring(1);
+        let run;
+        try {
+          run = atob(code)
+        } catch (e) {
+        }
+        editor.setValue(run || localStorage.code || "");
         setInterval(function() {
           saveCode();
         }, 30000);

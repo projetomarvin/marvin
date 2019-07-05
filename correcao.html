@@ -130,9 +130,14 @@
                   $("#files").attr("href", 'https://s3-sa-east-1.amazonaws.com/marvin-files/' + res.studentActivityId + '.zip')
                   numberOfExercises = r.exercises.length;
                   r.exercises.map((q, i) => {
+                    const name = q.file.substring(0, q.file.length - 3);
+                    let url = `/editor.html?${res.codes[name]}`;
+                    if (res.language === 'py') {
+                      url = `/editor3.html?${res.codes[name]}`;
+                    }
                     $("#questions").append(
                       `<div class="question">
-                        <h1>Exercício 0${i}</h1>
+                        <a href="${url}" target="_blank"><h1>Exercício 0${i}</h1></a>
                         <div style="display:flex">
                           <div class="text">
                             <p>
