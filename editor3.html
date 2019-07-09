@@ -134,7 +134,7 @@
           res.activities.map(a => {
             if (a.exercises) {
               a.exercises.map(e => {
-                files.push(e.file);
+                files.push(e.file.replace('.js', '.py'));
               });
             }
           });

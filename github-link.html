@@ -23,7 +23,7 @@
       <form class="loginForm">
         <input type="text" name="username" placeholder="usuário do Github" />
         <br>
-        <button type="submit" class="full-green">contunuar</button>
+        <button type="submit" class="full-green">continuar</button>
       </form>
     </div>
   </main>
@@ -41,7 +41,7 @@
             alert('Usuário ou repositório não encontrado. Verifique e tente novamente.')
           } else {
             console.log(responseData);
-            alert('Conta vinculada com sucesso e você conseguiu seus primeiros 50 pontos de XP! Agora você deve vincular sua conta com o Github.')
+            alert('Conta vinculada com sucesso e você conseguiu suas primeiras 42 moedas! Agora você deve vincular sua conta com o Github.')
             window.location.href = 'https://github.com/login/oauth/authorize?client_id=71f8116e373c16f3eb11&scope=repo&login=' + usr;
           }
         },
