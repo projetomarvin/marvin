@@ -474,6 +474,7 @@ textarea[name="comments"] {
 
 #questions a {
   color: #3ddd0d;
+  text-decoration: underline;
 }
 
 .content .container {
