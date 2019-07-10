@@ -15,7 +15,8 @@ function isOnline() {
     },
     success: function (responseData) {
       let acceptCorrection;
-      if (responseData.pendingCorrection) {
+      if (responseData.pendingCorrection && !localStorage.askedCorrection) {
+        localStorage.setItem("askedCorrection", "1")
         clearInterval(onlineId)
         do {
           acceptCorrection = prompt(`Você foi escolhido(a) para corrigir ${responseData.pendingCorrection.studentName} na fase ${responseData.pendingCorrection.level}. Deseja fazer a correção? Responda com S ou N`);
@@ -23,6 +24,7 @@ function isOnline() {
         answerCorrectionInvite(acceptCorrection.toLowerCase() === "s", responseData.pendingCorrection.correctionId);
         onlineId = setInterval(isOnline, 30*1000);
         console.log(acceptCorrection);
+        localStorage.removeItem("askedCorrection")
       }
     }
   })
