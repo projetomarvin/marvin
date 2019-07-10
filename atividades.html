@@ -129,7 +129,7 @@
                 "Pontos de correção insuficientes! Você deve corrigir seus colegas para conseguir mais pontos e continuar"
               );
             } else if (res.responseJSON.error.message === "Não há nenum corretor disponível") {
-              alert('Não há nenum corretor disponível.')
+              alert('Não há nenhum corretor disponível.')
             } else alert("Algo deu errado, tente novamente." + res.responseJSON.error.message);
             closeDialog()
           }
