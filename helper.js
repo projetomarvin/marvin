@@ -14,10 +14,13 @@ function isOnline() {
       availableUntil: new Date(new Date().getTime() + 60000)
     },
     success: function (responseData) {
+      let acceptCorrection;
       if (responseData.pendingCorrection) {
         clearInterval(onlineId)
-        const acceptCorrection = confirm(`Você foi escolhido(a) para corrigir ${responseData.pendingCorrection.studentName} na fase ${responseData.pendingCorrection.level}. Deseja fazer a correção?`);
-        answerCorrectionInvite(acceptCorrection, responseData.pendingCorrection.correctionId);
+        do {
+          acceptCorrection = prompt(`Você foi escolhido(a) para corrigir ${responseData.pendingCorrection.studentName} na fase ${responseData.pendingCorrection.level}. Deseja fazer a correção? Responda com S ou N`);
+        } while (!acceptCorrection);
+        answerCorrectionInvite(acceptCorrection.toLowerCase() === "s", responseData.pendingCorrection.correctionId);
         onlineId = setInterval(isOnline, 30*1000);
         console.log(acceptCorrection);
       }

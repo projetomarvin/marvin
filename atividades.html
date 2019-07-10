@@ -97,6 +97,9 @@
       function finish() {
         $(".loader").show();
         $("#finishButton").attr("disabled", true);
+        if (!currentActivity.language) {
+          return alert("VOCÊ DEVE  ESCOLHER UMA LINGUAGEM ANTES DE FINALIZAR!")
+        }
         $.ajax({
           type: "put",
           url:
@@ -285,6 +288,10 @@
             localStorage.access_token,
           crossDomain: true,
           success: function(res, textStatus, jqXHR) {
+            const langs = {
+              js: 'JavaScript',
+              py: 'Python',
+            }
             currentActivity =
               res.studentActivities[res.studentActivities.length - 1];
             console.log(currentActivity);
@@ -312,7 +319,7 @@
             if (!currentActivity.language) {
               $('#chooseLang').show()
             } else {
-              $(".doing p").append(` em ${currentActivity.language}`);
+              $(".doing p").append(` em ${langs[currentActivity.language]}`);
             }
           },
           error: function(responseData, textStatus, errorThrown) {
