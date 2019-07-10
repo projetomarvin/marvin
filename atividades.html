@@ -68,6 +68,9 @@
       let lastActivity = {};
 
       function checkFiles() {
+        if (!currentActivity.language) {
+          return alert("VOCÊ DEVE  ESCOLHER UMA LINGUAGEM ANTES DE FINALIZAR!");
+        }
         $("#saveDialog").toggle();
         $('#langView').hide();
         $.ajax({
@@ -97,9 +100,6 @@
       function finish() {
         $(".loader").show();
         $("#finishButton").attr("disabled", true);
-        if (!currentActivity.language) {
-          return alert("VOCÊ DEVE  ESCOLHER UMA LINGUAGEM ANTES DE FINALIZAR!")
-        }
         $.ajax({
           type: "put",
           url:
