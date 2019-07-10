@@ -38,6 +38,9 @@ function answerCorrectionInvite(answer, id) {
     crossDomain: true,
     success: function (res) {
       console.log(res);
+    },
+    error: function (res, txt) {
+      alert(res.responseJSON.error.message);
     }
   })
 }
