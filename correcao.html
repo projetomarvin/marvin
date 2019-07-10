@@ -106,18 +106,56 @@
         })
       }
 
+      function answerCorrectionInvite(answer, id) {
+        $.ajax({
+          type: 'put',
+          url: url + 'studentActivities/' + id + '/answerCorrectionInvite?access_token=' + localStorage.access_token,
+          data: {answer},
+          crossDomain: true,
+          success: function (res) {
+            console.log(res);
+            if (!answer) {
+              alert("Você recusou o convite de correção!")
+              window.location.href = '/home.html'
+            }
+          },
+          error: function (res, txt) {
+            alert(res.responseJSON.error.message);
+          }
+        })
+      }
+
       $(document).ready(function() {
+
         $.ajax({
           type: 'GET',
           url: url + 'corrections/' + location.search.replace("?", '') + '?filter[include][studentActivity]=student&filter[include]studentActivity',
           crossDomain: true,
           success: function(res, textStatus, jqXHR) {
+              if (!res.started) {
+                let acceptCorrection;
+                do {
+                  acceptCorrection = prompt('Deseja fazer a correção? Responda com S ou N');
+                } while (!acceptCorrection);
+                answerCorrectionInvite(acceptCorrection.toLowerCase() === "s", location.search.replace("?", ''));
+                if (acceptCorrection.toLowerCase() !== "s") return true;
+              }
               $.ajax({
                 type: 'GET',
                 url: url + 'activities/' + res.studentActivity.activityId + '?access_token=' + localStorage.access_token,
                 crossDomain: true,
                 success: function(r, textStatus, jqXHR) {
                   console.log(r);
+                  $.ajax({
+                    type: 'post',
+                    url: url + 'corrections/' + location.search.replace("?", '') + '/start',
+                    success: function (res) {
+                      console.log(res);
+                    },
+                    error: function (res) {
+                      console.log(res);
+                    }
+                  })
                   if (!r.exercises[0].tests) {
                     isManual = true;
                   }
@@ -159,16 +197,6 @@
             },
           error: function(responseData, textStatus, errorThrown) {
             console.log(responseData);
-          }
-        })
-        $.ajax({
-          type: 'post',
-          url: url + 'corrections/' + location.search.replace("?", '') + '/start',
-          success: function (res) {
-            console.log(res);
-          },
-          error: function (res) {
-            console.log(res);
           }
         })
       })
