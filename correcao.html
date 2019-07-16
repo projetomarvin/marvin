@@ -170,7 +170,7 @@
                   r.exercises.map((q, i) => {
                     const name = q.file.substring(0, q.file.length - 3);
                     let url = `/editor.html?${res.codes[name]}`;
-                    if (res.language === 'py') {
+                    if (res.studentActivity.language === 'py') {
                       url = `/editor3.html?${res.codes[name]}`;
                     }
                     $("#questions").append(
