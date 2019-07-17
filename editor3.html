@@ -143,20 +143,33 @@
     }
 
     function panic() {
+      const sure = confirm("O botão de pânico custa 420 moedas. Tem certeza que quer continuar?")
+      if (!sure) {
+        return false;
+      }
+      const realySure = confirm("VOCÊ TEM MUITA CERTEZA MESMO QUE QUER GASTAR 420 MOEDAS PARA ACIONAR O BOTÃO DE PÂNICO?")
+      if (!realySure) {
+        return false;
+      }
       $.ajax({
-        type: 'patch',
-        url: url + 'students/' + localStorage.userId + '?access_token=' + localStorage.access_token,
+        type: "patch",
+        url:
+          url +
+          "students/" +
+          localStorage.userId +
+          "?access_token=" +
+          localStorage.access_token,
         crossDomain: true,
         data: {
           panic: true
         },
         success: function(responseData, textStatus, jqXHR) {
-          alert('Pronto, um facilitador irá te ajudar em breve!')
+          alert("Pronto, um facilitador irá te ajudar em breve!");
         },
         error: function(responseData, textStatus, errorThrown) {
-          alert('Algo deu errado' + responseData)
+          alert("Algo deu errado " + responseData.responseJSON.error.message);
         }
-      })
+      });
     }
 
     $('#closeButton').click(() => {
