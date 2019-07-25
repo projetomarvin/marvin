@@ -27,6 +27,12 @@
       </p>
     </header>
     <main class="content">
+      <div id="saveDialog" style="display: none">
+        <div class="dialog">
+          <h2>Finalizando a correção. Isso pode demorar um tempo...</h2>
+          <img src="https://i.gifer.com/VAyR.gif" class="loader">
+        </div>
+      </div>
       <div class="container">
         <div id="questions"></div>
         <div>
@@ -55,7 +61,9 @@
       let numberOfExercises;
       let isLast = false;
       let isManual = false;
+
       function submit() {
+        toggleLoadingDialog();
         const sure = confirm("Tem certeza que quer terminar a correção?");
         if (!sure) return false;
         let payload = {};
@@ -84,7 +92,6 @@
           data: payload,
           success: function(res, textStatus, jqXHR) {
             console.log(res);
-            window.location.href = '/home.html'
             let path = url + 'corrections/' + location.search.replace("?", '') + '/finish'
             if (isLast) {
               path = url + 'corrections/' + location.search.replace("?", '') + '/finishManual'
@@ -97,6 +104,7 @@
                 data: payload,
                 success: function(responseData, textStatus, jqXHR) {
                   console.log(responseData);
+                  alert('Pronto. Atividade finalizada com sucesso!')
                   window.location.href = '/home.html'
                 }
               })
@@ -104,6 +112,10 @@
               window.location.href = '/home.html'
           }
         })
+      }
+
+      function toggleLoadingDialog() {
+        $('#saveDialog').toggle();
       }
 
       function answerCorrectionInvite(answer, id) {
