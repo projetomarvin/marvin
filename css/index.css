@@ -260,6 +260,8 @@ main.fullwidth {
   position: fixed;
   background: rgba(203, 203, 203, 0.88);
   z-index: 5;
+  top: 0;
+  bottom: 0;
 }
 
 #saveDialog .dialog {
@@ -562,16 +564,16 @@ textarea[name="comments"] {
   width: 24px;
 }
 
-div.message .delete-msg {
+div .delete-msg {
   position: absolute;
   right: 4px;
   font-size: 10px;
   width: 12px;
   text-align: center;
-  z-index: 9999;
+  margin-top: 6px;
 }
 
-div.message .delete-msg:hover {
+div .delete-msg:hover {
   background-color: #b10000;
   border-radius: 50%;
 }

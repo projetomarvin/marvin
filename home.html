@@ -79,11 +79,11 @@
             }
 
             $("#msg-box .messages").append(
-              `<a href="${msg.targetURL}" class="msg" id="msg${i}">` +
+              `<div id="msg${i}">` + btn +
+              `<a href="${msg.targetURL}" class="msg">` +
               '<div class="message">' +
-                btn +
                 msg.message +
-              '</div></a>'
+              '</div></a></div>'
             )
           })
         }
