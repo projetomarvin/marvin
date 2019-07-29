@@ -305,7 +305,9 @@
             } else {
               $(".doing p").append(` em ${langs[currentActivity.language]}`);
             }
-            if (currentActivity.corrections.length % 2 === 1 && res.activityNumber > 7) {
+            if (currentActivity.corrections.length % 2 === 1 &&
+              currentActivity.corrections[currentActivity.corrections.length - 1].correctedAt &&
+              res.activityNumber > 7) {
               $(".doing p").append(', segunda correção.');
             } else if (
               (currentActivity.correctorId && !currentActivity.corrector2Id) ||
