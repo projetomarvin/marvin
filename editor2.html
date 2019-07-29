@@ -524,17 +524,25 @@
             let htmlCode = editor.getValue();
             editor.setSession(css)
             const cssCode = editor.getValue();
+            editor.setSession(js)
+            const jsCode = editor.getValue();
             $('#edit-html').click();
             const element = document.createElement('a');
-            if (cssCode) {
-              htmlCode = htmlCode.replace('</head>', '<link rel="stylesheet" type="text/css" href="index.css" />\n</head>');
-              element.setAttribute('href', 'data:text/css;charset=utf-8,' + encodeURIComponent(cssCode));
-              element.setAttribute('download', "index.css");
-              element.style.display = 'none';
-              document.body.appendChild(element);
-              element.click();
-              document.body.removeChild(element);
-            }
+            htmlCode = htmlCode.replace(
+              '</head>',
+              '\<script async src="index.js"\>\</script\>\n<link rel="stylesheet" type="text/css" href="index.css" />\n</head>');
+            console.log(htmlCode);
+            element.setAttribute('href', 'data:text/css;charset=utf-8,' + encodeURIComponent(cssCode));
+            element.setAttribute('download', "index.css");
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            element.setAttribute('href', 'data:text/js;charset=utf-8,' + encodeURIComponent(jsCode));
+            element.setAttribute('download', "index.js");
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
             element.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(htmlCode));
             element.setAttribute('download', "index.html");
             element.style.display = 'none';
