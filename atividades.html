@@ -278,7 +278,7 @@
           url:
             url + "students/" +
             localStorage.userId +
-            "?filter=%7B%22include%22%3A%22studentActivities%22%7D&access_token=" +
+            '?filter={"include":{"studentActivities": "corrections"}}&access_token=' +
             localStorage.access_token,
           crossDomain: true,
           success: function(res, textStatus, jqXHR) {
@@ -294,27 +294,26 @@
               res.studentActivities.length - 2
             ] || { correctorId: "" };
             studentActivityId = currentActivity.id;
-            if (
-              (currentActivity.correctorId && !currentActivity.corrector2Id) ||
-              currentActivity.corrector2Id != 0 && currentActivity.corrector2Id
-            ) {
-              $(".doing").hide();
-              $(".correction").show();
-              getCorrector(currentActivity.corrector2Id || currentActivity.correctorId);
-            }
             if (res.username) {
               $(".doing p").append(res.activityNumber);
               getCourseActivities(res.courseId, res.activityNumber);
             } else {
               location.href = "/home.html";
             }
-            if (currentActivity.corrector2Id) {
-              $(".doing p").append(', segunda correção.');
-            }
             if (!currentActivity.language) {
               $('#chooseLang').show()
             } else {
               $(".doing p").append(` em ${langs[currentActivity.language]}`);
+            }
+            if (currentActivity.corrections.length % 2 === 1 && res.activityNumber > 7) {
+              $(".doing p").append(', segunda correção.');
+            } else if (
+              (currentActivity.correctorId && !currentActivity.corrector2Id) ||
+              currentActivity.corrector2Id != 0 && currentActivity.corrector2Id
+            ) {
+              $(".doing").hide();
+              $(".correction").show();
+              getCorrector(currentActivity.corrector2Id || currentActivity.correctorId);
             }
           },
           error: function(responseData, textStatus, errorThrown) {
