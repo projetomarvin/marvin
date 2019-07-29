@@ -313,6 +313,7 @@
           var js = new ace.EditSession('');
           js.setMode('ace/mode/javascript');
           editor.setSession(html);
+          editor.getSession().setUndoManager(new ace.UndoManager())
 
           const codeTab = document.getElementById('edit-html');
           const cssTab = document.getElementById('edit-css');
