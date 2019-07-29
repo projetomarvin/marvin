@@ -474,22 +474,6 @@
             $('#HTMLview').attr('srcdoc', '');
           }
 
-          editor.commands.addCommand({
-            name: "save",
-            bindKey: { win: "Ctrl-S", mac: "Command-S" },
-            exec: function (editor) {
-              save()
-            }
-          });
-
-          editor.commands.addCommand({
-            name: "undoo",
-            bindKey: { win: "Ctrl-Z", mac: "Command-Z" },
-            exec: function () {
-              editor.undo();
-            }
-          });
-
           function run() {
             editor.setSession(html)
             let htmlCode = editor.getValue();
