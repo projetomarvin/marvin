@@ -559,7 +559,7 @@
               e.preventDefault();
               $(document).mousemove(function (e) {
                   e.preventDefault();
-                  var x = e.pageX - $('#left-side').offset().left;
+                  var x = e.pageX;
                   $('#left-side').css("width", x);
                   $('#right-side').css("width", window.innerWidth - x - 18);
               })
