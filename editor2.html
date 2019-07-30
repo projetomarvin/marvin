@@ -312,6 +312,10 @@
           css.setMode('ace/mode/css');
           var js = new ace.EditSession('');
           js.setMode('ace/mode/javascript');
+          editor.setSession(css);
+          editor.getSession().setUndoManager(new ace.UndoManager())
+          editor.setSession(js);
+          editor.getSession().setUndoManager(new ace.UndoManager())
           editor.setSession(html);
           editor.getSession().setUndoManager(new ace.UndoManager())
 
