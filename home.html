@@ -1,210 +1,251 @@
 <!DOCTYPE html>
 <html lang="pt" dir="ltr">
+  <head>
+    <link rel="stylesheet" href="/css/index.css" />
+    <link rel="stylesheet" href="/css/master.css" />
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="assets/favicon.ico" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>Marvin</title>
+    <script src="./helper.js" charset="utf-8"></script>
+  </head>
 
-<head>
-  <link rel="stylesheet" href="/css/index.css">
-  <link rel="stylesheet" href="/css/master.css">
-  <meta charset="utf-8">
-  <link rel="shortcut icon" href="assets/favicon.ico">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <title>Marvin</title>
-  <script src="./helper.js" charset="utf-8"></script>
-</head>
-
-<body>
-  <header>
-    <div class="logo welcome">
-      <img src="assets/logo.png" alt="">
-      <span class="name-msg">
-        <p>Bem vindo(a) de volta, </p>
-        <div>
-        <img id="msg" onclick="toggleMsg()" src="assets/close-envelope.svg" alt="">
-        <div id="msg-box" hidden>
-          <h3>Notificações</h3>
-          <div class="messages">
-
+  <body>
+    <header>
+      <div class="logo welcome">
+        <img src="assets/logo.png" alt="" />
+        <span class="name-msg">
+          <p>Bem vindo(a) de volta,</p>
+          <div>
+            <img
+              id="msg"
+              onclick="toggleMsg()"
+              src="assets/close-envelope.svg"
+              alt=""
+            />
+            <div id="msg-box" hidden>
+              <h3>Notificações</h3>
+              <div class="messages"></div>
+            </div>
           </div>
+        </span>
+        <div class="coins">
+          <h3 id="CPoints">Pontos de correção:</h3>
+          <h3 id="coins">Moedas:</h3>
         </div>
       </div>
-      </span>
-      <div class="coins">
-        <h3 id="CPoints">Pontos de correção: </h3>
-        <h3 id="coins">Moedas: </h3>
+      <div class="logout">
+        <button type="button" class="wine" onclick="logout()">Sair</button>
+        <br />
+        <br />
+        <h3>Disponível para correção</h3>
+        <a href="/historico.html"><h3>Histórico de correções</h3></a>
       </div>
-    </div>
-    <div class="logout">
-      <button type="button" class="wine" onclick="logout()">Sair</button>
-      <br>
-      <br>
-      <h3>Disponível para correção</h3>
-      <a href="/historico.html"><h3>Histórico de correções</h3></a>
-    </div>
-  </header>
-  <main>
-    <a class="activityButton purple" href="editor.html">
-      <img src="assets/coding.svg" alt="">
-      Acessar o editor
-    </a>
-    <a class="activityButton rose" id="repo" target="_blank">
-      <img src="assets/desktop.svg" alt="">
-      Ir para repositório
-    </a>
-    <a class="activityButton green" href="atividades.html">
-      <img src="assets/checklist.svg" alt="">
-      Atividades
-    </a>
-    <a class="activityButton orange" href="material-suporte.html">
-      <img src="assets/book.svg" alt="">
-      Material de suporte
-    </a>
-  </main>
-  <script type="text/javascript">
-    function toggleMsg() {
-      $("#msg-box").toggle()
-      return false;
-    }
+    </header>
+    <main>
+      <a class="activityButton purple" href="editor.html">
+        <img src="assets/coding.svg" alt="" />
+        Acessar o editor
+      </a>
+      <a class="activityButton rose" id="repo" target="_blank">
+        <img src="assets/desktop.svg" alt="" />
+        Ir para repositório
+      </a>
+      <a class="activityButton green" href="atividades.html">
+        <img src="assets/checklist.svg" alt="" />
+        Atividades
+      </a>
+      <a class="activityButton orange" href="material-suporte.html">
+        <img src="assets/book.svg" alt="" />
+        Material de suporte
+      </a>
+    </main>
+    <script type="text/javascript">
+      function toggleMsg() {
+        $("#msg-box").toggle();
+        return false;
+      }
 
-    function getMessages() {
-      $.ajax({
-        url: url + 'students/' + localStorage.userId + '?filter=%7B%22include%22%3A%20%22notifications%22%7D&access_token=' + localStorage.access_token,
-        crossDomain: true,
-        success: function (responseData) {
-          if (!responseData.notifications.length) return $('#msg').hide();
-          $('#msg').show();
-          $('.messages').empty();
-          responseData.notifications.map((msg, i) => {
-            let btn = '';
-            if (msg.targetURL === '#' || msg.targetURL.includes("detalheNota")) {
-              btn = `<span class="delete-msg" onclick="del('${msg.id}', ${i})">&times;</span>`
-            }
-
-            $("#msg-box .messages").append(
-              `<div id="msg${i}">` + btn +
-              `<a href="${msg.targetURL}" class="msg">` +
-              '<div class="message">' +
-                msg.message +
-              '</div></a></div>'
-            )
-          })
-        }
-      })
-    }
-
-    function toggleAvailable() {
-      let data;
-      $('.switch input').is(':checked') ? data = new Date(new Date().getTime() + 1800000) : data = 0
-      $.ajax({
-        type: 'patch',
-        url: url + 'students/' + localStorage.userId + '?access_token=' + localStorage.access_token,
-        crossDomain: true,
-        data: {
-          availableUntil: data
-        },
-        success: function(responseData, textStatus, jqXHR) {
-          if ($('.switch input').is(':checked')) {
-            $('.available p').html('Disponível')
-          } else {
-            $('.available p').html('Indisponível')
-          }
-        },
-        error: function(responseData, textStatus, errorThrown) {
-          if ($('.switch input').is(':checked')) {
-            $('.available p').html('Indisponível');
-          } else {
-            $('.available p').html('Disponível');
-          }
-          var checkBoxes = $('.switch input');
-          checkBoxes.prop("checked", !checkBoxes.prop("checked"));
-          console.log(responseData);
-          alert(responseData.responseJSON.error.message)
-        }
-      })
-    }
-
-    function del(msgId, i) {
-      $.ajax({
-        type: "delete",
-        url: url + 'students/' + localStorage.userId + '/notifications/' + msgId + '?access_token=' + localStorage.access_token,
-        crossDomain: true,
-        success: function(responseData, textStatus, jqXHR) {
-          $(`#msg${i}`).remove()
-        },
-        error: function(responseData, textStatus, errorThrown) {
-          console.log(responseData);
-        }
-      })
-    }
-
-    $(document).on('click', function(evt) {
-        if(!$(evt.target).is('#msg') &&
-        !$(evt.target).is('.message a') &&
-        !$(evt.target).is('.message') &&
-        !$(evt.target).is('.delete-msg') &&
-        $('#msg-box').is(':visible')) {
-          $('#msg-box').hide()
-          return false;
-        }
-    });
-
-    $(document).ready(function() {
-      if (location.href.includes('code=')) {
-        const token = location.href.split('code=')[1];
+      function getMessages() {
         $.ajax({
-          type: 'post',
-          url: url + 'students/' + localStorage.userId + '/linkGithub?access_token=' + localStorage.access_token,
+          url:
+            url +
+            "students/" +
+            localStorage.userId +
+            "?filter=%7B%22include%22%3A%20%22notifications%22%7D&access_token=" +
+            localStorage.access_token,
+          crossDomain: true,
+          success: function(responseData) {
+            if (!responseData.notifications.length) return $("#msg").hide();
+            $("#msg").show();
+            $(".messages").empty();
+            responseData.notifications.map((msg, i) => {
+              let btn = "";
+              if (
+                msg.targetURL === "#" ||
+                msg.targetURL.includes("detalheNota")
+              ) {
+                btn = `<span class="delete-msg" onclick="del('${msg.id}', ${i})">&times;</span>`;
+              }
+
+              $("#msg-box .messages").append(
+                `<div id="msg${i}">` +
+                  btn +
+                  `<a href="${msg.targetURL}" class="msg">` +
+                  '<div class="message">' +
+                  msg.message +
+                  "</div></a></div>"
+              );
+            });
+          }
+        });
+      }
+
+      function toggleAvailable() {
+        let data;
+        $(".switch input").is(":checked")
+          ? (data = new Date(new Date().getTime() + 1800000))
+          : (data = 0);
+        $.ajax({
+          type: "patch",
+          url:
+            url +
+            "students/" +
+            localStorage.userId +
+            "?access_token=" +
+            localStorage.access_token,
           crossDomain: true,
           data: {
-            token: token
+            availableUntil: data
           },
           success: function(responseData, textStatus, jqXHR) {
-            console.log(responseData);
-          },
-          error: function(responseData, textStatus, errorThrown) {
-            console.log(responseData);
-          }
-        })
-      }
-      if (!localStorage.access_token) {
-        localStorage.removeItem('userId');
-        localStorage.removeItem('access_token');
-        location.href = '/index.html'
-      } else {
-        $.ajax({
-          type: 'GET',
-          url: url + 'students/' + localStorage.userId + '?access_token=' + localStorage.access_token,
-          crossDomain: true,
-          success: function(responseData, textStatus, jqXHR) {
-            localStorage.setItem("courseId", responseData.courseId);
-            if (responseData.username) {
-              localStorage.setItem('user', JSON.stringify(responseData));
-              $('.welcome p').append(responseData.username);
-              $("#repo").attr("href", "http://www.github.com/" + responseData.username + '/marvin')
-              $('#currentLevel').append(responseData.XPPoints)
-              $('#CPoints').append(responseData.correctionPoints)
-              $('#coins').append(responseData.coins + '&nbsp;<a href="/moedas.html" class="orange">Loja</a>')
-              getMessages();
-              setInterval(getMessages, 5*1000);
+            if ($(".switch input").is(":checked")) {
+              $(".available p").html("Disponível");
             } else {
-              location.href = '/github-link.html?' + responseData.id;
+              $(".available p").html("Indisponível");
             }
           },
           error: function(responseData, textStatus, errorThrown) {
-            alert('Algo deu errado. Faça o login novamente');
-            localStorage.removeItem('userId');
-            localStorage.removeItem('access_token');
-            location.href = '/index.html';
+            if ($(".switch input").is(":checked")) {
+              $(".available p").html("Indisponível");
+            } else {
+              $(".available p").html("Disponível");
+            }
+            var checkBoxes = $(".switch input");
+            checkBoxes.prop("checked", !checkBoxes.prop("checked"));
+            console.log(responseData);
+            alert(responseData.responseJSON.error.message);
           }
-        })
+        });
       }
-    })
 
-    function logout() {
-      localStorage.removeItem('userId');
-      localStorage.removeItem('access_token');
-      location.href = '/index.html'
-    }
+      function del(msgId, i) {
+        $.ajax({
+          type: "delete",
+          url:
+            url +
+            "students/" +
+            localStorage.userId +
+            "/notifications/" +
+            msgId +
+            "?access_token=" +
+            localStorage.access_token,
+          crossDomain: true,
+          success: function(responseData, textStatus, jqXHR) {
+            $(`#msg${i}`).remove();
+          },
+          error: function(responseData, textStatus, errorThrown) {
+            console.log(responseData);
+          }
+        });
+      }
 
-  </script>
-</body>
+      $(document).on("click", function(evt) {
+        if (
+          !$(evt.target).is("#msg") &&
+          !$(evt.target).is(".message a") &&
+          !$(evt.target).is(".message") &&
+          !$(evt.target).is(".delete-msg") &&
+          $("#msg-box").is(":visible")
+        ) {
+          $("#msg-box").hide();
+          return false;
+        }
+      });
 
+      $(document).ready(function() {
+        if (location.href.includes("code=")) {
+          const token = location.href.split("code=")[1];
+          $.ajax({
+            type: "post",
+            url:
+              url +
+              "students/" +
+              localStorage.userId +
+              "/linkGithub?access_token=" +
+              localStorage.access_token,
+            crossDomain: true,
+            data: {
+              token: token
+            },
+            success: function(responseData, textStatus, jqXHR) {
+              console.log(responseData);
+            },
+            error: function(responseData, textStatus, errorThrown) {
+              console.log(responseData);
+            }
+          });
+        }
+        if (!localStorage.access_token) {
+          localStorage.removeItem("userId");
+          localStorage.removeItem("access_token");
+          location.href = "/index.html";
+        } else {
+          $.ajax({
+            type: "GET",
+            url:
+              url +
+              "students/" +
+              localStorage.userId +
+              "?access_token=" +
+              localStorage.access_token,
+            crossDomain: true,
+            success: function(responseData, textStatus, jqXHR) {
+              localStorage.setItem("courseId", responseData.courseId);
+              if (responseData.username) {
+                localStorage.setItem("user", JSON.stringify(responseData));
+                $(".welcome p").append(responseData.username);
+                $("#repo").attr(
+                  "href",
+                  "http://www.github.com/" + responseData.username + "/marvin"
+                );
+                $("#currentLevel").append(responseData.XPPoints);
+                $("#CPoints").append(responseData.correctionPoints);
+                $("#coins").append(
+                  responseData.coins +
+                    '&nbsp;<a href="/moedas.html" class="orange">Loja</a>'
+                );
+                getMessages();
+                setInterval(getMessages, 5 * 1000);
+              } else {
+                location.href = "/github-link.html?" + responseData.id;
+              }
+            },
+            error: function(responseData, textStatus, errorThrown) {
+              alert("Algo deu errado. Faça o login novamente");
+              localStorage.removeItem("userId");
+              localStorage.removeItem("access_token");
+              location.href = "/index.html";
+            }
+          });
+        }
+      });
+
+      function logout() {
+        localStorage.removeItem("userId");
+        localStorage.removeItem("access_token");
+        location.href = "/index.html";
+      }
+    </script>
+  </body>
 </html>
