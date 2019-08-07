@@ -16,6 +16,10 @@
   width: 100%;
 }
 
+.line-break {
+  width: 100%;
+}
+
 #atividades {
   margin-bottom: 112px;
 }
@@ -767,5 +771,7 @@ input:checked + .slider:before {
 .grid {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  flex-flow: row wrap;
+  align-content: space-between;
+  justify-content: space-between
 }

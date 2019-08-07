@@ -22,7 +22,7 @@
   <main class="vertical">
     <h2 id="coin">Você tem </h2>
     <div class="grid">
-      <a class="activityButton orange" onclick="buyCPoint()">
+      <a class="activityButton orange" onclick="buy('CPoints')">
         <img src="assets/correct.svg" alt="">
         Ponto de correção
         <br>
@@ -33,19 +33,73 @@
         <img src="assets/exchange.svg" alt="">
         Transferir moedas
       </a>
+      <a class="activityButton orange" onclick="buy('dado')">
+        <img src="assets/dado.svg" alt="">
+        Dado
+        <br>
+        <br>
+        $47
+      </a>
+      <div class="line-break"></div>
+      <a class="activityButton orange" onclick="buy('music1')">
+        <img src="assets/musica.svg" alt="">
+        3 músicas na playlist
+        <br>
+        <br>
+        $42
+      </a>
+      <a class="activityButton orange" onclick="buy('music1')">
+        <img src="assets/musica.svg" alt="">
+        2 músicas na playlist
+        <br>
+        <br>
+        $35
+      </a>
+      <a class="activityButton orange" onclick="buy('music1')">
+        <img src="assets/musica.svg" alt="">
+        Uma música na playlist
+        <br>
+        <br>
+        $21
+      </a>
+      <div class="line-break"></div>
+      <a class="activityButton orange" onclick="buy('stickerMarvin')">
+        <img src="assets/sticker.svg" alt="">
+        Adesivo Marvin
+        <br>
+        <br>
+        $42
+      </a>
+      <a class="activityButton orange" onclick="buy('stickerDontPanic')">
+        <img src="assets/sticker.svg" alt="">
+        Adesivo Don't Panic
+        <br>
+        <br>
+        $42
+      </a>
+      <a class="activityButton orange" onclick="buy('tshirt')">
+        <img src="assets/tshirt.svg" alt="">
+        Camisa
+        <br>
+        <br>
+        $997
+      </a>
     </div>
   </main>
   <script type="text/javascript">
-    function buyCPoint() {
-      const sure = confirm("Tem certeza que quer comprar um ponto de correção?")
+    function buy(product) {
+      const sure = confirm("Tem certeza que quer comprar isso?")
       if (sure && confirm("Tem MUITA certeza que quer gastar suas moedas com isso?"))
       $.ajax({
-        url: url + '/students/' + localStorage.userId + '/buyCPoint?access_token=' + localStorage.access_token,
-        type: 'put',
+        url: url + 'students/' + localStorage.userId + '/buy/' + product + '?access_token=' + localStorage.access_token,
+        type: 'post',
         crossDomain: true,
         success: function (res) {
           console.log(res);
-          alert("Ponto de correção comprado com sucesso!")
+          alert("Compra realizada com sucesso com sucesso!");
+          if (res) {
+            location.href = `https://docs.google.com/forms/d/e/${res}/viewform`
+          }
         },
         error: function (msg) {
           alert(msg.responseJSON.error.message)
