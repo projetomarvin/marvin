@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <title>Marvi - Editor</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/css/index.css" />
+    <link rel="stylesheet" href="/css/master.css" />
+    <link rel="stylesheet" href="/css/panic.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script
+      src="/src-min/ace.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
+    <link rel="shortcut icon" href="assets/favicon.ico" />
+    <script src="./helper.js" charset="utf-8"></script>
+  </head>
+
+  <body>
+    <div id="saveDialog" style="display:none">
+      <div class="dialog">
+        <button id="closeButton">&times;</button>
+        <div id="upload" style="display:none">
+          <h2>Como você deseja salvar seu código?</h2>
+          <div class="buttons">
+            <button onclick="download()" class="purple">
+              Baixar <span class="icon">&#11015;</span>
+            </button>
+            <button onclick="github()" class="purple">
+              Github <img src="assets/github.svg" alt="" />
+            </button>
+          </div>
+          <div class="githubPath" hidden>
+            <input
+              type="text"
+              name="githubPath"
+              placeholder="caminho e nome do arquivo"
+            />
+            <br />
+            <input
+              type="text"
+              name="message"
+              placeholder="mensagem do commit"
+            />
+            <br />
+            <br />
+            <button class="green" onclick="saveGithub()">Salvar</button>
+          </div>
+          <br />
+          <p style="color: darkred;">
+            LEMBRE-SE DE NÃO INCLUIR A LINHA DE INVOCAÇÃO DA FUNÇÃO
+          </p>
+        </div>
+        <div id="githubLoad" style="display:none">
+          <h2>Qual arquvo você quer abrir?</h2>
+          <select id="file">
+            <option disabled selected value></option>
+          </select>
+          <div class="buttons">
+            <button onclick="loadFile()" class="green">Abrir</button>
+          </div>
+        </div>
+        <div class="buttons" id="custommsg" hidden></div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="half">
+        <header class="header editor">
+          <div>
+            <a class="white_back" href="/home.html"> &#11013; </a>
+            <p>Editor React</p>
+            <button onclick="toggleGithub()" id="github-file">
+              <img src="assets/github.svg" alt="" />
+            </button>
+          </div>
+          <a href="/editor2.html"> <img src="assets/arrows.svg" alt="" /> </a>
+        </header>
+        <div id="editor"></div>
+        <footer class="footer">
+          <button onclick="run()" class="green">
+            Executar <span class="icon">&#9654;</span>
+          </button>
+          <button onclick="reset()" class="rose">
+            Reiniciar <span class="icon">&#8634;</span>
+          </button>
+          <button onclick="save()" class="purple">
+            Salvar arquivo <span class="icon">&#11015;</span>
+          </button>
+        </footer>
+      </div>
+      <div class="half">
+        <header class="header console">
+          Saída do console
+          <button onclick="clearConsole()" class="wine">Limpar</button>
+        </header>
+        <iframe id="HTMLview" name="iframe1"></iframe>
+      </div>
+    </div>
+
+    <script>
+      const editor = ace.edit("editor");
+      const logger = document.getElementById("log");
+      editor.setTheme("ace/theme/monokai");
+      editor.session.setMode("ace/mode/jsx");
+      editor.setBehavioursEnabled(true);
+      editor.focus();
+      const files = [];
+
+      document.onkeyup = function(e) {
+        if (e.ctrlKey && e.which === 13) {
+          run();
+        } else if (e.altKey && e.which === 83) {
+          e.preventDefault();
+          save();
+        }
+      };
+
+      function save() {
+        $("#saveDialog").show();
+        $("#upload").show();
+        $.ajax({
+          url:
+            url +
+            "courses/" +
+            localStorage.courseId +
+            "?filter[include]=activities&access_token=" +
+            localStorage.access_token,
+          crossDomain: true,
+          success: res => {
+            res.activities.map(a => {
+              if (a.exercises) {
+                a.exercises.map(e => {
+                  files.push(e.file);
+                });
+              }
+            });
+          }
+        });
+      }
+
+      function panic() {
+        const sure = confirm("O botão de pânico custa 420 moedas. Tem certeza que quer continuar?")
+        if (!sure) {
+          return false;
+        }
+        const realySure = confirm("VOCÊ TEM MUITA CERTEZA MESMO QUE QUER GASTAR 420 MOEDAS PARA ACIONAR O BOTÃO DE PÂNICO?")
+        if (!realySure) {
+          return false;
+        }
+        $.ajax({
+          type: "patch",
+          url:
+            url +
+            "students/" +
+            localStorage.userId +
+            "?access_token=" +
+            localStorage.access_token,
+          crossDomain: true,
+          data: {
+            panic: true
+          },
+          success: function(responseData, textStatus, jqXHR) {
+            alert("Pronto, um facilitador irá te ajudar em breve!");
+          },
+          error: function(responseData, textStatus, errorThrown) {
+            alert("Algo deu errado " + responseData.responseJSON.error.message);
+          }
+        });
+      }
+
+      $("#closeButton").click(() => {
+        $("#saveDialog").toggle();
+        $("input[name=githubPath]").val("");
+        $("input[name=message]").val("");
+        $(".githubPath").toggle();
+        $("#upload").hide();
+        $("#githubLoad").hide();
+      });
+
+      function github() {
+        $(".githubPath").toggle();
+      }
+
+      function pushToGit(code, path) {
+        const msg = $("input[name=message]").val();
+        $.ajax({
+          type: "post",
+          url:
+            url +
+            "students/" +
+            localStorage.userId +
+            "/pushToGit?access_token=" +
+            localStorage.access_token,
+          crossDomain: true,
+          data: {
+            content: btoa(code),
+            path: path,
+            message: msg
+          },
+          success: function(res, txt, jsXHR) {
+            alert("Commit criado com sucesso! Veja em seu repositório");
+            $("#saveDialog").toggle();
+            $(".githubPath").toggle();
+            $("#upload").toggle();
+            $("input[name=githubPath]").val("");
+            $("input[name=message]").val("");
+          },
+          error: function(res, txt, jsXHR) {
+            if (res.responseJSON.error.statusCode === 401) {
+              const goToLink =
+                "<h3>Algo deu errado no upload para o github. Você deve autorizar o acesso novamemte.</h3>" +
+                '<button onclick="linkToGit()" class="green">Clique aqui para continuar</button>';
+              $("#upload").hide();
+              $("#custommsg").append(goToLink);
+              $("#custommsg").show();
+            }
+          }
+        });
+      }
+
+      function checkFileIsCurrent(obj) {
+        return (
+          obj.mode === "100644" &&
+          obj.path.includes(
+            "fase0" + JSON.parse(localStorage.user).activityNumber
+          )
+        );
+      }
+
+      function toggleGithub() {
+        const user = JSON.parse(localStorage.user);
+        $("#saveDialog").show();
+        $("#githubLoad").show();
+        $.ajax({
+          url:
+            "https://api.github.com/repos/" +
+            user.username +
+            "/marvin/commits?access_token=" +
+            JSON.parse(localStorage.user).githubAccessToken,
+          crossDomain: true,
+          success: function(res, txt, jsXHR) {
+            $.ajax({
+              url:
+                "https://api.github.com/repos/" +
+                user.username +
+                "/marvin/git/trees/" +
+                res[0].sha +
+                "?recursive=1&access_token=" +
+                JSON.parse(localStorage.user).githubAccessToken,
+              crossDomain: true,
+              success: function(r, t) {
+                const files = r.tree.filter(checkFileIsCurrent);
+                if ($("select#file option").length === 1) {
+                  for (var i = 0; i < files.length; i++) {
+                    $("select#file").append(
+                      "<option value=" +
+                        files[i].path +
+                        ">" +
+                        files[i].path +
+                        "</option>"
+                    );
+                  }
+                }
+              }
+            });
+          },
+          error: function(res, txt, jsXHR) {
+            console.log(res);
+          }
+        });
+      }
+
+      function loadFile() {
+        const user = JSON.parse(localStorage.user);
+        const path = $("select#file").val();
+        $.ajax({
+          url:
+            "https://api.github.com/repos/" +
+            user.username +
+            "/marvin/contents/" +
+            path,
+          crossDomain: true,
+          success: function(res) {
+            editor.getSession().setValue(atob(res.content));
+            $("#closeButton").trigger("click");
+            $("input[name=githubPath]").val(path);
+          }
+        });
+      }
+
+      function saveGithub() {
+        const code = editor.getValue();
+        const path = $("input[name=githubPath]")
+          .val()
+          .replace(/\s/g, "");
+        if (!$("input[name=message]").val())
+          return alert("Você precisa colocar uma mensagem de commit!");
+        else if (
+          (files.includes(path) ||
+            (!files.includes(path) &&
+              confirm(
+                "Parece que você digitou um caminho de arquivo que não corresponde a nenhum exercício. Tem certeza que quer continuar?"
+              ))) &&
+          (code.match(/(fun.*{[\s\S]*}[\s]*$)/g) ||
+            (!code.match(/(fun.*{[\s\S]*}[\s]*$)/g) &&
+              confirm(
+                "Oops, parece que seu código não segue as normas de envio, tem certeza que quer continuar?"
+              )))
+        )
+          pushToGit(code, path);
+        else {
+          $("#saveDialog").toggle();
+          $("#upload").toggle();
+          $(".githubPath").hide();
+        }
+      }
+
+      function linkToGit() {
+        window.open("/github-link.html", "_blank");
+        $("#closeButton").trigger("click");
+      }
+
+      function saveCode() {
+        var code = editor.getValue();
+        localStorage.setItem("code", code);
+      }
+
+      function reset() {
+        location.reload();
+      }
+
+      function clearConsole() {
+        logger.innerHTML = "";
+      }
+
+      function run() {
+        saveCode();
+        var code = editor.getValue();
+        const t = "bo" + "dy"
+        let htmlCode = `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="UTF-8" />
+            <title>React</title>
+            <script src="https://unpkg.com/@babel/standalone/babel.min.js"></scrip>
+            <script src="https://unpkg.com/react@16/umd/react.development.js"></scrip>
+            <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></scrip>
+          </head>
+          <${t}>
+            <div id="root"></div>
+            <script type="text/babel">
+              ${code}
+                const domContainer = document.querySelector('#root');
+                ReactDOM.render(<App/>, domContainer);
+            </scrip>
+          </${t}></html>`;
+        htmlCode = htmlCode.replace(/scrip>/g, "script>");
+        console.log(htmlCode);
+        $('#HTMLview').attr('srcdoc', htmlCode);
+      }
+
+      function download() {
+        const code = editor.getValue();
+        const element = document.createElement("a");
+        element.setAttribute(
+          "href",
+          "data:text/javascript;charset=utf-8," + encodeURIComponent(code)
+        );
+        element.setAttribute("download", "file.js");
+
+        element.style.display = "none";
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+      }
+
+      $(document).ready(function() {
+        let code = location.search.substring(1);
+        let run;
+        try {
+          run = atob(code)
+        } catch (e) {
+        }
+        editor.setValue(run || localStorage.code || "");
+        setInterval(function() {
+          saveCode();
+        }, 30000);
+      });
+    </script>
+  </body>
+</html>
