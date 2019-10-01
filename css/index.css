@@ -1,3 +1,44 @@
+@font-face {
+  font-family: 'Courier new';
+  font-weight: bold;
+  src: url('../assets/Courier.ttf');
+}
+
+@font-face {
+  font-family: 'Courier new';
+  font-weight: normal;
+  src: url('../assets/Courrier_regular.ttf');
+}
+
+@font-face {
+  font-family: 'Computer says no';
+  src: url('../assets/Computer_says_no.ttf');
+}
+
+@font-face {
+  font-family: 'LM Roman 10';
+  font-weight: bold;
+  src: url('../assets/lmroman10_bold.otf');
+}
+
+@font-face {
+  font-family: 'LM Roman 10';
+  src: url('../assets/lmroman10-regular.otf');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  src: url('../assets/OpenSans.ttf');
+  font-weight: lighter;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  src: url('../assets/OpenSans-Regular.ttf');
+  font-weight: normal;
+}
+
 .activityButton {
   width: 20%;
   text-align: center;
@@ -616,7 +657,7 @@ button[disabled] {
 }
 
 .editor a img {
-    width: 24px;
+  width: 24px;
 }
 
 /* EDITOR */
@@ -631,10 +672,10 @@ button[disabled] {
 .editor-tabs {
   padding: 0px;
   margin: 0;
-	display: flex;
-	background: #2f3240;
+  display: flex;
+  background: #2f3240;
   color: #f8f8f2;
-	width: 100%;
+  width: 100%;
   height: 40px;
   font: 12px / normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas',
     'source-code-pro', monospace;
@@ -776,5 +817,188 @@ input:checked + .slider:before {
   align-items: center;
   flex-flow: row wrap;
   align-content: space-between;
-  justify-content: space-between
+  justify-content: space-between;
+}
+
+#pdf .page {
+  background: white;
+  padding: 24px;
+  width: 98vw;
+  height: calc(98vw * 1.414);
+  max-width: 1000px;
+  max-height: 1414px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 5px 0px #444444;
+  position: relative;
+}
+
+#pdf .content {
+  padding: 60px;
+  border: 6px solid #5eb770;
+  border-radius: 24px;
+  width: 100%;
+  height: 100%;
+}
+
+#pdf .cover {
+  text-align: center;
+}
+
+#pdf .cover .title {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  color: #66b400;
+  font-size: 60px;
+}
+
+#pdf .cover #levelNumber {
+  font-family: 'LM Roman 10', Courier, monospace;
+  font-weight: bold;
+  color: #000;
+  font-size: 42px;
+  text-transform: uppercase;
+  margin-top: 180px;
+}
+
+#pdf .cover #levelName {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: lighter;
+  color: #000;
+  font-size: 27px;
+  margin-top: 190px;
+}
+
+#pdf .cover .icon {
+  margin-top: 44px;
+}
+
+#pdf .icon {
+  width: 100px;
+  height: 100px;
+}
+
+.talkingCharacter {
+  display: flex;
+  margin: 36px 0;
+}
+
+.talkingCharacter.bottom {
+  position: absolute;
+  bottom: 30px;
+  width: 82%;
+}
+
+.speech-bubble {
+  position: relative;
+  background: #43a61d;
+  border-radius: 24px;
+  border-top-left-radius: 0;
+  margin-left: 32px;
+  margin-top: 20px;
+  padding: 16px;
+  font-family: 'Open Sans', sans-serif;
+  color: white;
+  font-size: 20px;
+}
+
+.speech-bubble:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  border: 37px solid transparent;
+  border-right-color: #43a61d;
+  border-left: 0;
+  border-top: 0;
+  margin-left: -37px;
+}
+
+#pdf .instructions li {
+  margin-bottom: 20px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 24px;
+}
+#pdf .instructions a {
+  color: #43a61d;
+  text-decoration: underline;
+}
+
+#pdf .content #chapterNumber {
+  font-family: 'LM Roman 10', Courier, monospace;
+  font-weight: normal;
+  color: #000;
+  font-size: 60px;
+  margin: 0;
+}
+
+#pdf .content #chapterName {
+  font-family: 'Open Sans', Courier, monospace;
+  font-weight: normal;
+  color: #000;
+  font-size: 60px;
+  margin: 16px 0;
+}
+
+#pdf .table {
+  display: flex;
+  flex-direction: column;
+  margin: 50px;
+}
+
+#pdf .table .row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  border: 1px solid black;
+  border-bottom: 0;
+  padding: 4px;
+  font-family: 'Open Sans', Courier, monospace;
+  font-weight: lighter;
+  font-size: 20px;
+  text-align: center;
+}
+
+#pdf .table .row.centered {
+  justify-content: center;
+}
+
+#pdf .table .row:last-of-type {
+  border-bottom: 1px solid black;
+}
+
+#pdf #M {
+  font-family: 'Computer says no', Courier, monospace;
+  color: #43a61d;
+  font-size: 60px;
+  border-right: 1px solid black;
+  padding: 16px;
+}
+
+#pdf #exerciseNumber {
+  flex-grow: 1;
+}
+
+#pdf .example .title {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 24px;
+  margin-top: 16px;
+}
+
+#pdf .example .box {
+  background: black;
+  color: white;
+  font-family: 'Courier New', Courier, monospace;
+  padding: 4px 4px 15px 4px;
+  font-size: 24px;
+  width: 100%;
+  min-height: 72px;
+}
+
+#pdf .example .comment {
+  font-family: inherit;
+  color: darkgrey;
 }
