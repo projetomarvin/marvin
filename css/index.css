@@ -44,7 +44,7 @@
   float: right;
 }
 
-.logout a{
+.logout a {
   color: #1edbb9;
 }
 
@@ -117,7 +117,7 @@ main.fullwidth {
 }
 
 .header.editor div {
-  display: flex
+  display: flex;
 }
 
 .header.console {
@@ -251,7 +251,7 @@ main.fullwidth {
 }
 
 .log::before {
-  content: ">";
+  content: '>';
   padding-right: 8px;
 }
 
@@ -389,7 +389,7 @@ select#file {
 }
 
 #msg-box:after {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 20px;
@@ -435,8 +435,8 @@ header.intro-text {
   padding: 8px;
 }
 
-#questions .question input[type="radio"],
-.comments .question input[type="checkbox"] {
+#questions .question input[type='radio'],
+.comments .question input[type='checkbox'] {
   display: none;
 }
 
@@ -461,7 +461,7 @@ header.intro-text {
   font-weight: bold;
 }
 
-textarea[name="comments"] {
+textarea[name='comments'] {
   width: 100%;
   padding: 8px;
   font-size: 20px;
@@ -524,7 +524,7 @@ textarea[name="comments"] {
   text-align: center;
 }
 
-.picker input[type="radio"] {
+.picker input[type='radio'] {
   display: none;
   margin: 0;
 }
@@ -538,8 +538,8 @@ textarea[name="comments"] {
   cursor: pointer;
 }
 
-.picker input[type="radio"] + label::after {
-  content: "";
+.picker input[type='radio'] + label::after {
+  content: '';
   display: block;
   position: absolute;
   width: 0;
@@ -551,7 +551,7 @@ textarea[name="comments"] {
   transition: all 0.1s ease;
 }
 
-.picker input[type="radio"]:checked + label::after {
+.picker input[type='radio']:checked + label::after {
   width: 14px;
   height: 14px;
   top: 3px;
@@ -595,18 +595,20 @@ button.border {
 #split-bar {
   flex: 0 0 auto;
   width: 18px;
-  background: url(https://raw.githubusercontent.com/RickStrahl/jquery-resizable/master/assets/vsizegrip.png) center center no-repeat #535353;
+  background: url(https://raw.githubusercontent.com/RickStrahl/jquery-resizable/master/assets/vsizegrip.png)
+    center center no-repeat #535353;
   min-height: 200px;
   cursor: col-resize;
 }
 
-#CPoints, #coins {
+#CPoints,
+#coins {
   color: white;
   text-align: center;
 }
 
 button:disabled,
-button[disabled]{
+button[disabled] {
   border: 1px solid #999999;
   background-color: #cccccc;
   color: #3d3d3d;
@@ -634,7 +636,8 @@ button[disabled]{
   color: #f8f8f2;
 	width: 100%;
   height: 40px;
-  font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  font: 12px / normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas',
+    'source-code-pro', monospace;
 }
 
 .editor-tab {
@@ -650,7 +653,7 @@ button[disabled]{
   outline: none;
   flex-grow: 1;
   text-align: center;
-  transition: color .3s ease;
+  transition: color 0.3s ease;
   z-index: 1;
 }
 
@@ -699,28 +702,28 @@ button[disabled]{
   right: 0;
   bottom: 0;
   background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 .slider:before {
   position: absolute;
-  content: "";
+  content: '';
   height: 16px;
   width: 16px;
   left: 4px;
   bottom: 4px;
   background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 input:checked + .slider {
-  background-color: #56FD61;
+  background-color: #56fd61;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #56FD61;
+  box-shadow: 0 0 1px #56fd61;
 }
 
 input:checked + .slider:before {
