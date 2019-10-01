@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="/css/master.css" />
+    <link rel="stylesheet" href="/css/index.css" />
+    <link rel="stylesheet" href="/css/collapsable.css" />
+    <link rel="shortcut icon" href="assets/favicon.ico" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>PDF</title>
+    <script src="./helper.js" charset="utf-8"></script>
+  </head>
+
+  <body>
+    <header class="header editor">
+      <a class="white_back" href="/home.html">
+        &#11013;
+      </a>
+      Próximos Desafios a Fazer
+    </header>
+    <main>
+      <div id="pdf">
+        <div class="page">
+          <div class="content cover">
+            <img src="assets/logo.png" alt="Marvin" class="icon" />
+            <h1 class="title">Projeto Marvin</h1>
+            <h1 id="levelNumber">Fase</h1>
+            <h1 id="levelName"></h1>
+          </div>
+        </div>
+        <div class="page">
+          <div class="content">
+            <div class="talkingCharacter">
+              <img src="assets/logo.png" alt="Marvin" class="icon" />
+              <span class="speech-bubble">
+                Olá, esse sou eu, o Marvin. Vou te ajudar por essa jornada. Para
+                começar, queria deixar claro algumas instruções:
+              </span>
+            </div>
+            <div class="instructions">
+              <ul>
+                <li>
+                  Somente esse material serve como referência. Não acredite em
+                  rumores.
+                </li>
+                <li>
+                  Fique atento, esse material pode mudar a qualquer hora antes
+                  da submissão.
+                </li>
+                <li>
+                  Os exercícios são cuidadosamente organizados em ordem de
+                  dificuldade, do mais fácil para o mais difícil. Esse mesmo
+                  raciocínio é aplicado para as correções, portanto não adianta
+                  completar om exercício mais difícil se os anteriores estão
+                  errados.
+                </li>
+                <li>
+                  Você precisa seguir os procedimentos de envio para todas as
+                  atividades.
+                </li>
+                <li>
+                  Suas atividades serão corrigidas e avaliadas pelos seus
+                  colegas.
+                </li>
+                <li>
+                  Você não pode deixar nenhum outro arquivo na pasta, a não ser
+                  o que foi expressamente pedido.
+                </li>
+                <li>
+                  Tem uma pergunta? Pergunte ao seu colega à direita. Caso
+                  contrário, tente o seu colega à esquerda.
+                </li>
+                <li>Seu guia de referência se chama Google / Internet</li>
+                <li>
+                  Procure por conteúdo no Youtube para introduzir ao assunto.
+                </li>
+                <li>
+                  Examine os exemplos cuidadosamente. Eles estão sempre corretos
+                  e podem pedir por detalhes que não foram mencionados
+                  explicitamente na atividade.
+                </li>
+                <li>O uso do loop <i>for</i> é proibido.</li>
+                <li>
+                  <b
+                    >A função não deve ser chamada no arquivo, apenas
+                    definida.</b
+                  >
+                </li>
+                <li>
+                  “No início, o universo foi criado. Isso irritou profundamente
+                  muitas pessoas e, no geral, foi encarado como uma péssima
+                  idéia”.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="page">
+          <div class="content">
+            <h1 id="chapterNumber">
+              Capítulo I
+            </h1>
+            <h1 id="chapterName">
+              Quem sou eu?
+            </h1>
+            <div class="table">
+              <div class="row centered">
+                <div id="M">_M</div>
+                <div id="exerciseNumber">
+                  Exercício 00
+                </div>
+              </div>
+              <div class="row centered" id="exerciseName">
+                Quem sou eu?
+              </div>
+              <div class="row" id="exercisePath">
+                Submissão: fase01/ex00/mostrarNome.js
+              </div>
+            </div>
+            <div class="instructions">
+              <ul>
+                <li>
+                  Antes de começar, veja o material de suporte na plataforma ou
+                  clicando aqui;
+                </li>
+                <li>
+                  Escreva uma função chamada <b>“mostrarNome”</b> que, ao ser
+                  executada, exibe “Marvin” no console e não retorna nada.
+                </li>
+              </ul>
+            </div>
+            <div class="example">
+              <p class="title">JavaScript</p>
+              <div class="box">
+                function mostrarNome() {<br />
+                <span class="comment">// seu código aqui</span><br />
+                }
+              </div>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </main>
+
+    <script>
+      var nums = {
+        0: '',
+        1: 'I',
+        4: 'IV',
+        5: 'V',
+        9: 'IX',
+        10: 'X',
+      };
+
+      function numericoParaRomano(arg) {
+        const val = String(arg);
+        let i = 0;
+        let txt = '';
+
+        const all = val.split('').map((c, i) => c * 10 ** (val.length - 1 - i));
+        all.forEach((c) => {
+          const d = String(c)[0];
+          const e = c / d;
+          if (nums[c]) txt += nums[c];
+          else if (d < 5 && c > 0) {
+            txt += nums[e].repeat(Number(d));
+          } else if (c > 0) {
+            txt += nums[e * 5];
+            txt += nums[e].repeat(Number(d - 5));
+          }
+        });
+        return txt;
+      }
+
+      function parseStyle(code) {
+        const strong = /\*\*(.+?)\*\*/g;
+        const italic = /\_\_(.+?)\_\_/g;
+        const href = /\[(.+?)\]\((.+?)\)/g;
+
+        return code
+          .replace(italic, '<i>$1</i>')
+          .replace(strong, '<b>$1</b>')
+          .replace(href, '<a href="$1" target="__blank">$2</a>');
+      }
+
+      function exampleStyle(code) {
+        const comment = /\/\*(.+?)\*\//g;
+
+        return code.replace(comment, '<span class="comment">$1</span>');
+      }
+
+      $(document).ready(async function() {
+        const id = location.search.replace('?', '');
+        const res = await $.ajax({
+          type: 'GET',
+          url:
+            url +
+            'pdfs/' +
+            id +
+            '?filter[include]=exercises&access_token=' +
+            localStorage.access_token,
+          crossDomain: true,
+        });
+
+        $('#levelNumber').append(res.levelNumber);
+        $('#levelName').append(res.levelName);
+
+        res.exercises.forEach((ex) => {
+          let code = '<div class="page"> <div class="content">';
+          code += `<h1 id="chapterNumber">Capítulo ${numericoParaRomano(
+            ex.number,
+          )}</h1>
+            <h1 id="chapterName">${ex.name}</h1>
+            <div class="table">
+              <div class="row centered">
+                <div id="M">_M</div>
+                <div id="exerciseNumber">
+                  Exercício 0${ex.number - 1}
+                </div>
+              </div>
+              <div class="row centered" id="exerciseName">
+                ${ex.name}
+              </div>
+              <div class="row" id="exercisePath">
+                Submissão: ${ex.path}
+              </div>
+            </div>`;
+
+          ex.instructions.forEach((i) => {
+            let txt = '';
+            const keys = Object.keys(i);
+            console.log(i, keys);
+            keys.forEach((k) => {
+              if (k === 'bullet') {
+                txt += `<div class="instructions">
+                    <ul>
+                      <li>
+                        ${parseStyle(i[k])}
+                      </li>
+                    </ul
+                  </div>`;
+              } else if (k === 'example') {
+                txt += '<div class="example">';
+                if (i[k].title) {
+                  txt += `<p class="title">${parseStyle(i[k].title)}</p>`;
+                }
+                if (i[k].code) {
+                  txt += '<div class="box">';
+                  i[k].code.forEach((c) => {
+                    txt += exampleStyle(c) + '<br>';
+                  });
+                  txt += '</div>';
+                }
+                txt += '</div>';
+              } else if (k === 'bubble') {
+                txt += `<div class="talkingCharacter ${i[k].bottom && 'bottom'}">
+              <img src="assets/logo.png" alt="Marvin" class="icon" />
+              <span class="speech-bubble">
+                  ${typeof i[k] === 'string' ? i[k] : i[k].text}
+              </span>
+            </div>`;
+              }
+            });
+            code += txt;
+          });
+          code += '</div> </div>';
+          $('#pdf').append(code);
+        });
+      });
+    </script>
+  </body>
+</html>
