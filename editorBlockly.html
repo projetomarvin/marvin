@@ -7,6 +7,7 @@
     <script src="blockly/blocks_compressed.js"></script>
     <script src="blockly/javascript_compressed.js"></script>
     <script src="blockly/pt-br.js"></script>
+    <script src="blockly/custon_blocks.js"></script>
     <style>
       body {
         background-color: #fff;
@@ -27,6 +28,7 @@
     <p>
       <button onclick="runCode()">Run JavaScript</button>
       <button onclick="saveCode()">Save</button>
+      <button onclick="clearCode()">Limpar</button>
     </p>
 
     <div id="blocklyArea"></div>
@@ -56,23 +58,6 @@
           </value>
         </block>
         <block type="controls_whileUntil"></block>
-        <block type="controls_for">
-          <value name="FROM">
-            <shadow type="math_number">
-              <field name="NUM">1</field>
-            </shadow>
-          </value>
-          <value name="TO">
-            <shadow type="math_number">
-              <field name="NUM">10</field>
-            </shadow>
-          </value>
-          <value name="BY">
-            <shadow type="math_number">
-              <field name="NUM">1</field>
-            </shadow>
-          </value>
-        </block>
         <block type="controls_forEach"></block>
         <block type="controls_flow_statements"></block>
       </category>
@@ -107,13 +92,6 @@
           </value>
         </block>
         <block type="math_constant"></block>
-        <block type="math_number_property">
-          <value name="NUMBER_TO_CHECK">
-            <shadow type="math_number">
-              <field name="NUM">0</field>
-            </shadow>
-          </value>
-        </block>
         <block type="math_round">
           <value name="NUM">
             <shadow type="math_number">
@@ -121,7 +99,6 @@
             </shadow>
           </value>
         </block>
-        <block type="math_on_list"></block>
         <block type="math_modulo">
           <value name="DIVIDEND">
             <shadow type="math_number">
@@ -151,31 +128,7 @@
             </shadow>
           </value>
         </block>
-        <block type="math_random_int">
-          <value name="FROM">
-            <shadow type="math_number">
-              <field name="NUM">1</field>
-            </shadow>
-          </value>
-          <value name="TO">
-            <shadow type="math_number">
-              <field name="NUM">100</field>
-            </shadow>
-          </value>
-        </block>
         <block type="math_random_float"></block>
-        <block type="math_atan2">
-          <value name="X">
-            <shadow type="math_number">
-              <field name="NUM">1</field>
-            </shadow>
-          </value>
-          <value name="Y">
-            <shadow type="math_number">
-              <field name="NUM">1</field>
-            </shadow>
-          </value>
-        </block>
       </category>
       <category name="Textos" colour="#28db72">
         <block type="text"></block>
@@ -189,6 +142,13 @@
           <value name="VALUE">
             <shadow type="text">
               <field name="TEXT">abc</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="text_includes">
+          <value name="char">
+            <shadow type="text">
+              <field name="TEXT">x</field>
             </shadow>
           </value>
         </block>
@@ -239,13 +199,14 @@
             </shadow>
           </value>
         </block>
-        <block type="text_print">
+        <block type="text_log">
           <value name="TEXT">
             <shadow type="text">
               <field name="TEXT">abc</field>
             </shadow>
           </value>
         </block>
+        <block type="text_statement_log"></block>
         <block type="text_prompt_ext">
           <value name="TEXT">
             <shadow type="text">
@@ -259,13 +220,6 @@
           <mutation items="0"></mutation>
         </block>
         <block type="lists_create_with"></block>
-        <block type="lists_repeat">
-          <value name="NUM">
-            <shadow type="math_number">
-              <field name="NUM">5</field>
-            </shadow>
-          </value>
-        </block>
         <block type="lists_length"></block>
         <block type="lists_isEmpty"></block>
         <block type="lists_indexOf">
@@ -275,21 +229,14 @@
             </block>
           </value>
         </block>
-        <block type="lists_getIndex">
-          <value name="VALUE">
-            <block type="variables_get">
-              <field name="VAR">{listVariable}</field>
-            </block>
-          </value>
-        </block>
-        <block type="lists_setIndex">
+        <block type="lists_findat">
           <value name="LIST">
             <block type="variables_get">
               <field name="VAR">{listVariable}</field>
             </block>
           </value>
         </block>
-        <block type="lists_getSublist">
+        <block type="lists_push">
           <value name="LIST">
             <block type="variables_get">
               <field name="VAR">{listVariable}</field>
@@ -307,6 +254,9 @@
       </category>
       <category name="Variáveis" colour="#28db72" custom="VARIABLE"></category>
       <category name="Funções" colour="#28db72" custom="PROCEDURE"></category>
+      <category name="Funções" colour="#28db72">
+        <block type="function_return"></block>
+      </category>
     </xml>
 
     <xml
@@ -314,66 +264,106 @@
       id="startBlocks"
       style="display: none"
     >
-      <block type="controls_if" deletable="false" inline="false" x="20" y="20">
-        <mutation else="1"></mutation>
-        <value name="IF0">
-          <block type="logic_compare" inline="true">
-            <field name="OP">EQ</field>
-            <value name="A">
-              <block type="math_arithmetic" inline="true">
-                <field name="OP">MULTIPLY</field>
-                <value name="A">
-                  <block type="math_number">
-                    <field name="NUM">6</field>
-                  </block>
-                </value>
-                <value name="B">
-                  <block type="math_number">
-                    <field name="NUM">7</field>
-                  </block>
-                </value>
-              </block>
-            </value>
-            <value name="B">
-              <block type="math_number">
-                <field name="NUM">42</field>
-              </block>
-            </value>
-          </block>
-        </value>
-        <statement name="DO0">
-          <block type="text_print" inline="false">
-            <value name="TEXT">
-              <block type="text">
-                <field name="TEXT">Don't panic</field>
-              </block>
-            </value>
-          </block>
-        </statement>
-        <statement name="ELSE">
-          <block type="text_print" inline="false">
-            <value name="TEXT">
-              <block type="text">
-                <field name="TEXT">Panic</field>
-              </block>
-            </value>
-          </block>
-        </statement>
-      </block>
     </xml>
 
     <script>
       var blocklyArea = document.getElementById('blocklyArea');
       var blocklyDiv = document.getElementById('blocklyDiv');
       var workspace = Blockly.inject('blocklyDiv', {
-        media: '../../media/',
+        media: 'blockly/media/',
         toolbox: document.getElementById('toolbox'),
+        zoom: {
+          controls: true,
+          startScale: 1.0,
+          maxScale: 3,
+          minScale: 0.3,
+          scaleSpeed: 1.2,
+        },
       });
 
       Blockly.Xml.domToWorkspace(
         document.getElementById('startBlocks'),
         workspace,
       );
+
+      Blockly.JavaScript['text_includes'] = function(block) {
+        var value_string = Blockly.JavaScript.valueToCode(
+          block,
+          'string',
+          Blockly.JavaScript.ORDER_FUNCTION_CALL,
+        );
+        var value_char = Blockly.JavaScript.valueToCode(
+          block,
+          'char',
+          Blockly.JavaScript.ORDER_FUNCTION_CALL,
+        );
+        var code = value_string + '.includes(' + value_char + ')\n';
+        return [code, Blockly.JavaScript.ORDER_MEMBER];
+      };
+
+      Blockly.JavaScript['lists_findat'] = function(block) {
+        var value_index = Blockly.JavaScript.valueToCode(
+          block,
+          'INDEX',
+          Blockly.JavaScript.ORDER_ATOMIC,
+        );
+        var value_list = Blockly.JavaScript.valueToCode(
+          block,
+          'LIST',
+          Blockly.JavaScript.ORDER_ATOMIC,
+        );
+        var code = value_list + '[' + value_index + ']';
+        return [code, Blockly.JavaScript.ORDER_NONE];
+      };
+
+      Blockly.JavaScript['text_log'] = function(block) {
+        var value = Blockly.JavaScript.valueToCode(
+          block,
+          'TEXT',
+          Blockly.JavaScript.ORDER_ATOMIC,
+        );
+        var code =
+          "document.getElementById('code').innerHTML += " +
+          value +
+          ' + "<br>"\n';
+        return code;
+      };
+
+      Blockly.JavaScript['text_statement_log'] = function(block) {
+        var value = Blockly.JavaScript.valueToCode(
+          block,
+          'VALUE',
+          Blockly.JavaScript.ORDER_ATOMIC,
+        );
+        var code =
+          "document.getElementById('code').innerHTML += " +
+          value +
+          ' + "<br>"\n';
+        return code;
+      };
+
+      Blockly.JavaScript['lists_push'] = function(block) {
+        var value_list = Blockly.JavaScript.valueToCode(
+          block,
+          'LIST',
+          Blockly.JavaScript.ORDER_ATOMIC,
+        );
+        var value_value = Blockly.JavaScript.valueToCode(
+          block,
+          'VALUE',
+          Blockly.JavaScript.ORDER_ATOMIC,
+        );
+        var code = value_list + '.push(' + value_value + ')\n';
+        return code;
+      };
+
+      Blockly.JavaScript['function_return'] = function(block) {
+        var value_value = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_ATOMIC);
+        // TODO: Assemble JavaScript into code variable.
+        var code = 'return ' + value_value +'\n';
+        return code;
+      };
+
       var onresize = function(e) {
         // Compute the absolute coordinates and dimensions of blocklyArea.
         var element = blocklyArea;
@@ -395,15 +385,16 @@
       onresize();
       Blockly.svgResize(workspace);
 
-      function showOutput(code) {
-        document.getElementById('code').innerHTML = code;
-      }
-
       function saveCode() {
         var xml = Blockly.Xml.workspaceToDom(workspace);
         var xml_text = Blockly.Xml.domToText(xml);
+        console.log(xml);
+        localStorage.setItem('blocks', xml_text);
+      }
 
-        console.log(xml, xml_text);
+      function clearCode() {
+        workspace.clear();
+        localStorage.removeItem('blocks')
       }
 
       function runCode() {
@@ -414,13 +405,18 @@
         var code = Blockly.JavaScript.workspaceToCode(workspace);
         console.log(code);
         Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
-        code = code.replace(/window\.alert/g, 'showOutput');
         try {
           eval(code);
         } catch (e) {
           alert(e);
         }
       }
+
+      window.onload = function() {
+        const xml_text = localStorage.blocks;
+        var xml = Blockly.Xml.textToDom(xml_text);
+        Blockly.Xml.domToWorkspace(xml, workspace);
+      };
     </script>
   </body>
 </html>
