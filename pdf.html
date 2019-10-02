@@ -140,9 +140,16 @@
       }
 
       function exampleStyle(code) {
-        const comment = /\/\*(.+?)\*\//g;
+        const comment = /^\s+?\/\/(.+?)$|\n/gm;
+        const space = /\ {2}/g;
 
-        return code.replace(comment, '<span class="comment">$1</span>');
+        if (code.match(comment)) {
+          return code
+            .replace(comment, `<span class="comment">${code}</span>`)
+            .replace(space, '&nbsp;&nbsp;');
+        } else {
+          return code;
+        }
       }
 
       $(document).ready(async function() {
@@ -161,8 +168,8 @@
         $('#levelNumber').append(res.levelNumber);
         $('#levelName').append(res.levelName);
 
-        res.exercises.forEach((ex) => {
-          let code = '<div class="page"> <div class="content">';
+        res.exercises.forEach((ex, i) => {
+          let code = `<div class="page" id="pageEx${i}"> <div class="content">`;
           code += `<h1 id="chapterNumber">Capítulo ${numericoParaRomano(
             ex.number,
           )}</h1>
@@ -185,7 +192,6 @@
           ex.instructions.forEach((i) => {
             let txt = '';
             const keys = Object.keys(i);
-            console.log(i, keys);
             keys.forEach((k) => {
               if (k === 'bullet') {
                 txt += `<div class="instructions">
@@ -209,7 +215,8 @@
                 }
                 txt += '</div>';
               } else if (k === 'bubble') {
-                txt += `<div class="talkingCharacter ${i[k].bottom && 'bottom'}">
+                txt += `<div class="talkingCharacter ${i[k].bottom &&
+                  'bottom'}">
               <img src="assets/logo.png" alt="Marvin" class="icon" />
               <span class="speech-bubble">
                   ${typeof i[k] === 'string' ? i[k] : i[k].text}
