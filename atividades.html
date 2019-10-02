@@ -24,7 +24,11 @@
             <h2 id="error-file" style="display:none;">
               Oops, parece que o seguinte arquivo está faltando: <span></span>.
             </h2>
-            <img src="https://i.gifer.com/VAyR.gif" class="loader" style="display:none;">
+            <img
+              src="https://i.gifer.com/VAyR.gif"
+              class="loader"
+              style="display:none;"
+            />
             <div class="buttons">
               <button onclick="finish()" class="green" id="finishButton">
                 Finalizar
@@ -51,8 +55,10 @@
     <footer>
       <div class="finish">
         <div class="doing">
-          <p>Você está fazendo a fase </p>
-          <button class="orange" id="chooseLang" onclick="chooseLang()" hidden>Escolher ling.</button>
+          <p>Você está fazendo a fase</p>
+          <button class="orange" id="chooseLang" onclick="chooseLang()" hidden>
+            Escolher ling.
+          </button>
           <button onclick="checkFiles()" class="green">Finalizar</button>
         </div>
         <div class="correction" hidden>
@@ -69,43 +75,45 @@
 
       function checkFiles() {
         if (!currentActivity.language) {
-          return alert("VOCÊ DEVE  ESCOLHER UMA LINGUAGEM ANTES DE FINALIZAR!");
+          return alert('VOCÊ DEVE  ESCOLHER UMA LINGUAGEM ANTES DE FINALIZAR!');
         }
-        $("#saveDialog").toggle();
+        $('#saveDialog').toggle();
         $('#langView').hide();
         $.ajax({
-          type: "get",
+          type: 'get',
           url:
-            url + "studentActivities/" +
+            url +
+            'studentActivities/' +
             studentActivityId +
-            "/checkFiles?access_token=" +
+            '/checkFiles?access_token=' +
             localStorage.access_token,
           crossDomain: true,
           success: function(res, txt, jqXHR) {
-            $(".loading").hide();
-            $("#finish").show();
-            $("#all-ok").show();
+            $('.loading').hide();
+            $('#finish').show();
+            $('#all-ok').show();
           },
           error: function(responseData, textStatus, errorThrown) {
-            $(".loading").hide();
-            $("#finish").show();
-            $("#error-file").show();
-            $("#error-file span").html(
-              responseData.responseJSON.error.message.split(" ")[3]
+            $('.loading').hide();
+            $('#finish').show();
+            $('#error-file').show();
+            $('#error-file span').html(
+              responseData.responseJSON.error.message.split(' ')[3],
             );
-          }
+          },
         });
       }
 
       function finish() {
-        $(".loader").show();
-        $("#finishButton").attr("disabled", true);
+        $('.loader').show();
+        $('#finishButton').attr('disabled', true);
         $.ajax({
-          type: "put",
+          type: 'put',
           url:
-            url + "studentActivities/" +
+            url +
+            'studentActivities/' +
             studentActivityId +
-            "/finish?access_token=" +
+            '/finish?access_token=' +
             localStorage.access_token,
           crossDomain: true,
           success: function(res, txt, jqXHR) {
@@ -113,141 +121,157 @@
           },
           error: function(res, txt, jqXHR) {
             console.log(res, txt);
-            if (res.responseJSON.error.message === "atividade já finalizada") {
-              alert("Você já terminou a atividade");
+            if (res.responseJSON.error.message === 'atividade já finalizada') {
+              alert('Você já terminou a atividade');
             } else if (
               res.responseJSON.error.message ===
-              "pontos de correção insuficientes"
+              'pontos de correção insuficientes'
             ) {
               alert(
-                "Pontos de correção insuficientes! Você deve corrigir seus colegas para conseguir mais pontos e continuar"
+                'Pontos de correção insuficientes! Você deve corrigir seus colegas para conseguir mais pontos e continuar',
               );
-            } else if (res.responseJSON.error.message === "Não há nenum corretor disponível") {
-              alert('Não há nenhum corretor disponível.')
-            } else alert("Algo deu errado, tente novamente." + res.responseJSON.error.message);
-            closeDialog()
-          }
+            } else if (
+              res.responseJSON.error.message ===
+              'Não há nenum corretor disponível'
+            ) {
+              alert('Não há nenhum corretor disponível.');
+            } else
+              alert(
+                'Algo deu errado, tente novamente.' +
+                  res.responseJSON.error.message,
+              );
+            closeDialog();
+          },
         });
       }
 
       function closeDialog() {
-        $(".loader").hide();
-        $("#saveDialog").toggle();
-        $(".loading").toggle();
-        $("#finish").toggle();
-        $("#all-ok").hide();
-        $("#error-file").hide();
-        $("#finishButton").attr("disabled", false);
+        $('.loader').hide();
+        $('#saveDialog').toggle();
+        $('.loading').toggle();
+        $('#finish').toggle();
+        $('#all-ok').hide();
+        $('#error-file').hide();
+        $('#finishButton').attr('disabled', false);
         $('#langView').hide();
       }
 
       function getCorrector(id) {
         $.ajax({
-          type: "GET",
+          type: 'GET',
           url:
-            url + "students/" +
+            url +
+            'students/' +
             id +
-            "/username?access_token=" +
+            '/username?access_token=' +
             localStorage.access_token,
           crossDomain: true,
           success: function(res, textStatus, jqXHR) {
-            $(".correction p").append(res);
+            $('.correction p').append(res);
           },
           error: function(responseData, textStatus, errorThrown) {
             console.log(responseData.data);
-          }
+          },
         });
       }
 
       function setLang(lang) {
-        const sure = confirm("Você tem certeza? Uma vez que escolheu não será mais possível alterar a linguagem para essa fase!")
+        const sure = confirm(
+          'Você tem certeza? Uma vez que escolheu não será mais possível alterar a linguagem para essa fase!',
+        );
         if (sure)
           $.ajax({
-              type: "patch",
-              url:
-                url + "studentActivities/" +
-                studentActivityId +
-                "?access_token=" +
-                localStorage.access_token,
-              crossDomain: true,
-              data: {language: lang},
-              success: function(res, txt, jqXHR) {
-                console.log(res);
-                alert('Escolha salva com sucesso!')
-                location.reload();
-              },
-              error: function(err, txt, errorThrown) {
-                console.log(err);
-              }
-            });
+            type: 'patch',
+            url:
+              url +
+              'studentActivities/' +
+              studentActivityId +
+              '?access_token=' +
+              localStorage.access_token,
+            crossDomain: true,
+            data: { language: lang },
+            success: function(res, txt, jqXHR) {
+              console.log(res);
+              alert('Escolha salva com sucesso!');
+              location.reload();
+            },
+            error: function(err, txt, errorThrown) {
+              console.log(err);
+            },
+          });
       }
 
       function getCourseActivities(courseId, currentLevel) {
         $.ajax({
-          type: "GET",
+          type: 'GET',
           url:
-            url + "courses/" +
+            url +
+            'courses/' +
             courseId +
-            "?filter=%7B%22include%22%3A%20%5B%22activities%22%5D%7D&access_token=" +
+            '?filter={"include": "activities"}&access_token=' +
             localStorage.access_token,
           crossDomain: true,
           success: function(res, textStatus, jqXHR) {
-            $("#course_name").append(res.name);
-            res.activities.map((r, i) => {
-              let position;
-              if (i < currentLevel) {
-                position = "done";
-              } else if (i === currentLevel) {
-                position = "current";
-              } else {
-                position = "disabled";
-              }
-              $("#activities").append(
-                '<div class="wrap-collabsible ' +
-                  position +
-                  '">' +
-                  '<input id="' +
-                  r.id +
-                  '" class="toggle" type="checkbox">' +
-                  '<label for="' +
-                  r.id +
-                  '" class="lbl-toggle">fase ' +
-                  i +
-                  "</label>" +
-                  '<div class="collapsible-content">' +
-                  '<div class="content-inner">' +
-                  "<h2>" +
-                  r.name +
-                  "</h2>" +
-                  "<p>" +
-                  r.description +
-                  "</p>" +
-                  '<a href="' +
-                  r.PDFurl +
-                  '" target="_blank" class="PDFlink">Ver desafios da fase</a>' +
-                  "</div>" +
-                  "</div>" +
-                  "</div>"
-              );
-              if (position === "disabled") $("#" + r.id).attr("disabled", true);
-              if (position === "current") $("#" + r.id).attr("checked", true);
-            });
+            $('#course_name').append(res.name);
+            res.activities
+              .sort((a, b) => (a > b ? 1 : -1))
+              .forEach((r, i) => {
+                let position;
+                if (i < currentLevel) {
+                  position = 'done';
+                } else if (i === currentLevel) {
+                  position = 'current';
+                } else {
+                  position = 'disabled';
+                }
+                $('#activities').append(
+                  '<div class="wrap-collabsible ' +
+                    position +
+                    '">' +
+                    '<input id="' +
+                    r.id +
+                    '" class="toggle" type="checkbox">' +
+                    '<label for="' +
+                    r.id +
+                    '" class="lbl-toggle">fase ' +
+                    i +
+                    '</label>' +
+                    '<div class="collapsible-content">' +
+                    '<div class="content-inner">' +
+                    '<h2>' +
+                    r.levelName +
+                    '</h2>' +
+                    '<p>' +
+                    r.levelDescription +
+                    '</p>' +
+                    '<a href="/pdf.html?' +
+                    r.id +
+                    '" target="_blank" class="PDFlink">Ver desafios da fase</a>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>',
+                );
+                if (position === 'disabled')
+                  $('#' + r.id).attr('disabled', true);
+                if (position === 'current') $('#' + r.id).attr('checked', true);
+              });
           },
           error: function(responseData, textStatus, errorThrown) {
             console.log(responseData);
-          }
+          },
         });
       }
 
       function cancelCorrection() {
-        const retVal = confirm("Tem certeza que quer cancelar a correção?");
+        const retVal = confirm('Tem certeza que quer cancelar a correção?');
         if (retVal == true) {
           $.ajax({
-            type: "put",
+            type: 'put',
             url:
-              url + "studentActivities/" +
+              url +
+              'studentActivities/' +
               studentActivityId +
-              "/cancelCorrection?access_token=" +
+              '/cancelCorrection?access_token=' +
               localStorage.access_token,
             crossDomain: true,
             success: function(res, txt, jqXHR) {
@@ -258,10 +282,10 @@
               console.log(err);
               if (err.status === 403) {
                 alert(
-                  "Sua correção já foi iniciada. Você não pode mais cancelar"
+                  'Sua correção já foi iniciada. Você não pode mais cancelar',
                 );
               }
-            }
+            },
           });
         }
       }
@@ -274,9 +298,10 @@
 
       $(document).ready(function() {
         $.ajax({
-          type: "GET",
+          type: 'GET',
           url:
-            url + "students/" +
+            url +
+            'students/' +
             localStorage.userId +
             '?filter={"include":{"studentActivities": "corrections"}}&access_token=' +
             localStorage.access_token,
@@ -286,42 +311,49 @@
               js: 'JavaScript',
               py: 'Python',
               html: 'HTML',
-            }
+            };
             currentActivity =
               res.studentActivities[res.studentActivities.length - 1];
             console.log(currentActivity);
             lastActivity = res.studentActivities[
               res.studentActivities.length - 2
-            ] || { correctorId: "" };
+            ] || { correctorId: '' };
             studentActivityId = currentActivity.id;
             if (res.username) {
-              $(".doing p").append(res.activityNumber);
+              $('.doing p').append(res.activityNumber);
               getCourseActivities(res.courseId, res.activityNumber);
             } else {
-              location.href = "/home.html";
+              location.href = '/home.html';
             }
             if (!currentActivity.language) {
-              $('#chooseLang').show()
+              $('#chooseLang').show();
             } else {
-              $(".doing p").append(` em ${langs[currentActivity.language]}`);
+              $('.doing p').append(` em ${langs[currentActivity.language]}`);
             }
-            if (currentActivity.corrections.length % 2 === 1 &&
-              currentActivity.corrections[currentActivity.corrections.length - 1].correctedAt &&
-              res.activityNumber > 7) {
-              $(".doing p").append(', segunda correção.');
+            if (
+              currentActivity.corrections.length % 2 === 1 &&
+              currentActivity.corrections[
+                currentActivity.corrections.length - 1
+              ].correctedAt &&
+              res.activityNumber > 7
+            ) {
+              $('.doing p').append(', segunda correção.');
             } else if (
               (currentActivity.correctorId && !currentActivity.corrector2Id) ||
-              currentActivity.corrector2Id != 0 && currentActivity.corrector2Id
+              (currentActivity.corrector2Id != 0 &&
+                currentActivity.corrector2Id)
             ) {
-              $(".doing").hide();
-              $(".correction").show();
-              getCorrector(currentActivity.corrector2Id || currentActivity.correctorId);
+              $('.doing').hide();
+              $('.correction').show();
+              getCorrector(
+                currentActivity.corrector2Id || currentActivity.correctorId,
+              );
             }
           },
           error: function(responseData, textStatus, errorThrown) {
-            alert("Algo deu errado.");
+            alert('Algo deu errado.');
             history.back();
-          }
+          },
         });
       });
     </script>
