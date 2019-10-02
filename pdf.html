@@ -191,7 +191,7 @@
                       <li>
                         ${parseStyle(i[k])}
                       </li>
-                    </ul
+                    </ul>
                   </div>`;
               } else if (k === 'example') {
                 txt += '<div class="example">';
@@ -207,13 +207,15 @@
                 }
                 txt += '</div>';
               } else if (k === 'bubble') {
-                txt += `<div class="talkingCharacter ${i[k].bottom &&
+                txt += `<div class="talkingCharacter ${i[k].bottom === 'true' &&
                   'bottom'}">
               <img src="assets/logo.png" alt="Marvin" class="icon" />
               <span class="speech-bubble">
                   ${typeof i[k] === 'string' ? parseStyle(i[k]) : parseStyle(i[k].text)}
               </span>
             </div>`;
+              } else if (k === 'image') {
+                txt += `<img src="${i[k]}" class="inline-image" />`;
               }
             });
             code += txt;

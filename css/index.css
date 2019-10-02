@@ -1006,3 +1006,7 @@ input:checked + .slider:before {
   font-family: inherit;
   color: darkgrey;
 }
+
+#pdf .inline-image {
+  max-width: 80%;
+}
