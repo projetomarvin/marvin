@@ -998,6 +998,10 @@ input:checked + .slider:before {
   min-height: 72px;
 }
 
+#pdf .example .box:only-child {
+  margin-top: 24px;
+}
+
 #pdf .example .comment {
   font-family: inherit;
   color: darkgrey;
