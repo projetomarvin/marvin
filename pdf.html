@@ -211,7 +211,7 @@
                   'bottom'}">
               <img src="assets/logo.png" alt="Marvin" class="icon" />
               <span class="speech-bubble">
-                  ${typeof i[k] === 'string' ? i[k] : i[k].text}
+                  ${typeof i[k] === 'string' ? parseStyle(i[k]) : parseStyle(i[k].text)}
               </span>
             </div>`;
               }
