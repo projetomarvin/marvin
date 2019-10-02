@@ -1010,3 +1010,7 @@ input:checked + .slider:before {
 #pdf .inline-image {
   max-width: 80%;
 }
+
+#activities {
+  width: 100%;
+}
