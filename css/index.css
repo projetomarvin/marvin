@@ -227,6 +227,36 @@ main.fullwidth {
   height: 100%;
 }
 
+#editorAndConsole {
+  display: flex;
+  flex-direction: row;
+  width: calc(100vw - 60px);
+  position: absolute;
+  right: 0;
+  transition: width ease 0.4s
+}
+
+#editorAndConsole.vertical {
+  display: flex;
+  flex-direction: column;
+  width: calc(50vw);
+  position: absolute;
+  right: 0;
+}
+
+#editorAndConsole.vertical .half {
+  width: 100%;
+  height: 50%;
+}
+
+#editorAndConsole.vertical .half #editor {
+  height: calc(50vh - 130px);
+}
+
+#editorAndConsole.vertical .half #log {
+  max-height: calc(50vh - 45px);
+}
+
 #editor {
   width: 100%;
   height: calc(100vh - 130px);
@@ -1075,6 +1105,10 @@ input:checked + .slider:before {
   #pdf .instructions li {
     margin-bottom: 2vw;
     font-size: 2.4vw;
+  }
+
+  #pdf ul {
+    padding-left: 4vw;
   }
 
   #pdf .content #chapterNumber {

@@ -1,0 +1,153 @@
+.modernEditor {
+  width: initial;
+  height: initial;
+}
+
+#navContainer {
+  position: absolute;
+  z-index: 5;
+}
+
+.modernEditor nav {
+  width: 60px;
+  background: #757575;
+  min-height: 100vh;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  font-size: 32px;
+  padding-top: 16px;
+  padding: 8px;
+  box-shadow: 0 0 3px grey;
+  transition: width 0.4s;
+  z-index: 200;
+}
+
+nav .space {
+  height: 24px;
+}
+
+#togglePDF,
+nav .exercise {
+  border-radius: 8px;
+  border: 2px solid #42c70a;
+  padding: 8px;
+  height: 42px;
+  width: 42px;
+  padding-left: 13px;
+  margin-bottom: 16px;
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 20px;
+  transition: width 0.4s;
+}
+
+.exercise:hover {
+  border-radius: 8px;
+  background: #616161;
+  box-shadow: inset 1px 1px 2px #222;
+}
+
+.exercise.selected {
+  border-color: black;
+  background: #009c00;
+  color: black;
+}
+
+nav:hover {
+  width: 100%;
+  min-width: 60px;
+}
+
+nav:hover .exercise,
+nav:hover .name {
+  width: 100%;
+}
+
+nav .name {
+  margin-left: 16px;
+  width: 0;
+  transition: width 4s;
+}
+
+iframe {
+  width: calc(100% - 18px);
+  height: 100%;
+  transition: width ease 0.4s;
+}
+
+#instructions.hidden,
+#instructions.hidden iframe {
+  width: 0;
+}
+
+#instructions.hidden button {
+  display: none;
+}
+
+#instructions button{
+  position: absolute;
+  bottom: 0;
+  left: 60px;
+}
+
+#instructions #openPDF {
+  padding: 8px;
+  margin: 24px;
+  text-transform: uppercase;
+  border: 1px solid black;
+  background: darkgreen;
+  color: white;
+}
+
+#togglePDF {
+  bottom: 0;
+  font-weight: bold;
+  position: absolute;
+}
+
+#instructions {
+  width: calc(50vw - 60px);
+  margin-left: 60px;
+  transition: width ease 0.4s;
+}
+
+#instructions #split-bar {
+  float: right;
+  right: 0;
+  height: 100vh;
+  transition: background-color ease 0.4s, right ease 0.4s;
+}
+
+#instructions #split-bar.clicked {
+ background-color: green;
+}
+
+#iframeHover {
+  width: calc(50vw - 78px);
+  position: absolute;
+  background-color: #72ec72;
+  top: 0;
+  transition: opacity ease 0.4s;
+  opacity: 0;
+}
+
+#consoleHover {
+  width: calc(50vw);
+  position: absolute;
+  background-color: #aaa;
+  top: 0;
+  transition: opacity ease 0.4s;
+  opacity: 0;
+  z-index: 7;
+}
+
+#consoleHover.active,
+#iframeHover.active {
+  height: 100vh;
+  opacity: 0.8;
+  display: block;
+}
