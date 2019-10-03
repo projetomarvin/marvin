@@ -88,7 +88,7 @@ iframe {
   display: none;
 }
 
-#instructions button{
+#instructions button {
   position: absolute;
   bottom: 0;
   left: 60px;
@@ -113,6 +113,7 @@ iframe {
   width: calc(50vw - 60px);
   margin-left: 60px;
   transition: width ease 0.4s;
+  display: flex;
 }
 
 #instructions #split-bar {
@@ -123,7 +124,7 @@ iframe {
 }
 
 #instructions #split-bar.clicked {
- background-color: green;
+  background-color: green;
 }
 
 #iframeHover {
@@ -150,4 +151,159 @@ iframe {
   height: 100vh;
   opacity: 0.8;
   display: block;
+}
+
+#instructions #exercisePDF .page {
+  background: white;
+  padding: 8px;
+  width: calc(100%);
+  height: 100%;
+  position: relative;
+}
+
+#instructions #exercisePDF .content {
+  padding: 16px;
+  border: 3px solid #5eb770;
+  border-radius: 12px;
+  width: 100%;
+  height: 100%;
+}
+
+#instructions #exercisePDF .icon {
+  width: 8vw;
+  height: 8vw;
+}
+
+#instructions #exercisePDF .talkingCharacter {
+  display: flex;
+  align-items: end;
+  margin: 16px 0;
+}
+
+#instructions #exercisePDF .talkingCharacter.bottom {
+  position: absolute;
+  bottom: 16px;
+  width: 82%;
+}
+
+#instructions #exercisePDF .speech-bubble {
+  position: relative;
+  background: #43a61d;
+  border-radius: 8px;
+  border-top-left-radius: 0;
+  margin-left: 16px;
+  margin-top: 8px;
+  padding: 8px;
+  font-family: 'Open Sans', sans-serif;
+  color: white;
+  font-size: 14px;
+}
+
+#instructions #exercisePDF .speech-bubble:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  border: 16px solid transparent;
+  border-right-color: #43a61d;
+  border-left: 0;
+  border-top: 0;
+  margin-left: -16px;
+}
+
+#instructions #exercisePDF .instructions li {
+  margin-bottom: 10px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 18px;
+}
+#instructions #exercisePDF .instructions a {
+  color: #43a61d;
+  text-decoration: underline;
+}
+
+#instructions #exercisePDF .content #chapterNumber {
+  font-family: 'LM Roman 10', Courier, monospace;
+  font-weight: normal;
+  color: #000;
+  font-size: 30px;
+  margin: 0;
+}
+
+#instructions #exercisePDF .content #chapterName {
+  font-family: 'Open Sans', Courier, monospace;
+  font-weight: normal;
+  color: #000;
+  font-size: 24px;
+  margin: 16px 0;
+}
+
+#instructions #exercisePDF .table {
+  display: flex;
+  flex-direction: column;
+}
+
+#instructions #exercisePDF .table .row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  border: 1px solid black;
+  border-bottom: 0;
+  padding: 3px;
+  font-family: 'Open Sans', Courier, monospace;
+  font-weight: lighter;
+  font-size: 16px;
+  text-align: center;
+}
+
+#instructions #exercisePDF .table .row.centered {
+  justify-content: center;
+}
+
+#instructions #exercisePDF .table .row:last-of-type {
+  border-bottom: 1px solid black;
+}
+
+#instructions #exercisePDF #M {
+  font-family: 'Computer says no', Courier, monospace;
+  color: #43a61d;
+  font-size: 36px;
+  border-right: 1px solid black;
+  padding: 8px;
+}
+
+#instructions #exercisePDF #exerciseNumber {
+  flex-grow: 1;
+}
+
+#instructions #exercisePDF .example .title {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  margin-top: 8px;
+}
+
+#instructions #exercisePDF .example .box {
+  background: black;
+  color: white;
+  font-family: 'Courier New', Courier, monospace;
+  padding: 4px 4px 15px 4px;
+  font-size: 16px;
+  width: 100%;
+  min-height: 36px;
+}
+
+#instructions #exercisePDF .example .box:only-child {
+  margin-top: 20px;
+}
+
+#instructions #exercisePDF .example .comment {
+  font-family: inherit;
+  color: darkgrey;
+}
+
+#instructions #exercisePDF .inline-image {
+  max-width: 80%;
 }

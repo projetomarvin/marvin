@@ -69,41 +69,17 @@
         <nav>
           <a class="white_back" href="/home.html"> &#11013; </a>
           <div class="space"></div>
-          <button onclick="selectExercise(0)" class="exercise">
-            <span class="number">
-              0
-            </span>
-            <span class="name">
-              Lorem ipsum dolor
-            </span>
-          </button>
-          <button onclick="selectExercise(1)" class="exercise">
-            <span class="number">
-              1
-            </span>
-            <span class="name">
-              Lorem ipsum dolor
-            </span>
-          </button>
-          <button onclick="selectExercise(2)" class="exercise">
-            <span class="number">
-              2
-            </span>
-            <span class="name">
-              Lorem ipsum dolor
-            </span>
-          </button>
           <button id="togglePDF" onclick="togglePDF()">
             &#xab;
           </button>
         </nav>
       </div>
       <div id="instructions">
-        <iframe src="" frameborder="0"></iframe>
+        <div id="exercisePDF"></div>
         <div id="iframeHover"></div>
         <button onclick="openPDF()">
           <div id="openPDF">
-            Abrir em uma janela
+            ver pdf completo
           </div>
         </button>
         <div id="split-bar"></div>
@@ -160,7 +136,7 @@
     </div>
 
     <script>
-      let activityId;
+      let activity;
       const editor = ace.edit('editor');
       const logger = document.getElementById('log');
       editor.setTheme('ace/theme/monokai');
@@ -168,6 +144,35 @@
       editor.setBehavioursEnabled(false);
       editor.focus();
       const files = [];
+
+      function numericoParaRomano(arg) {
+        var nums = {
+          0: '',
+          1: 'I',
+          4: 'IV',
+          5: 'V',
+          9: 'IX',
+          10: 'X',
+        };
+
+        const val = String(arg);
+        let i = 0;
+        let txt = '';
+
+        const all = val.split('').map((c, i) => c * 10 ** (val.length - 1 - i));
+        all.forEach((c) => {
+          const d = String(c)[0];
+          const e = c / d;
+          if (nums[c]) txt += nums[c];
+          else if (d < 5 && c > 0) {
+            txt += nums[e].repeat(Number(d));
+          } else if (c > 0) {
+            txt += nums[e * 5];
+            txt += nums[e].repeat(Number(d - 5));
+          }
+        });
+        return txt;
+      }
 
       $(document).ready(async function() {
         let code = location.search.substring(1);
@@ -197,21 +202,124 @@
         currentActivity = res.activities.find(
           (a) => a.levelNumber === currentActivity,
         );
-        activityId = currentActivity.id;
-        $('iframe').attr(
-          'src',
-          `${location.origin}/pdf.html?${currentActivity.id}&headless`,
-        );
+        activity = currentActivity;
+        const exs = activity.exercises.sort((a, b) => (a > b ? -1 : 1));
+        exs.forEach((e) => {
+          let code = `
+          <button onclick="selectExercise(${e.number})" class="exercise">
+            <span class="number">
+              ${e.number}
+            </span>
+            <span class="name">
+              ${e.name}
+            </span>
+          </button>`;
+          $("nav").append(code);
+        });
+
+        selectExercise(0);
       });
 
       function selectExercise(n) {
         $('.exercise').removeClass('selected');
         $(`.exercise:eq(${n})`).addClass('selected');
+
+        function parseStyle(code) {
+          const strong = /\*\*(.+?)\*\*/g;
+          const italic = /\_\_(.+?)\_\_/g;
+          const href = /\[(.+?)\]\((.+?)\)/g;
+
+          return code
+            .replace(italic, '<i>$1</i>')
+            .replace(strong, '<b>$1</b>')
+            .replace(href, '<a href="$1" target="__blank">$2</a>');
+        }
+
+        function exampleStyle(code) {
+          const comment = /^\s+?\/\/(.+?)$|\n/gm;
+          const space = /\ {2}/g;
+
+          if (code.match(comment)) {
+            return code
+              .replace(comment, `<span class="comment">${code}</span>`)
+              .replace(space, '&nbsp;&nbsp;');
+          } else {
+            return code;
+          }
+        }
+
+        $('#exercisePDF').empty();
+        const ex = activity.exercises[n];
+        let code = `<div class="page"> <div class="content">`;
+        code += `<h1 id="chapterNumber">Capítulo ${numericoParaRomano(
+          ex.number + 1,
+        )}</h1>
+            <h1 id="chapterName">${ex.name}</h1>
+            <div class="table">
+              <div class="row centered">
+                <div id="M">_M</div>
+                <div id="exerciseNumber">
+                  Exercício 0${ex.number}
+                </div>
+              </div>
+              <div class="row centered" id="exerciseName">
+                ${ex.name}
+              </div>
+              <div class="row" id="exercisePath">
+                Submissão: ${ex.path}
+              </div>
+            </div>`;
+
+        ex.instructions.forEach((i) => {
+          let txt = '';
+          const keys = Object.keys(i);
+          keys.forEach((k) => {
+            if (k === 'bullet') {
+              txt += `<div class="instructions">
+                    <ul>
+                      <li>
+                        ${parseStyle(i[k])}
+                      </li>
+                    </ul>
+                  </div>`;
+            } else if (k === 'example') {
+              txt += '<div class="example">';
+              if (i[k].title) {
+                txt += `<p class="title">${parseStyle(i[k].title)}</p>`;
+              }
+              if (i[k].code) {
+                txt += '<div class="box">';
+                i[k].code.forEach((c) => {
+                  txt += exampleStyle(c) + '<br>';
+                });
+                txt += '</div>';
+              }
+              txt += '</div>';
+            } else if (k === 'bubble') {
+              txt += `<div class="talkingCharacter ${i[k].bottom === 'true' &&
+                'bottom'}">
+              <img src="assets/logo.png" alt="Marvin" class="icon" />
+              <span class="speech-bubble">
+                  ${
+                    typeof i[k] === 'string'
+                      ? parseStyle(i[k])
+                      : parseStyle(i[k].text)
+                  }
+              </span>
+            </div>`;
+            } else if (k === 'image') {
+              txt += `<img src="${i[k]}" class="inline-image" />`;
+            }
+          });
+          code += txt;
+        });
+        code += '</div> </div>';
+        $('#exercisePDF').append(code);
       }
 
       function openPDF() {
         var win = window.open(
-          `${location.origin}/pdf.html?${activityId}`,
+          `${location.origin}/pdf.html?${activity.id}`,
           '_blank',
         );
         togglePDF();
@@ -539,8 +647,7 @@
         $(document).mousemove(function(e) {
           e.preventDefault();
           var x = e.pageX;
-          if (x % 30 === 0 && x > 300) {
-            console.log(e.pageX);
+          if (x % 30 === 0 && x >= 420 && window.innerWidth - x >= 360) {
             $('#instructions').css('width', x);
             $('#editorAndConsole').css('width', window.innerWidth - x - 60);
             $('#iframeHover').css('width', x - 18);
