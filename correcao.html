@@ -70,7 +70,7 @@
         for (var i = 0; i < numberOfExercises; i++) {
           let asr = $(`input[name=ex${i}]:checked`).val();
           if (asr) {
-            payload['ex0'+i] = {works: asr}
+            payload['ex0'+i] = Boolean(asr);
           } else {
             alert("Oops, parece que você esqueceu de algum exercício");
             return false;
@@ -91,9 +91,8 @@
           crossDomain: true,
           data: payload,
           success: function(res, textStatus, jqXHR) {
-            console.log(res);
             let path = url + 'corrections/' + location.search.replace("?", '') + '/finish'
-            if (isLast) {
+            if (isManual) {
               path = url + 'corrections/' + location.search.replace("?", '') + '/finishManual'
             }
             if (!isManual || isLast)
@@ -103,7 +102,6 @@
                 crossDomain: true,
                 data: payload,
                 success: function(responseData, textStatus, jqXHR) {
-                  console.log(responseData);
                   alert('Pronto. Atividade finalizada com sucesso!')
                   window.location.href = '/home.html'
                 }
@@ -154,10 +152,9 @@
               }
               $.ajax({
                 type: 'GET',
-                url: url + 'activities/' + res.studentActivity.activityId + '?access_token=' + localStorage.access_token,
+                url: url + 'pdfs/' + res.studentActivity.activityId + '?filter[include]=exercises&access_token=' + localStorage.access_token,
                 crossDomain: true,
                 success: function(r, textStatus, jqXHR) {
-                  console.log(r);
                   $.ajax({
                     type: 'post',
                     url: url + 'corrections/' + location.search.replace("?", '') + '/start',
@@ -168,7 +165,7 @@
                       console.log(res);
                     }
                   })
-                  if (!r.exercises[0].tests) {
+                  if (!r.exercises[0].corrections) {
                     isManual = true;
                   }
                   if (res.studentActivity.corrector2Id) {
@@ -176,11 +173,11 @@
                   }
                   $("#level").append(r.name)
                   $(".intro-text p").prepend("Você está corrigindo <b>" + res.studentActivity.student.username +"</b> na fase "+ res.studentActivity.student.activityNumber)
-                  $("#pdf").attr("href", r.PDFurl)
+                  $("#pdf").attr("href", `/pdf.html?${res.studentActivity.activityId}`)
                   $("#files").attr("href", 'https://s3-sa-east-1.amazonaws.com/marvin-files/' + res.studentActivityId + '.zip')
                   numberOfExercises = r.exercises.length;
                   r.exercises.map((q, i) => {
-                    const name = q.file.substring(0, q.file.length - 3);
+                    const name = q.path.substring(0, q.path.length - 3);
                     let url = `/editor.html?${res.codes[name]}`;
                     if (res.studentActivity.language === 'py') {
                       url = `/editor3.html?${res.codes[name]}`;
@@ -195,9 +192,9 @@
                             </p>
                           </div>
                           <div class="buttons">
-                            <input type="radio" id="ex${i}true" name="ex${i}" value="Sim"/>
+                            <input type="radio" id="ex${i}true" name="ex${i}" value="true"/>
                             <label for="ex${i}true">SIM</label>
-                            <input type="radio" id="ex${i}false" name="ex${i}" value="Não"/>
+                            <input type="radio" id="ex${i}false" name="ex${i}" value="false"/>
                             <label for="ex${i}false">NÃO</label>
                           </div>
                         </div>
