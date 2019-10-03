@@ -53,7 +53,7 @@
           url: url + 'corrections/' + localStorage.userId + '/own?access_token=' + localStorage.access_token,
           crossDomain: true,
           success: function(res, textStatus, jqXHR) {
-            res.map(c => {
+            res.forEach(c => {
               if (c.correctedAt) {
                 let text
                 if (c.studentActivity.studentId === localStorage.userId) {
