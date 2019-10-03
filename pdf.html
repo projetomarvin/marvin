@@ -146,6 +146,9 @@
 
       $(document).ready(async function() {
         const id = location.search.replace('?', '');
+        if (location.hash.includes('headless')) {
+          $("header").hide();
+        }
         const res = await $.ajax({
           type: 'GET',
           url:
