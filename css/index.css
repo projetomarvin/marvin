@@ -823,10 +823,8 @@ input:checked + .slider:before {
 #pdf .page {
   background: white;
   padding: 24px;
-  width: 98vw;
-  height: calc(98vw * 1.414);
-  max-width: 1000px;
-  max-height: 1414px;
+  width: 1000px;
+  height: 1414px;
   margin-bottom: 20px;
   box-shadow: 0 0 5px 0px #444444;
   position: relative;
@@ -877,18 +875,18 @@ input:checked + .slider:before {
   height: 100px;
 }
 
-.talkingCharacter {
+#pdf .talkingCharacter {
   display: flex;
   margin: 36px 0;
 }
 
-.talkingCharacter.bottom {
+#pdf .talkingCharacter.bottom {
   position: absolute;
   bottom: 30px;
   width: 82%;
 }
 
-.speech-bubble {
+#pdf .speech-bubble {
   position: relative;
   background: #43a61d;
   border-radius: 24px;
@@ -901,7 +899,7 @@ input:checked + .slider:before {
   font-size: 20px;
 }
 
-.speech-bubble:after {
+#pdf .speech-bubble:after {
   content: '';
   position: absolute;
   left: 0;
@@ -1013,4 +1011,113 @@ input:checked + .slider:before {
 
 #activities {
   width: 100%;
+}
+
+@media screen and (max-width: 1000px) {
+  #pdf .page {
+    padding: 2.4vw;
+    width: calc(98vw - 48px);
+    height: calc(98vw * 1.414);
+    margin-bottom: 2vw;
+    box-shadow: 0 0 0.5vw 0 #444444;
+  }
+
+  #pdf .content {
+    padding: 6vw;
+    border: 0.6vw solid #5eb770;
+    border-radius: 2.4vw;
+  }
+
+  #pdf .cover .title {
+    font-size: 6vw;
+  }
+
+  #pdf .cover #levelNumber {
+    font-size: 4.2vw;
+    margin-top: 18vw;
+  }
+
+  #pdf .cover #levelName {
+    font-size: 2.7vw;
+    margin-top: 19vw;
+  }
+
+  #pdf .cover .icon {
+    margin-top: 4.4vw;
+  }
+
+  #pdf .icon {
+    width: 10vw;
+    height: 10vw;
+  }
+
+  #pdf .talkingCharacter {
+    margin: 3.6vw 0;
+  }
+
+  #pdf .talkingCharacter.bottom {
+    bottom: 3vw;
+  }
+
+  #pdf .speech-bubble {
+    border-radius: 2.4vw;
+    margin-left: 3.2vw;
+    margin-top: 2vw;
+    padding: 1.6vw;
+    font-size: 2vw;
+  }
+
+  #pdf .speech-bubble:after {
+    border: 3.7vw solid transparent;
+    margin-left: -3.7vw;
+  }
+
+  #pdf .instructions li {
+    margin-bottom: 2vw;
+    font-size: 2.4vw;
+  }
+
+  #pdf .content #chapterNumber {
+    font-size: 6vw;
+  }
+
+  #pdf .content #chapterName {
+    font-size: 6vw;
+    margin: 1.6vw 0;
+  }
+
+  #pdf .table {
+    margin: 5vw;
+  }
+
+  #pdf .table .row {
+    border: 1px solid black;
+    padding: 4px;
+    font-size: 2vw;
+  }
+
+  #pdf .table .row:last-of-type {
+    border-bottom: 1px solid black;
+  }
+
+  #pdf #M {
+    font-size: 6vw;
+    border-right: 1px solid black;
+    padding: 1.6vw;
+  }
+
+  #pdf .example .title {
+    font-size: 2.4vw;
+    margin-top: 1.6vw;
+  }
+
+  #pdf .example .box {
+    padding: 0.4vw 0.4vw 1.5vw 0.4vw;
+    font-size: 2.4vw;
+    min-height: 7.2vw;
+  }
+
+  #pdf .example .box:only-child {
+    margin-top: 2.4vw;
+  }
 }
