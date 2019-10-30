@@ -51,6 +51,13 @@
     <main class="vertical" id="atividades">
       <h1 id="course_name"></h1>
       <div id="activities"></div>
+      <div id="createStAct" hidden>
+        <button onclick="createStudentActivity()" class="green">
+          <h1>
+            Começar atividades
+          </h1>
+        </button>
+      </div>
     </main>
     <footer>
       <div class="finish">
@@ -71,6 +78,7 @@
       let studentActivityId;
       let students;
       let currentActivity;
+      let stLevel;
       let lastActivity = {};
 
       function checkFiles() {
@@ -208,13 +216,18 @@
             url +
             'courses/' +
             courseId +
-            '?filter={"include": "activities"}&access_token=' +
+            '?filter=[where][trail]=main&filter[include]=activities&access_token=' +
             localStorage.access_token,
           crossDomain: true,
           success: function(res, textStatus, jqXHR) {
             $('#course_name').append(res.name);
+            const actX = res.activities.find((e) => e.levelNumber === stLevel);
+            if (actX.id !== currentActivity.activityId) {
+              console.log(actX);
+              return $('#createStAct').show();
+            }
             res.activities
-              .sort((a, b) => (a > b ? 1 : -1))
+              .sort((a, b) => (a.levelNumber > b.levelNumber ? 1 : -1))
               .forEach((r, i) => {
                 let position;
                 if (i < currentLevel) {
@@ -258,6 +271,23 @@
           },
           error: function(responseData, textStatus, errorThrown) {
             console.log(responseData);
+          },
+        });
+      }
+
+      function createStudentActivity() {
+        $.ajax({
+          type: 'post',
+          url:
+            url +
+            'studentActivities/fix?access_token=' +
+            localStorage.access_token,
+          crossDomain: true,
+          success: function(res) {
+            window.location.reload();
+          },
+          error: function(err, txt, errorThrown) {
+              console.log(err);
           },
         });
       }
@@ -312,8 +342,14 @@
               py: 'Python',
               html: 'HTML',
             };
-            currentActivity =
-              res.studentActivities[res.studentActivities.length - 1];
+            stLevel = res.activityNumber;
+            if (
+              !res.studentActivities.length
+            ) {
+              $('#createStAct').show();
+              return;
+            }
+            currentActivity = res.studentActivities[res.studentActivities.length - 1];
             console.log(currentActivity);
             lastActivity = res.studentActivities[
               res.studentActivities.length - 2
