@@ -4,6 +4,7 @@
     <title>Marvi - Editor</title>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="/css/index.css" />
+    <link rel="stylesheet" href="/css/newEditor.css" />
     <link rel="stylesheet" href="/css/master.css" />
     <link rel="stylesheet" href="/css/panic.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -22,15 +23,7 @@
         <button id="closeButton">&times;</button>
         <div id="upload" style="display:none">
           <h2>Como você deseja salvar seu código?</h2>
-          <div class="buttons">
-            <button onclick="download()" class="purple">
-              Baixar <span class="icon">&#11015;</span>
-            </button>
-            <button onclick="github()" class="purple">
-              Github <img src="assets/github.svg" alt="" />
-            </button>
-          </div>
-          <div class="githubPath" hidden>
+          <div class="githubPath">
             <input
               type="text"
               name="githubPath"
@@ -63,294 +56,512 @@
         <div class="buttons" id="custommsg" hidden></div>
       </div>
     </div>
-    <div class="container">
-      <div class="half">
-        <header class="header editor">
-          <div>
-            <a class="white_back" href="/home.html"> &#11013; </a>
-            <p>Editor javascript</p>
-            <button onclick="toggleGithub()" id="github-file">
-              <img src="assets/github.svg" alt="" />
-            </button>
-          </div>
-          <div>
-            <a href="/editorBlockly.html"> <img src="assets/block.svg" alt="" /> </a>
-            &nbsp;
-            &nbsp;
-            &nbsp;
-            <a href="/editor2.html"> <img src="assets/arrows.svg" alt="" /> </a>
-          </div>
-        </header>
-        <div id="editor"></div>
-        <footer class="footer">
-          <button onclick="run()" class="green">
-            Executar <span class="icon">&#9654;</span>
+    <div class="container modernEditor">
+      <div id="navContainer">
+        <nav>
+          <a class="white_back" href="/home.html"> &#11013; </a>
+          <div class="space"></div>
+          <button id="togglePDF" onclick="togglePDF()">
+            &#xab;
           </button>
-          <button onclick="reset()" class="rose">
-            Reiniciar <span class="icon">&#8634;</span>
-          </button>
-          <button onclick="save()" class="purple">
-            Salvar arquivo <span class="icon">&#11015;</span>
-          </button>
-        </footer>
+        </nav>
       </div>
-      <div class="half">
-        <header class="header console">
-          Saída do console
-          <button onclick="clearConsole()" class="wine">Limpar</button>
-        </header>
-        <div id="log"></div>
-        <a id="panic" href="#" onclick="panic()">
-          <div class="button">pânico</div>
-          <div class="body">
-            <div class="center"></div>
-            <div class="bottom"></div>
+      <div id="instructions">
+        <div id="exercisePDF"></div>
+        <div id="iframeHover"></div>
+        <button onclick="openPDF()">
+          <div id="openPDF">
+            ver pdf completo
           </div>
-          <div class="base"></div>
-        </a>
+        </button>
+        <div id="split-bar"></div>
+      </div>
+      <div id="editorAndConsole" class="vertical">
+        <div class="half">
+          <header class="header editor">
+            <div>
+              <p>Editor javascript</p>
+              <button onclick="toggleGithub()" id="github-file">
+                <img src="assets/github.svg" alt="" />
+              </button>
+            </div>
+            <div>
+              <a href="/editorBlockly.html">
+                <img src="assets/block.svg" alt="" />
+              </a>
+              &nbsp; &nbsp; &nbsp;
+              <a href="/editor2.html">
+                <img src="assets/arrows.svg" alt="" />
+              </a>
+            </div>
+          </header>
+          <div id="editor"></div>
+          <footer class="footer">
+            <button onclick="run()" class="green">
+              Executar <span class="icon">&#9654;</span>
+            </button>
+            <button onclick="reset()" class="rose">
+              Reiniciar <span class="icon">&#8634;</span>
+            </button>
+            <button onclick="save()" class="purple">
+              Salvar arquivo <span class="icon">&#11015;</span>
+            </button>
+          </footer>
+        </div>
+        <div class="half">
+          <header class="header console">
+            Saída do console
+            <button onclick="clearConsole()" class="wine">Limpar</button>
+          </header>
+          <div id="log"></div>
+          <a id="panic" href="#" onclick="panic()">
+            <div class="button">pânico</div>
+            <div class="body">
+              <div class="center"></div>
+              <div class="bottom"></div>
+            </div>
+            <div class="base"></div>
+          </a>
+        </div>
+        <div id="consoleHover"></div>
       </div>
     </div>
 
     <script>
-      const editor = ace.edit("editor");
-      const logger = document.getElementById("log");
-      editor.setTheme("ace/theme/monokai");
-      editor.session.setMode("ace/mode/javascript");
+      let activity;
+      const editor = ace.edit('editor');
+      const logger = document.getElementById('log');
+      editor.setTheme('ace/theme/monokai');
+      editor.session.setMode('ace/mode/javascript');
       editor.setBehavioursEnabled(false);
       editor.focus();
       const files = [];
 
+      function numericoParaRomano(arg) {
+        var nums = {
+          0: '',
+          1: 'I',
+          4: 'IV',
+          5: 'V',
+          9: 'IX',
+          10: 'X',
+        };
+
+        const val = String(arg);
+        let i = 0;
+        let txt = '';
+
+        const all = val.split('').map((c, i) => c * 10 ** (val.length - 1 - i));
+        all.forEach((c) => {
+          const d = String(c)[0];
+          const e = c / d;
+          if (nums[c]) txt += nums[c];
+          else if (d < 5 && c > 0) {
+            txt += nums[e].repeat(Number(d));
+          } else if (c > 0) {
+            txt += nums[e * 5];
+            txt += nums[e].repeat(Number(d - 5));
+          }
+        });
+        return txt;
+      }
+
+      $(document).ready(async function() {
+        let code = location.search.substring(1);
+        let run;
+
+        try {
+          run = atob(code);
+        } catch (e) {}
+        editor.setValue(run || localStorage.js || '');
+        setInterval(function() {
+          saveCode();
+        }, 30000);
+
+        const res = await $.ajax({
+          url:
+            url +
+            'courses/' +
+            localStorage.courseId +
+            '?filter[include][activities]=exercises&access_token=' +
+            localStorage.access_token,
+          type: 'GET',
+          crossDomain: true,
+        });
+
+        let currentActivity;
+        currentActivity = JSON.parse(localStorage.user).activityNumber;
+        currentActivity = res.activities.find(
+          (a) => a.levelNumber === currentActivity,
+        );
+        activity = currentActivity;
+        const exs = activity.exercises.sort((a, b) => (a > b ? -1 : 1));
+        exs.forEach((e) => {
+          let code = `
+          <button onclick="selectExercise(${e.number})" class="exercise">
+            <span class="number">
+              ${e.number}
+            </span>
+            <span class="name">
+              ${e.name}
+            </span>
+          </button>`;
+          $('nav').append(code);
+        });
+
+        selectExercise(0);
+      });
+
+      function selectExercise(n) {
+        $('.exercise').removeClass('selected');
+        $(`.exercise:eq(${n})`).addClass('selected');
+
+        function parseStyle(code) {
+          const strong = /\*\*(.+?)\*\*/g;
+          const italic = /\_\_(.+?)\_\_/g;
+          const href = /\[(.+?)\]\((.+?)\)/g;
+
+          return code
+            .replace(italic, '<i>$1</i>')
+            .replace(strong, '<b>$1</b>')
+            .replace(href, '<a href="$1" target="__blank">$2</a>');
+        }
+
+        function exampleStyle(code) {
+          const comment = /^\s+?\/\/(.+?)$|\n/gm;
+          const space = /\ {2}/g;
+
+          if (code.match(comment)) {
+            return code
+              .replace(comment, `<span class="comment">${code}</span>`)
+              .replace(space, '&nbsp;&nbsp;');
+          } else {
+            return code;
+          }
+        }
+
+        $('#exercisePDF').empty();
+        const ex = activity.exercises[n];
+        let code = `<div class="page"> <div class="content">`;
+        code += `<h1 id="chapterNumber">Capítulo ${numericoParaRomano(
+          ex.number + 1,
+        )}</h1>
+            <h1 id="chapterName">${ex.name}</h1>
+            <div class="table">
+              <div class="row centered">
+                <div id="M">_M</div>
+                <div id="exerciseNumber">
+                  Exercício 0${ex.number}
+                </div>
+              </div>
+              <div class="row centered" id="exerciseName">
+                ${ex.name}
+              </div>
+              <div class="row" id="exercisePath">
+                Submissão: ${ex.path}
+              </div>
+            </div>`;
+
+        ex.instructions.forEach((i) => {
+          let txt = '';
+          const keys = Object.keys(i);
+          keys.forEach((k) => {
+            if (k === 'bullet') {
+              txt += `<div class="instructions">
+                    <ul>
+                      <li>
+                        ${parseStyle(i[k])}
+                      </li>
+                    </ul>
+                  </div>`;
+            } else if (k === 'example') {
+              txt += '<div class="example">';
+              if (i[k].title) {
+                txt += `<p class="title">${parseStyle(i[k].title)}</p>`;
+              }
+              if (i[k].code) {
+                txt += '<div class="box">';
+                i[k].code.forEach((c) => {
+                  txt += exampleStyle(c) + '<br>';
+                });
+                txt += '</div>';
+              }
+              txt += '</div>';
+            } else if (k === 'bubble') {
+              txt += `<div class="talkingCharacter ${i[k].bottom === 'true' &&
+                'bottom'}">
+              <img src="assets/logo.png" alt="Marvin" class="icon" />
+              <span class="speech-bubble">
+                  ${
+                    typeof i[k] === 'string'
+                      ? parseStyle(i[k])
+                      : parseStyle(i[k].text)
+                  }
+              </span>
+            </div>`;
+            } else if (k === 'image') {
+              txt += `<img src="${i[k]}" class="inline-image" />`;
+            }
+          });
+          code += txt;
+        });
+        code += '</div> </div>';
+        $('#exercisePDF').append(code);
+      }
+
+      function openPDF() {
+        var win = window.open(
+          `${location.origin}/pdf.html?${activity.id}`,
+          '_blank',
+        );
+        togglePDF();
+        win.focus();
+      }
+
+      function togglePDF() {
+        $('#instructions').toggleClass('hidden');
+        $('#editorAndConsole').toggleClass('vertical');
+        if (
+          $('#togglePDF')
+            .text()
+            .includes('«')
+        ) {
+          const height = $(window).width() - 130;
+          $('#togglePDF').text('»');
+        } else {
+          $('#togglePDF').text('«');
+        }
+        editor.focus();
+        window.dispatchEvent(new Event('resize'));
+        $('#instructions').removeAttr('style');
+        $('#editorAndConsole').removeAttr('style');
+        $('#iframeHover').removeAttr('style');
+        $('#consoleHover').removeAttr('style');
+      }
+
       document.onkeyup = function(e) {
         if (e.ctrlKey && e.which === 13) {
           run();
-        } else if (e.altKey && e.which === 83) {
-          e.preventDefault();
-          save();
         }
       };
 
       function save() {
-        $("#saveDialog").show();
-        $("#upload").show();
+        $('#saveDialog').show();
+        $('#upload').show();
+        $('input[name=githubPath]').val(
+          activity.exercises[$('.selected')[0].innerText[0]].path,
+        );
         $.ajax({
           url:
             url +
-            "courses/" +
+            'courses/' +
             localStorage.courseId +
-            "?filter[include]=activities&access_token=" +
+            '?filter[include]=activities&access_token=' +
             localStorage.access_token,
           crossDomain: true,
-          success: res => {
-            res.activities.map(a => {
+          success: (res) => {
+            res.activities.map((a) => {
               if (a.exercises) {
-                a.exercises.map(e => {
+                a.exercises.map((e) => {
                   files.push(e.file);
                 });
               }
             });
-          }
+          },
         });
       }
 
       function panic() {
-        const sure = confirm("O botão de pânico custa 420 moedas. Tem certeza que quer continuar?")
+        const sure = confirm(
+          'O botão de pânico custa 420 moedas. Tem certeza que quer continuar?',
+        );
         if (!sure) {
           return false;
         }
-        const realySure = confirm("VOCÊ TEM MUITA CERTEZA MESMO QUE QUER GASTAR 420 MOEDAS PARA ACIONAR O BOTÃO DE PÂNICO?")
+        const realySure = confirm(
+          'VOCÊ TEM MUITA CERTEZA MESMO QUE QUER GASTAR 420 MOEDAS PARA ACIONAR O BOTÃO DE PÂNICO?',
+        );
         if (!realySure) {
           return false;
         }
         $.ajax({
-          type: "patch",
+          type: 'patch',
           url:
             url +
-            "students/" +
+            'students/' +
             localStorage.userId +
-            "?access_token=" +
+            '?access_token=' +
             localStorage.access_token,
           crossDomain: true,
           data: {
-            panic: true
+            panic: true,
           },
           success: function(responseData, textStatus, jqXHR) {
-            alert("Pronto, um facilitador irá te ajudar em breve!");
+            alert('Pronto, um facilitador irá te ajudar em breve!');
           },
           error: function(responseData, textStatus, errorThrown) {
-            alert("Algo deu errado " + responseData.responseJSON.error.message);
-          }
+            alert('Algo deu errado ' + responseData.responseJSON.error.message);
+          },
         });
       }
 
-      $("#closeButton").click(() => {
-        $("#saveDialog").toggle();
-        $("input[name=githubPath]").val("");
-        $("input[name=message]").val("");
-        $(".githubPath").toggle();
-        $("#upload").hide();
-        $("#githubLoad").hide();
+      $('#closeButton').click(() => {
+        $('#saveDialog').toggle();
+        $('input[name=githubPath]').val('');
+        $('input[name=message]').val('');
+        $('#upload').hide();
+        $('#githubLoad').hide();
       });
 
-      function github() {
-        $(".githubPath").toggle();
-      }
-
       function pushToGit(code, path) {
-        const msg = $("input[name=message]").val();
+        const msg = $('input[name=message]').val();
         $.ajax({
-          type: "post",
+          type: 'post',
           url:
             url +
-            "students/" +
+            'students/' +
             localStorage.userId +
-            "/pushToGit?access_token=" +
+            '/pushToGit?access_token=' +
             localStorage.access_token,
           crossDomain: true,
           data: {
             content: btoa(code),
             path: path,
-            message: msg
+            message: msg,
           },
           success: function(res, txt, jsXHR) {
-            alert("Commit criado com sucesso! Veja em seu repositório");
-            $("#saveDialog").toggle();
-            $(".githubPath").toggle();
-            $("#upload").toggle();
-            $("input[name=githubPath]").val("");
-            $("input[name=message]").val("");
+            alert('Commit criado com sucesso! Veja em seu repositório');
+            $('#saveDialog').toggle();
+            $('#upload').toggle();
+            $('input[name=githubPath]').val('');
+            $('input[name=message]').val('');
           },
           error: function(res, txt, jsXHR) {
             if (res.responseJSON.error.statusCode === 401) {
               const goToLink =
-                "<h3>Algo deu errado no upload para o github. Você deve autorizar o acesso novamemte.</h3>" +
+                '<h3>Algo deu errado no upload para o github. Você deve autorizar o acesso novamemte.</h3>' +
                 '<button onclick="linkToGit()" class="green">Clique aqui para continuar</button>';
-              $("#upload").hide();
-              $("#custommsg").append(goToLink);
-              $("#custommsg").show();
+              $('#upload').hide();
+              $('#custommsg').append(goToLink);
+              $('#custommsg').show();
             }
-          }
+          },
         });
       }
 
       function checkFileIsCurrent(obj) {
         return (
-          obj.mode === "100644" &&
+          obj.mode === '100644' &&
           obj.path.includes(
-            "fase0" + JSON.parse(localStorage.user).activityNumber
+            'fase0' + JSON.parse(localStorage.user).activityNumber,
           )
         );
       }
 
       function toggleGithub() {
         const user = JSON.parse(localStorage.user);
-        $("#saveDialog").show();
-        $("#githubLoad").show();
+        $('#saveDialog').show();
+        $('#githubLoad').show();
         $.ajax({
           url:
-            "https://api.github.com/repos/" +
+            'https://api.github.com/repos/' +
             user.username +
-            "/marvin/commits?access_token=" +
+            '/marvin/commits?access_token=' +
             JSON.parse(localStorage.user).githubAccessToken,
           crossDomain: true,
           success: function(res, txt, jsXHR) {
             $.ajax({
               url:
-                "https://api.github.com/repos/" +
+                'https://api.github.com/repos/' +
                 user.username +
-                "/marvin/git/trees/" +
+                '/marvin/git/trees/' +
                 res[0].sha +
-                "?recursive=1&access_token=" +
+                '?recursive=1&access_token=' +
                 JSON.parse(localStorage.user).githubAccessToken,
               crossDomain: true,
               success: function(r, t) {
                 const files = r.tree.filter(checkFileIsCurrent);
-                if ($("select#file option").length === 1) {
+                if ($('select#file option').length === 1) {
                   for (var i = 0; i < files.length; i++) {
-                    $("select#file").append(
-                      "<option value=" +
+                    $('select#file').append(
+                      '<option value=' +
                         files[i].path +
-                        ">" +
+                        '>' +
                         files[i].path +
-                        "</option>"
+                        '</option>',
                     );
                   }
                 }
-              }
+              },
             });
           },
           error: function(res, txt, jsXHR) {
             console.log(res);
-          }
+          },
         });
       }
 
       function loadFile() {
         const user = JSON.parse(localStorage.user);
-        const path = $("select#file").val();
+        const path = $('select#file').val();
         $.ajax({
           url:
-            "https://api.github.com/repos/" +
+            'https://api.github.com/repos/' +
             user.username +
-            "/marvin/contents/" +
+            '/marvin/contents/' +
             path,
           crossDomain: true,
           success: function(res) {
             editor.getSession().setValue(atob(res.content));
-            $("#closeButton").trigger("click");
-            $("input[name=githubPath]").val(path);
-          }
+            $('#closeButton').trigger('click');
+            $('input[name=githubPath]').val(path);
+          },
         });
       }
 
       function saveGithub() {
         const code = editor.getValue();
-        const path = $("input[name=githubPath]")
+        const path = $('input[name=githubPath]')
           .val()
-          .replace(/\s/g, "");
-        if (!$("input[name=message]").val())
-          return alert("Você precisa colocar uma mensagem de commit!");
+          .replace(/\s/g, '');
+        if (!$('input[name=message]').val())
+          return alert('Você precisa colocar uma mensagem de commit!');
         else if (
-          (files.includes(path) ||
-            (!files.includes(path) &&
-              confirm(
-                "Parece que você digitou um caminho de arquivo que não corresponde a nenhum exercício. Tem certeza que quer continuar?"
-              ))) &&
-          (code.match(/(fun.*{[\s\S]*}[\s]*$)/g) ||
-            (!code.match(/(fun.*{[\s\S]*}[\s]*$)/g) &&
-              confirm(
-                "Oops, parece que seu código não segue as normas de envio, tem certeza que quer continuar?"
-              )))
+          code.match(/(fun.*{[\s\S]*}[\s]*$)/g) ||
+          (!code.match(/(fun.*{[\s\S]*}[\s]*$)/g) &&
+            confirm(
+              'Oops, parece que seu código não segue as normas de envio, tem certeza que quer continuar?',
+            ))
         )
           pushToGit(code, path);
         else {
-          $("#saveDialog").toggle();
-          $("#upload").toggle();
-          $(".githubPath").hide();
+          $('#saveDialog').toggle();
+          $('#upload').toggle();
         }
       }
 
       function linkToGit() {
-        window.open("/github-link.html", "_blank");
-        $("#closeButton").trigger("click");
+        window.open('/github-link.html', '_blank');
+        $('#closeButton').trigger('click');
       }
 
       function addToLog(msg, err) {
         if (err) {
           logger.innerHTML =
-            logger.innerHTML + '<p class="error log">' + msg + "</p>";
+            logger.innerHTML + '<p class="error log">' + msg + '</p>';
         } else {
           logger.innerHTML =
-            logger.innerHTML + '<p class="log">' + msg + "</p>";
+            logger.innerHTML + '<p class="log">' + msg + '</p>';
         }
       }
 
       (function() {
         console.log = function(message) {
-          if (typeof message === "string") {
-            addToLog(message.replace(/\n/g, "<br>&nbsp;&nbsp;"));
-          } else if (typeof message == "object") {
+          if (typeof message === 'string') {
+            addToLog(message.replace(/\n/g, '<br>&nbsp;&nbsp;'));
+          } else if (typeof message == 'object') {
             addToLog(
-              JSON && JSON.stringify ? JSON.stringify(message) : message
+              JSON && JSON.stringify ? JSON.stringify(message) : message,
             );
           } else {
             addToLog(message);
@@ -359,7 +570,7 @@
       })();
 
       window.onerror = function(msg) {
-        if (typeof msg == "object") {
+        if (typeof msg == 'object') {
           addToLog(JSON && JSON.stringify ? JSON.stringify(msg) : msg, true);
         } else {
           addToLog(msg, true);
@@ -368,7 +579,7 @@
 
       function saveCode() {
         var code = editor.getValue();
-        localStorage.setItem("code", code);
+        localStorage.setItem('js', code);
       }
 
       function reset() {
@@ -376,15 +587,15 @@
       }
 
       function clearConsole() {
-        logger.innerHTML = "";
+        logger.innerHTML = '';
       }
 
       function run() {
         saveCode();
         var code = editor.getValue();
-        $("#script").remove();
-        var script = document.createElement("script");
-        script.setAttribute("id", "script");
+        $('#script').remove();
+        var script = document.createElement('script');
+        script.setAttribute('id', 'script');
         try {
           script.appendChild(document.createTextNode(code));
           document.body.appendChild(script);
@@ -396,14 +607,14 @@
 
       function download() {
         const code = editor.getValue();
-        const element = document.createElement("a");
+        const element = document.createElement('a');
         element.setAttribute(
-          "href",
-          "data:text/javascript;charset=utf-8," + encodeURIComponent(code)
+          'href',
+          'data:text/javascript;charset=utf-8,' + encodeURIComponent(code),
         );
-        element.setAttribute("download", "file.js");
+        element.setAttribute('download', 'file.js');
 
-        element.style.display = "none";
+        element.style.display = 'none';
         document.body.appendChild(element);
 
         element.click();
@@ -411,17 +622,28 @@
         document.body.removeChild(element);
       }
 
-      $(document).ready(function() {
-        let code = location.search.substring(1);
-        let run;
-        try {
-          run = atob(code)
-        } catch (e) {
-        }
-        editor.setValue(run || localStorage.code || "");
-        setInterval(function() {
-          saveCode();
-        }, 30000);
+      $('#split-bar').mousedown(function(e) {
+        e.preventDefault();
+        $(this).addClass('clicked');
+        $('#iframeHover').addClass('active');
+        $('#consoleHover').addClass('active');
+        $(document).mousemove(function(e) {
+          e.preventDefault();
+          var x = e.pageX;
+          if (x % 30 === 0 && x >= 420 && window.innerWidth - x >= 360) {
+            $('#instructions').css('width', x);
+            $('#editorAndConsole').css('width', window.innerWidth - x - 60);
+            $('#iframeHover').css('width', x - 18);
+            $('#consoleHover').css('width', window.innerWidth - x - 60);
+          }
+        });
+      });
+
+      $(document).mouseup(function(e) {
+        $('#iframeHover').removeClass('active');
+        $('#consoleHover').removeClass('active');
+        $('#split-bar').removeClass('clicked');
+        $(document).unbind('mousemove');
       });
     </script>
   </body>

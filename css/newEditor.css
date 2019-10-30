@@ -71,6 +71,7 @@ nav .name {
   margin-left: 16px;
   width: 0;
   transition: width 4s;
+  text-align: left;
 }
 
 iframe {
@@ -82,6 +83,10 @@ iframe {
 #instructions.hidden,
 #instructions.hidden iframe {
   width: 0;
+}
+
+#editorAndConsole:not(.vertical) .half:nth-child(1) {
+  margin-left: 15px;
 }
 
 #instructions.hidden button {
