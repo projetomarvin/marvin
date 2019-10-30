@@ -24,20 +24,22 @@
         <div id="upload" style="display:none">
           <h2>Como você deseja salvar seu código?</h2>
           <div class="githubPath">
-            <input
-              type="text"
-              name="githubPath"
-              placeholder="caminho e nome do arquivo"
-            />
-            <br />
-            <input
-              type="text"
-              name="message"
-              placeholder="mensagem do commit"
-            />
-            <br />
-            <br />
-            <button class="green" onclick="saveGithub()">Salvar</button>
+            <form>
+              <input
+                type="text"
+                name="githubPath"
+                placeholder="caminho e nome do arquivo"
+              />
+              <br />
+              <input
+                type="text"
+                name="message"
+                placeholder="mensagem do commit"
+              />
+              <br />
+              <br />
+              <button class="green" onclick="saveGithub()">Salvar</button>
+            </form>
           </div>
           <br />
           <p style="color: darkred;">
@@ -519,7 +521,11 @@
         });
       }
 
-      function saveGithub() {
+      $("form").submit(function(e){
+        e.preventDefault();
+      });
+
+      function saveGithub(e) {
         const code = editor.getValue();
         const path = $('input[name=githubPath]')
           .val()
