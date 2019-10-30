@@ -166,7 +166,7 @@
         res.exercises.forEach((ex, i) => {
           let code = `<div class="page" id="pageEx${i}"> <div class="content">`;
           code += `<h1 id="chapterNumber">Capítulo ${numericoParaRomano(
-            ex.number,
+            ex.number + 1,
           )}</h1>
             <h1 id="chapterName">${ex.name}</h1>
             <div class="table">
