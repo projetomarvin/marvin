@@ -158,6 +158,11 @@ iframe {
   display: block;
 }
 
+#exercisePDF {
+  max-height: 100vh;
+  overflow: auto;
+}
+
 #instructions #exercisePDF .page {
   background: white;
   padding: 8px;
