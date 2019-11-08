@@ -582,19 +582,19 @@
         }
       }
 
-      // (function() {
-      //   console.log = function(message) {
-      //     if (typeof message === 'string') {
-      //       addToLog(message.replace(/\n/g, '<br>&nbsp;&nbsp;'));
-      //     } else if (typeof message == 'object') {
-      //       addToLog(
-      //         JSON && JSON.stringify ? JSON.stringify(message) : message,
-      //       );
-      //     } else {
-      //       addToLog(message);
-      //     }
-      //   };
-      // })();
+      (function() {
+        console.log = function(message) {
+          if (typeof message === 'string') {
+            addToLog(message.replace(/\n/g, '<br>&nbsp;&nbsp;'));
+          } else if (typeof message == 'object') {
+            addToLog(
+              JSON && JSON.stringify ? JSON.stringify(message) : message,
+            );
+          } else {
+            addToLog(message);
+          }
+        };
+      })();
 
       window.onerror = function(msg) {
         if (typeof msg == 'object') {
