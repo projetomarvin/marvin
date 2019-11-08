@@ -76,6 +76,11 @@
             ver pdf completo
           </div>
         </button>
+        <button onclick="invert()" id="swap">
+          <div>
+            &#x21C4;
+          </div>
+        </button>
         <div id="split-bar"></div>
       </div>
       <div id="editorAndConsole" class="vertical">
@@ -92,9 +97,9 @@
                 <img src="assets/block.svg" alt="" />
               </a>
               &nbsp; &nbsp; &nbsp; -->
-              <a href="/editor2.html">
+              <!-- <a href="/editor2.html">
                 <img src="assets/arrows.svg" alt="" />
-              </a>
+              </a> -->
             </div>
           </header>
           <div id="editor"></div>
@@ -131,6 +136,7 @@
 
     <script>
       let activity;
+      let swap = false;
       const editor = ace.edit('editor');
       const logger = document.getElementById('log');
       editor.setTheme('ace/theme/monokai');
@@ -212,6 +218,7 @@
         });
 
         selectExercise(0);
+        bar();
       });
 
       function selectExercise(n) {
@@ -318,6 +325,20 @@
         );
         togglePDF();
         win.focus();
+      }
+
+      function invert() {
+        swap = !swap;
+        $("#editorAndConsole").toggleClass("invert");
+        $("#instructions").toggleClass("invert");
+        const pdf = $("#split-bar")
+        pdf.remove();
+        if (!swap) {
+          $("#instructions").append(pdf[0]);
+        } else {
+          $("#instructions").prepend(pdf[0]);
+        }
+        bar();
       }
 
       function togglePDF() {
@@ -561,19 +582,19 @@
         }
       }
 
-      (function() {
-        console.log = function(message) {
-          if (typeof message === 'string') {
-            addToLog(message.replace(/\n/g, '<br>&nbsp;&nbsp;'));
-          } else if (typeof message == 'object') {
-            addToLog(
-              JSON && JSON.stringify ? JSON.stringify(message) : message,
-            );
-          } else {
-            addToLog(message);
-          }
-        };
-      })();
+      // (function() {
+      //   console.log = function(message) {
+      //     if (typeof message === 'string') {
+      //       addToLog(message.replace(/\n/g, '<br>&nbsp;&nbsp;'));
+      //     } else if (typeof message == 'object') {
+      //       addToLog(
+      //         JSON && JSON.stringify ? JSON.stringify(message) : message,
+      //       );
+      //     } else {
+      //       addToLog(message);
+      //     }
+      //   };
+      // })();
 
       window.onerror = function(msg) {
         if (typeof msg == 'object') {
@@ -628,22 +649,28 @@
         document.body.removeChild(element);
       }
 
-      $('#split-bar').mousedown(function(e) {
-        e.preventDefault();
-        $(this).addClass('clicked');
-        $('#iframeHover').addClass('active');
-        $('#consoleHover').addClass('active');
-        $(document).mousemove(function(e) {
+      function bar() {
+        $('#split-bar').mousedown(function(e) {
+          console.log(e);
           e.preventDefault();
-          var x = e.pageX;
-          if (x % 30 === 0 && x >= 420 && window.innerWidth - x >= 360) {
-            $('#instructions').css('width', x);
-            $('#editorAndConsole').css('width', window.innerWidth - x - 60);
-            $('#iframeHover').css('width', x - 18);
-            $('#consoleHover').css('width', window.innerWidth - x - 60);
-          }
+          $(this).addClass('clicked');
+          $('#iframeHover').addClass('active');
+          $('#consoleHover').addClass('active');
+          $(document).mousemove(function(e) {
+            e.preventDefault();
+            var x = e.pageX;
+            if (swap) {
+              x = window.innerWidth - x;
+            }
+            if (x % 30 === 0 && x >= 420 && window.innerWidth - x >= 360) {
+              $('#instructions').css('width', x);
+              $('#editorAndConsole').css('width', window.innerWidth - x - 60);
+              $('#iframeHover').css('width', x - 18);
+              $('#consoleHover').css('width', window.innerWidth - x - 60);
+            }
+          });
         });
-      });
+      }
 
       $(document).mouseup(function(e) {
         $('#iframeHover').removeClass('active');

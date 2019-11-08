@@ -1,6 +1,6 @@
 #panic {
-  position: fixed;
-  bottom: 32px;
+  position: absolute;
+  bottom: -39vh;
   right: 32px;
   width: 150px;
   height: 150px;

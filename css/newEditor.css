@@ -93,13 +93,17 @@ iframe {
   display: none;
 }
 
+#instructions.invert button {
+  left: 8px;
+}
+
 #instructions button {
   position: absolute;
   bottom: 0;
   left: 60px;
 }
 
-#instructions #openPDF {
+#instructions button div {
   padding: 8px;
   margin: 24px;
   text-transform: uppercase;
@@ -112,6 +116,16 @@ iframe {
   bottom: 0;
   font-weight: bold;
   position: absolute;
+}
+
+#instructions.invert {
+  right: 0;
+  position: absolute;
+  margin-left: 0;
+}
+
+#editorAndConsole.invert {
+  left: 60px;
 }
 
 #instructions {
@@ -316,4 +330,8 @@ iframe {
 
 #instructions #exercisePDF .inline-image {
   max-width: 80%;
+}
+
+#swap {
+  margin-left: 160px;
 }
