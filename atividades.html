@@ -63,9 +63,9 @@
       <div class="finish">
         <div class="doing">
           <p>Você está fazendo a fase&nbsp;</p>
-          <button class="orange" id="chooseLang" onclick="chooseLang()" hidden>
+          <!-- <button class="orange" id="chooseLang" onclick="chooseLang()" hidden>
             Escolher ling.
-          </button>
+          </button> -->
           <button onclick="checkFiles()" class="green">Finalizar</button>
         </div>
         <div class="correction" hidden>
@@ -224,7 +224,9 @@
             const actX = res.activities.find((e) => e.levelNumber === stLevel);
             if (actX.id !== currentActivity.activityId) {
               console.log(actX);
-              return $('#createStAct').show();
+              // return $('#createStAct').show();
+              createStudentActivity();
+              return;
             }
             res.activities
               .sort((a, b) => (a.levelNumber > b.levelNumber ? 1 : -1))
@@ -346,7 +348,8 @@
             if (
               !res.studentActivities.length
             ) {
-              $('#createStAct').show();
+              // $('#createStAct').show();
+              createStudentActivity()
               return;
             }
             currentActivity = res.studentActivities[res.studentActivities.length - 1];
