@@ -39,7 +39,7 @@
         <button type="button" class="wine" onclick="logout()">Sair</button>
         <br />
         <br />
-        <h3>Disponível para correção</h3>
+        <h3 id="availability">Disponível para correção</h3>
         <a href="/historico.html"><h3>Histórico de correções</h3></a>
         <a
           href="https://docs.google.com/forms/d/e/1FAIpQLSfQejZUebl0NHNCCoaQD2UcwXROn5FJ6dI2lyE_ppcdDG1YUw/viewform"
@@ -235,6 +235,9 @@
                 );
                 getMessages();
                 setInterval(getMessages, 5 * 1000);
+                if (responseData.availableUntil === "correction") {
+                  $("#availability").text("Não disponível para correção");
+                }
               } else {
                 location.href = "/github-link.html";
               }
