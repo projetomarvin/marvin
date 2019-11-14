@@ -305,6 +305,12 @@ main.fullwidth {
   background: #747969;
 }
 
+button.bordered {
+  border: 2px solid;
+  padding: 4px;
+  font-size: 16px;
+}
+
 #log {
   padding: 8px;
   max-width: 100%;

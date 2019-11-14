@@ -100,6 +100,9 @@
               <!-- <a href="/editor2.html">
                 <img src="assets/arrows.svg" alt="" />
               </a> -->
+              <button onclick="dryRunCode()" class="bordered green">
+                Corrigir
+              </button>
             </div>
           </header>
           <div id="editor"></div>
@@ -179,7 +182,7 @@
         let run;
 
         try {
-          run = atob(code);
+          run = window.atob(code);
         } catch (e) {}
         editor.setValue(run || localStorage.js || '');
         setInterval(function() {
@@ -426,6 +429,42 @@
             alert('Algo deu errado ' + responseData.responseJSON.error.message);
           },
         });
+      }
+
+      function dryRunCode() {
+        const res = prompt("ATENÇÃO\n\n" +
+          `- Só será corrigida a fase atual (${activity.exercises[$('.selected')[0].innerText[0]].path});\n`+
+          "- Essa correção é a mesma do corretor autmático, que avalia seu código;\n" +
+          "- Essa correção custa 100 moedas;" +
+          "- O resultado aparecerá no console. Se você sair ou recarregar a página, não verá mais;\n" +
+          "Caso tenha entendido e concordado com isso, digite CONTINUAR abaixo");
+        if (res.toUpperCase() !== "CONTINUAR") {
+          return alert("Correção cancelada")
+        }
+        $.ajax({
+          type: 'post',
+          url:
+            url +
+            'students/' +
+            activity.exercises[$('.selected')[0].innerText[0]].id +
+            '/dryRun?access_token=' +
+            localStorage.access_token,
+          crossDomain: true,
+          data: {
+            code: editor.getValue(),
+            id: localStorage.userId,
+          },
+          success: function(res) {
+            res.map(r => {
+              console.log(r.test.replace(/\n/g, "<br>"));
+              console.log("Correto? " + String(r.correct));
+            })
+          },
+          error: function(err) {
+            // console.error(err)
+            alert(err.responseJSON.error.message)
+          }
+        })
       }
 
       $('#closeButton').click(() => {
