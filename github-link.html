@@ -30,6 +30,10 @@
     $('.loginForm').on('submit', function(e) {
       e.preventDefault()
       const usr = $('input[name=username]').val();
+      if (usr.includes("@")) {
+        $('input[name=username]').val("");
+        return alert("Ops, parece que você digitou seu email. Você precisa informar o seu USUÁRIO do github para continuar.")
+      }
       $.ajax({
         type: 'get',
         url: url + 'students/' + localStorage.userId + '/checkRepository' + '?username=' + usr + '&access_token=' + localStorage.access_token,
