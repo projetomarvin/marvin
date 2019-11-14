@@ -22,6 +22,7 @@
               onclick="toggleMsg()"
               src="assets/close-envelope.svg"
               alt=""
+              style="display: none;"
             />
             <div id="msg-box" hidden>
               <h3>Notificações</h3>
@@ -235,7 +236,7 @@
                 getMessages();
                 setInterval(getMessages, 5 * 1000);
               } else {
-                location.href = "/github-link.html?" + responseData.id;
+                location.href = "/github-link.html";
               }
             },
             error: function(responseData, textStatus, errorThrown) {
