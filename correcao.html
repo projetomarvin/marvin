@@ -59,6 +59,7 @@
 
     <script type="text/javascript">
       let numberOfExercises;
+      let lvlNumber;
       let isLast = false;
       let isManual = false;
 
@@ -165,6 +166,7 @@
                       console.log(res);
                     }
                   })
+                  lvlNumber = res.studentActivity.student.activityNumber;
                   if (!r.exercises[0].corrections) {
                     isManual = true;
                   }
@@ -178,7 +180,7 @@
                   numberOfExercises = r.exercises.length;
                   r.exercises.map((q, i) => {
                     const name = q.path.substring(0, q.path.length - 3);
-                    let url = `/editor.html?${res.codes[name]}`;
+                    let url = `/editor.html?code=${res.codes[name]}&level=${lvlNumber}&exercise=${i}`;
                     if (res.studentActivity.language === 'py') {
                       url = `/editor3.html?${res.codes[name]}`;
                     }

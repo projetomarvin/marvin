@@ -178,7 +178,10 @@
       }
 
       $(document).ready(async function() {
-        let code = location.search.substring(1);
+        let urlData = new URLSearchParams(location.search.substring(1))
+        let code = urlData.get("code");
+        let corrLevel = Number(urlData.get("level"));
+        let exercise = urlData.get("exercise");
         let run;
 
         try {
@@ -201,7 +204,7 @@
         });
 
         let currentActivity;
-        currentActivity = JSON.parse(localStorage.user).activityNumber;
+        currentActivity = corrLevel || JSON.parse(localStorage.user).activityNumber;
         currentActivity = res.activities.find(
           (a) => a.levelNumber === currentActivity,
         );
@@ -220,7 +223,7 @@
           $('nav').append(code);
         });
 
-        selectExercise(0);
+        selectExercise(exercise || 0);
         bar();
       });
 
