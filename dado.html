@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="/css/dado.css" />
+    <link rel="shortcut icon" href="assets/favicon.ico" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="./helper.js" charset="utf-8"></script>
+    <title>Dado</title>
+  </head>
+  <body>
+    <h1>Clique para rodar o dado</h1>
+    <section class="container">
+      <div id="cube">
+        <div class="front">
+          <span class="dot dot1"></span>
+        </div>
+        <div class="back">
+          <span class="dot dot1"></span>
+          <span class="dot dot2"></span>
+        </div>
+        <div class="right">
+          <span class="dot dot1"></span>
+          <span class="dot dot2"></span>
+          <span class="dot dot3"></span>
+        </div>
+        <div class="left">
+          <span class="dot dot1"></span>
+          <span class="dot dot2"></span>
+          <span class="dot dot3"></span>
+          <span class="dot dot4"></span>
+        </div>
+        <div class="top">
+          <span class="dot dot1"></span>
+          <span class="dot dot2"></span>
+          <span class="dot dot3"></span>
+          <span class="dot dot4"></span>
+          <span class="dot dot5"></span>
+        </div>
+        <div class="bottom">
+          <span class="dot dot1"></span>
+          <span class="dot dot2"></span>
+          <span class="dot dot3"></span>
+          <span class="dot dot4"></span>
+          <span class="dot dot5"></span>
+          <span class="dot dot6"></span>
+        </div>
+      </div>
+    </section>
+    <h1 id="result"></h1>
+    <script>
+      var cube = document.getElementById("cube");
+
+      var min = 1;
+      var max = 24;
+
+      const values = {
+        front: 1,
+        back: 2,
+        right: 3,
+        left: 4,
+        top: 5,
+        bottom: 6
+      };
+
+      const prizes = [
+        "ganhou um ponto de correção",
+        "perdeu um ponto de correção",
+        "ganhou 47 moedas",
+        "perdeu 37 moedas",
+        "não entre em pânico",
+        "não entre em pânico"
+      ];
+
+      cube.onclick = function() {
+        var xRand = getRandom(max, min);
+        var yRand = getRandom(max, min);
+        cube.onclick = null;
+
+        cube.style.webkitTransform =
+          "rotateX(" + xRand + "deg) rotateY(" + yRand + "deg)";
+        cube.style.transform =
+          "rotateX(" + xRand + "deg) rotateY(" + yRand + "deg)";
+        setTimeout(() => {
+          dicePrize();
+        }, 2700);
+      };
+      
+      function getRandom(max, min) {
+        return (Math.floor(Math.random() * (max - min)) + min) * 90;
+      }
+      
+      function dicePrize() {
+        const face = document.elementFromPoint(window.innerWidth / 2, 200);
+        console.log(values[face.className]);
+        $("#result").text(`Você tirou ${values[face.className]} e ${prizes[values[face.className] - 1]}`);
+        $.ajax({
+          url: url + 'students/' + localStorage.userId + '/dice/' + values[face.className] + '?access_token=' + localStorage.access_token,
+          type: 'post',
+          crossDomain: true,
+          success: function (res) {
+            console.log(res);
+            alert("Obrigado pelos peixes!");
+            setTimeout(() => {
+              location.href = "home.html";
+            }, 3000);
+          },
+          error: (err) => {
+            console.log(err);
+            alert(err.responseJSON.error.message);
+            setTimeout(() => {
+              location.href = "home.html";
+            }, 3000);
+          }
+        })
+      }
+    </script>
+  </body>
+</html>

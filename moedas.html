@@ -98,7 +98,9 @@
           console.log(res);
           alert("Compra realizada com sucesso com sucesso!");
           if (res) {
-            location.href = `https://docs.google.com/forms/d/e/${res}/viewform`
+            location.href = `https://docs.google.com/forms/d/e/${res}/viewform`;
+          } else if (product === "dado") {
+            location.href = "/dado.html";
           }
         },
         error: function (msg) {
