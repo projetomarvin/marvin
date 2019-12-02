@@ -144,7 +144,7 @@
       const logger = document.getElementById('log');
       editor.setTheme('ace/theme/monokai');
       editor.session.setMode('ace/mode/javascript');
-      editor.setBehavioursEnabled(false);
+      // editor.setBehavioursEnabled(false);
       editor.focus();
       const files = [];
 
@@ -628,7 +628,10 @@
 
       (function() {
         console.log = function(message) {
-          if (typeof message === 'string') {
+          if (message === undefined) {
+            addToLog(message, true);
+          }
+          else if (typeof message === 'string') {
             addToLog(message.replace(/\n/g, '<br>&nbsp;&nbsp;'));
           } else if (typeof message == 'object') {
             addToLog(
