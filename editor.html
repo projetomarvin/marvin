@@ -184,13 +184,15 @@
         let exercise = urlData.get("exercise");
         let run;
 
-        try {
-          run = window.atob(code);
-        } catch (e) {}
-        editor.setValue(run || localStorage.js || '');
-        setInterval(function() {
-          saveCode();
-        }, 30000);
+        if (code) {
+          try {
+            run = window.atob(code);
+          } catch (e) {}
+          editor.setValue(run || localStorage.js || '');
+          setInterval(function() {
+            saveCode();
+          }, 30000);
+        }
 
         const res = await $.ajax({
           url:
