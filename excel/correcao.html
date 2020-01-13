@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt" dir="ltr">
+  <head>
+    <title>Marvi - Correção</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/master.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="shortcut icon" href="../assets/favicon.ico">
+    <script src="../helper.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <div class="header editor">
+      <a class="white_back" href="home.html">
+        &#11013;
+      </a>
+      Correção
+    </div>
+    <header class="intro-text">
+      <h1 id="level">Correção: </h1>
+      <br>
+      <p>
+        . Para acessar o PDF da fase, <a id="pdf" href="#" target="_blank">clique aqui</a>.
+        <br>
+        O arquivo está disponível <a href="#" id="files" target="_blank">aqui.</a>
+      </p>
+    </header>
+    <main class="content">
+      <div id="saveDialog" style="display: none">
+        <div class="dialog">
+          <h2>Finalizando a correção. Isso pode demorar um tempo...</h2>
+          <img src="https://i.gifer.com/VAyR.gif" class="loader">
+        </div>
+      </div>
+      <div class="container">
+        <div id="questions"></div>
+        <div>
+          <h1>Considerações finais</h1>
+          <div class="comments">
+            <p>Comentários*</p>
+            <textarea name="comments" rows="2" cols="80"></textarea>
+            <br>
+            <br>
+            <p>Outros (use com cuidado):</p>
+            <div class="question" style="display:inline-block">
+              <div class="buttons">
+                <input type="checkbox" id="copy" name="final" value="copy"/>
+                <label for="copy">Foi identificado plágio</label>
+                <input type="checkbox" id="cheat" name="final" value="cheat"/>
+                <label for="cheat">Não conseguiu explicar</label>
+              </div>
+            </div>
+          </div>
+          <button id="finish-correction" onclick="submit()">FINALIZAR</button>
+        </div>
+      </div>
+    </main>
+
+    <script type="text/javascript">
+      let numberOfExercises;
+      let lvlNumber;
+
+      function submit() {
+        toggleLoadingDialog();
+        const sure = confirm("Tem certeza que quer terminar a correção?");
+        if (!sure) return false;
+        let payload = {};
+        for (var i = 0; i < numberOfExercises; i++) {
+          let asr = $(`input[name=ex${i}]:checked`).val();
+          if (asr) {
+            payload['ex0'+i] = Boolean(asr);
+          } else {
+            alert("Oops, parece que você esqueceu de algum exercício");
+            return false;
+          }
+        }
+        let comm = $('textarea').val();
+        if (comm) {
+          payload.comment = comm
+        } else {
+          alert("Oops, o campo de comentários é obrigatório");
+          return false;
+        }
+        payload.cheat = $(`input[name=final]:checked`).val();
+        payload.excel = true;
+        console.log(payload);
+        $.ajax({
+          type: 'patch',
+          url: url + 'corrections/' + location.search.replace("?", ''),
+          crossDomain: true,
+          data: payload,
+          success: function(res, textStatus, jqXHR) {
+            $.ajax({
+              type: 'post',
+              url: url + 'corrections/' + location.search.replace("?", '') + '/excel/finish',
+              crossDomain: true,
+              data: payload,
+              success: function(responseData, textStatus, jqXHR) {
+                alert('Pronto. Atividade finalizada com sucesso!')
+                window.location.href = 'home.html'
+              }
+            })
+          }
+        })
+      }
+
+      function toggleLoadingDialog() {
+        $('#saveDialog').toggle();
+      }
+
+      function answerCorrectionInvite(answer, id) {
+        $.ajax({
+          type: 'put',
+          url: url + 'studentActivities/' + id + '/answerCorrectionInvite?access_token=' + localStorage.access_token,
+          data: {answer},
+          crossDomain: true,
+          success: function (res) {
+            console.log(res);
+            if (!answer) {
+              alert("Você recusou o convite de correção!")
+              window.location.href = '/home.html'
+            }
+          },
+          error: function (res, txt) {
+            alert(res.responseJSON.error.message);
+          }
+        })
+      }
+
+      $(document).ready(function() {
+
+        $.ajax({
+          type: 'GET',
+          url: url + 'corrections/' + location.search.replace("?", '') + '?filter[include][studentActivity]=student&&filter[include]studentActivity',
+          crossDomain: true,
+          success: function(res, textStatus, jqXHR) {
+              if (!res.started) {
+                let acceptCorrection;
+                do {
+                  acceptCorrection = prompt('Deseja fazer a correção? Responda com S ou N');
+                } while (!acceptCorrection);
+                answerCorrectionInvite(acceptCorrection.toLowerCase() === "s", location.search.replace("?", ''));
+                if (acceptCorrection.toLowerCase() !== "s") return true;
+              }
+              $.ajax({
+                type: 'GET',
+                url: url + 'pdfs/' + res.studentActivity.activityId + '?access_token=' + localStorage.access_token,
+                crossDomain: true,
+                success: function(r, textStatus, jqXHR) {
+                  $.ajax({
+                    type: 'post',
+                    url: url + 'corrections/' + location.search.replace("?", '') + '/start',
+                    success: function (res) {
+                      console.log(res);
+                    },
+                    error: function (res) {
+                      console.log(res);
+                    }
+                  })
+                  lvlNumber = res.studentActivity.student.activityNumber;
+                  $("#level").append(r.name)
+                  $(".intro-text p").prepend("Você está corrigindo <b>" + res.studentActivity.student.email +"</b> na fase "+ res.studentActivity.student.activityNumber)
+                  $("#pdf").attr("href", r.pdfURL)
+                  $("#files").attr("href", res.studentActivity.fileUrl)
+                  numberOfExercises = r.excelExNumber;
+                  let i = 0;
+                  while (numberOfExercises > i) {
+                    $("#questions").append(
+                      `<div class="question">
+                        <h1>Exercício 0${i}</h1>
+                        <div style="display:flex">
+                          <div class="text">
+                            <p>
+                              A planilha está correta e atende a TODOS os requesitos do exercício?
+                            </p>
+                          </div>
+                          <div class="buttons">
+                            <input type="radio" id="ex${i}true" name="ex${i}" value="true"/>
+                            <label for="ex${i}true">SIM</label>
+                            <input type="radio" id="ex${i}false" name="ex${i}" value="false"/>
+                            <label for="ex${i}false">NÃO</label>
+                          </div>
+                        </div>
+                      </div>`
+                    );
+                    i++;
+                  };
+                },
+              })
+            },
+          error: function(responseData, textStatus, errorThrown) {
+            console.log(responseData);
+          }
+        })
+      })
+    </script>
+  </body>
+</html>

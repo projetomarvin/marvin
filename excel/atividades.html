@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="pt" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../css/master.css" />
+    <link rel="stylesheet" href="../css/index.css" />
+    <link rel="stylesheet" href="../css/collapsable.css" />
+    <link rel="shortcut icon" href="../assets/favicon.ico" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>Atividades</title>
+    <script src="../helper.js" charset="utf-8"></script>
+  </head>
+
+  <body>
+    <div id="saveDialog" style="display:none">
+      <div class="dialog">
+        <button onclick="closeDialog()" id="closeButton">&times;</button>
+        <div id="saveView">
+          <h2 class="loading">Verificando arquivos...</h2>
+          <div id="finish" style="display:none;">
+            <h2 id="all-ok" style="display:none;">
+              Ótimo, todos os arquivos estão no Drive.
+            </h2>
+            <h2 id="error-file" style="display:none;">
+              Oops, parece que o seguinte arquivo está faltando: <span></span>.
+            </h2>
+            <img
+              src="https://i.gifer.com/VAyR.gif"
+              class="loader"
+              style="display:none;"
+            />
+            <div class="buttons">
+              <button onclick="finish()" class="green" id="finishButton">
+                Finalizar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <header class="header editor">
+      <a class="white_back" href="home.html"> &#11013; </a> Atividades
+    </header>
+    <main class="vertical" id="atividades">
+      <h1 id="course_name"></h1>
+      <div id="activities"></div>
+      <div id="createStAct" hidden>
+        <button onclick="createStudentActivity()" class="green">
+          <h1>
+            Começar atividades
+          </h1>
+        </button>
+      </div>
+    </main>
+    <footer>
+      <div class="finish">
+        <div class="doing">
+          <p>Você está fazendo a fase&nbsp;</p>
+          <button onclick="checkFiles()" class="green">Finalizar</button>
+        </div>
+        <div class="correction" hidden>
+          <p>Parabéns, você terminou essa fase! Sua correção será por&nbsp;</p>
+          <button onclick="cancelCorrection()" class="wine">Cancelar</button>
+        </div>
+      </div>
+    </footer>
+    <script type="text/javascript">
+      let studentActivityId;
+      let students;
+      let currentActivity;
+      let stLevel;
+      let lastActivity = {};
+      let fileUrl;
+
+      function checkFiles() {
+        $('#saveDialog').toggle();
+        $('#langView').hide();
+        $.ajax({
+          type: 'get',
+          url:
+            url +
+            'studentActivities/' +
+            studentActivityId +
+            '/excel/checkFiles?access_token=' +
+            localStorage.access_token,
+          crossDomain: true,
+          success: function(res, txt, jqXHR) {
+            $('.loading').hide();
+            $('#finish').show();
+            $('#all-ok').show();
+            fileUrl = res.webViewLink;
+          },
+          error: function(responseData, textStatus, errorThrown) {
+            $('.loading').hide();
+            $('#finish').show();
+            $('#error-file').show();
+            $('#error-file span').html(
+              responseData.responseJSON.error.message.split(' ')[3],
+            );
+          },
+        });
+      }
+
+      function finish() {
+        $('.loader').show();
+        $('#finishButton').attr('disabled', true);
+        $.ajax({
+          type: 'put',
+          url:
+            url +
+            'studentActivities/' +
+            studentActivityId +
+            '/excel/finish?access_token=' +
+            localStorage.access_token,
+          crossDomain: true,
+          data: {fileUrl},
+          success: function(res, txt, jqXHR) {
+            location.reload();
+          },
+          error: function(res, txt, jqXHR) {
+            console.log(res, txt);
+            if (res.responseJSON.error.message === 'atividade já finalizada') {
+              alert('Você já terminou a atividade');
+            } else if (
+              res.responseJSON.error.message ===
+              'pontos de correção insuficientes'
+            ) {
+              alert(
+                'Pontos de correção insuficientes! Você deve corrigir seus colegas para conseguir mais pontos e continuar',
+              );
+            } else if (
+              res.responseJSON.error.message ===
+              'Não há nenum corretor disponível'
+            ) {
+              alert('Não há nenhum corretor disponível.');
+            } else
+              alert(
+                'Algo deu errado, tente novamente.' +
+                  res.responseJSON.error.message,
+              );
+            closeDialog();
+          },
+        });
+      }
+
+      function closeDialog() {
+        $('.loader').hide();
+        $('#saveDialog').toggle();
+        $('.loading').toggle();
+        $('#finish').toggle();
+        $('#all-ok').hide();
+        $('#error-file').hide();
+        $('#finishButton').attr('disabled', false);
+        $('#langView').hide();
+      }
+
+      function getCorrector(id) {
+        $.ajax({
+          type: 'GET',
+          url:
+            url +
+            'students/' +
+            id +
+            '/username?access_token=' +
+            localStorage.access_token,
+          crossDomain: true,
+          success: function(res, textStatus, jqXHR) {
+            $('.correction p').append(res);
+          },
+          error: function(responseData, textStatus, errorThrown) {
+            console.log(responseData.data);
+          },
+        });
+      }
+
+      function getCourseActivities(courseId, currentLevel) {
+        $.ajax({
+          type: 'GET',
+          url:
+            url +
+            'courses/' +
+            courseId +
+            '?filter=[where][trail]=main&filter[include]=activities&access_token=' +
+            localStorage.access_token,
+          crossDomain: true,
+          success: function(res, textStatus, jqXHR) {
+            $('#course_name').append(res.name);
+            const actX = res.activities.find((e) => e.levelNumber === stLevel);
+            if (actX.id !== currentActivity.activityId) {
+              console.log(actX);
+              // return $('#createStAct').show();
+              createStudentActivity();
+              return;
+            }
+            res.activities
+              .sort((a, b) => (a.levelNumber > b.levelNumber ? 1 : -1))
+              .forEach((r, i) => {
+                let position;
+                if (i < currentLevel) {
+                  position = 'done';
+                } else if (i === currentLevel) {
+                  position = 'current';
+                } else {
+                  position = 'disabled';
+                }
+                $('#activities').append(
+                  '<div class="wrap-collabsible ' +
+                    position +
+                    '">' +
+                    '<input id="' +
+                    r.id +
+                    '" class="toggle" type="checkbox">' +
+                    '<label for="' +
+                    r.id +
+                    '" class="lbl-toggle">fase ' +
+                    i +
+                    '</label>' +
+                    '<div class="collapsible-content">' +
+                    '<div class="content-inner">' +
+                    '<h2>' +
+                    r.levelName +
+                    '</h2>' +
+                    '<p>' +
+                    r.levelDescription +
+                    '</p>' +
+                    '<a href="' +
+                    r.PDFUrl +
+                    '" target="_blank" class="PDFlink">Ver desafios da fase</a>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>',
+                );
+                if (position === 'disabled')
+                  $('#' + r.id).attr('disabled', true);
+                if (position === 'current') $('#' + r.id).attr('checked', true);
+              });
+          },
+          error: function(responseData, textStatus, errorThrown) {
+            console.log(responseData);
+          },
+        });
+      }
+
+      function createStudentActivity() {
+        $.ajax({
+          type: 'post',
+          url:
+            url +
+            'studentActivities/fix?access_token=' +
+            localStorage.access_token,
+          crossDomain: true,
+          success: function(res) {
+            window.location.reload();
+          },
+          error: function(err, txt, errorThrown) {
+              console.log(err);
+          },
+        });
+      }
+
+      function cancelCorrection() {
+        const retVal = confirm('Tem certeza que quer cancelar a correção?');
+        if (retVal == true) {
+          $.ajax({
+            type: 'put',
+            url:
+              url +
+              'studentActivities/' +
+              studentActivityId +
+              '/cancelCorrection?access_token=' +
+              localStorage.access_token,
+            crossDomain: true,
+            success: function(res, txt, jqXHR) {
+              console.log(res);
+              location.reload();
+            },
+            error: function(err, txt, errorThrown) {
+              console.log(err);
+              if (err.status === 403) {
+                alert(
+                  'Sua correção já foi iniciada. Você não pode mais cancelar',
+                );
+              }
+            },
+          });
+        }
+      }
+
+      function chooseLang() {
+        $('#saveDialog').show();
+        $('#saveView').hide();
+        $('#langView').show();
+      }
+
+      $(document).ready(function() {
+        $.ajax({
+          type: 'GET',
+          url:
+            url +
+            'students/' +
+            localStorage.userId +
+            '?filter={"include":{"studentActivities": "corrections"}}&access_token=' +
+            localStorage.access_token,
+          crossDomain: true,
+          success: function(res, textStatus, jqXHR) {
+            stLevel = res.activityNumber;
+            if (
+              !res.studentActivities.length
+            ) {
+              // $('#createStAct').show();
+              createStudentActivity()
+              return;
+            }
+            currentActivity = res.studentActivities[res.studentActivities.length - 1];
+            console.log(currentActivity);
+            lastActivity = res.studentActivities[
+              res.studentActivities.length - 2
+            ] || { correctorId: '' };
+            studentActivityId = currentActivity.id;
+            if (res.GDriveURL) {
+              $('.doing p').append(res.activityNumber);
+              getCourseActivities(res.courseId, res.activityNumber);
+            } else {
+              location.href = '/home.html';
+            }
+            if (currentActivity.correctorId) {
+              $('.doing').hide();
+              $('.correction').show();
+              getCorrector(
+                currentActivity.corrector2Id || currentActivity.correctorId,
+              );
+            }
+          },
+          error: function(responseData, textStatus, errorThrown) {
+            alert('Algo deu errado.');
+            history.back();
+          },
+        });
+      });
+    </script>
+  </body>
+</html>

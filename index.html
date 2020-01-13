@@ -1,88 +1,117 @@
 <!DOCTYPE html>
 <html lang="pt" dir="ltr">
+  <head>
+    <link rel="stylesheet" href="/css/index.css" />
+    <link rel="stylesheet" href="/css/master.css" />
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="assets/favicon.ico" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>Marvin</title>
+    <script src="./helper.js" charset="utf-8"></script>
+  </head>
 
-<head>
-  <link rel="stylesheet" href="/css/index.css">
-  <link rel="stylesheet" href="/css/master.css">
-  <meta charset="utf-8">
-  <link rel="shortcut icon" href="assets/favicon.ico">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <title>Marvin</title>
-  <script src="./helper.js" charset="utf-8"></script>
-</head>
-
-<body>
-  <main class="fullwidth">
-    <div class="login">
-      <div class="logo">
-        <img src="assets/logo.png" alt="marvin">
+  <body>
+    <main class="fullwidth">
+      <div class="login">
+        <div class="logo">
+          <img src="assets/logo.png" alt="marvin" />
+        </div>
+        <h5>Faça o login para continuar</h5>
+        <form class="loginForm">
+          <input
+            type="text"
+            name="username"
+            placeholder="email ou usuário"
+            autocomplete="username"
+          />
+          <br />
+          <input
+            type="password"
+            name="password"
+            placeholder="senha"
+            autocomplete="current-password"
+          />
+          <br />
+          <button type="submit" class="full-green">Entrar</button>
+        </form>
+        <br />
+        <a onclick="resetPassword()">Esqueci minha senha</a>
+        <br />
+        <br />
+        <a href="http://projetomarvin.com">Voltar para o site</a>
       </div>
-      <h5>Faça o login para continuar</h5>
-      <form class="loginForm">
-        <input type="text" name="username" placeholder="email ou usuário" autocomplete="username"/>
-        <br>
-        <input type="password" name="password" placeholder="senha" autocomplete="current-password"/>
-        <br>
-        <button type="submit" class="full-green">Entrar</button>
-      </form>
-      <br>
-      <a onclick="resetPassword()">Esqueci minha senha</a>
-      <br>
-      <br>
-      <a href="http://projetomarvin.com">Voltar para o site</a>
-    </div>
-  </main>
-  <script type="text/javascript">
-    $('.loginForm').on('submit', function (e) {
-      e.preventDefault()
-      const usr = $('input[name=username]').val();
-      const pwd = $('input[name=password]').val();
-      $.ajax({
-        type: 'POST',
-        url: url + 'students/login',
-        crossDomain: true,
-        data: {user: usr, password: pwd},
-        success: function(responseData, textStatus, jqXHR) {
-          console.log(responseData);
-          localStorage.setItem('access_token', responseData.id);
-          localStorage.setItem('userId', responseData.userId);
-          window.location.href = '/home.html';
-        },
-        error: function (responseData, textStatus, errorThrown) {
-          console.log(responseData.statusCode());
-          $('input[name=password]').val('')
-          alert('Login inválido');
+    </main>
+    <script type="text/javascript">
+      $(".loginForm").on("submit", async e => {
+        e.preventDefault();
+        const usr = $("input[name=username]").val();
+        const pwd = $("input[name=password]").val();
+        let auth, stu;
+        try {
+          auth = await $.ajax({
+            type: "POST",
+            url: url + "students/login",
+            crossDomain: true,
+            data: { user: usr, password: pwd }
+          });
+        } catch (error) {
+          console.log(error);
+          $("input[name=password]").val("");
+          alert("Login inválido");
         }
-      })
-    })
+        console.log(auth);
+        localStorage.setItem("access_token", auth.id);
+        localStorage.setItem("userId", auth.userId);
+        try {
+          stu = await $.ajax({
+            type: "GET",
+            url: url + `students/${auth.userId}?access_token=${auth.id}&filter[include]=course`,
+            crossDomain: true,
+          });
+          console.log(stu);
+        } catch (err) {
+          console.log(err);
+        }
+        localStorage.setItem('type', stu.course.type);
+        if (stu.course.type === "excel") {
+          window.location.href = "/excel/home.html";
+        } else {
+          window.location.href = "/home.html";
+        }
+      });
 
-    function resetPassword() {
-      const email = prompt("Por favir, digite seu email:");
-      $.ajax({
-        type: 'POST',
-        url: url + 'students/reset',
-        crossDomain: true,
-        data: {email},
-        success: function(responseData, textStatus, jqXHR) {
-          console.log(responseData);
-          alert('Confira seu email para continuar')
-        },
-        error: function (responseData, textStatus, errorThrown) {
-          console.log(responseData.statusCode());
-          if (responseData.statusCode() === 404) {
-            alert('Email não cadastrado');
-          } else {
-            alert('Algo deu errado.');
+      function resetPassword() {
+        const email = prompt("Por favir, digite seu email:");
+        $.ajax({
+          type: "POST",
+          url: url + "students/reset",
+          crossDomain: true,
+          data: { email },
+          success: function(responseData, textStatus, jqXHR) {
+            console.log(responseData);
+            alert("Confira seu email para continuar");
+          },
+          error: function(responseData, textStatus, errorThrown) {
+            console.log(responseData.statusCode());
+            if (responseData.statusCode() === 404) {
+              alert("Email não cadastrado");
+            } else {
+              alert("Algo deu errado.");
+            }
           }
+        });
+      }
+
+      $(document).ready(function() {
+        if (localStorage.access_token && localStorage.type === 'excel') {
+          location.href = "/excel/home.html";
+        } else if (localStorage.access_token) {
+          location.href = "/home.html";
         }
-      })
-    }
-
-    $(document).ready(function () {
-      if (localStorage.access_token) location.href = '/home.html'
-      else localStorage.clear()
-    });
-  </script>
-</body>
-
+        else {
+          localStorage.clear();
+        }
+      });
+    </script>
+  </body>
 </html>
