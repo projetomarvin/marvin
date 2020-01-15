@@ -600,9 +600,9 @@
         else if (
           code.match(/(fun.*{[\s\S]*}[\s]*$)/g) ||
           (!code.match(/(fun.*{[\s\S]*}[\s]*$)/g) &&
-            confirm(
-              'Oops, parece que seu código não segue as normas de envio, tem certeza que quer continuar?',
-            ))
+            prompt(
+              'Oops, parece que seu código não segue as normas de envio, e muito provavelmente está errado. Digite CONTINUAR ERRADO caso tenha certeza que quer continuar de qualquer jeito?',
+            ) === 'CONTINUAR ERRADO')
         )
           pushToGit(code, path);
         else {
