@@ -19,16 +19,25 @@
         ou sua conta do Github foi desvinculada.
         <br>
         <br>
-        <a href="https://app.projetomarvin.com/assets/pdf/Marvin+-+fase+00.pdf" target="_blank">Clique aqui</a> para ver as instruções. 
+        <a href="#" onclick="openPDF()">Clique aqui para ver as instruções.</a> 
         </h3>
-      <form class="loginForm">
+      <form class="loginForm" hidden>
         <input type="text" name="username" placeholder="usuário do Github" />
         <br>
         <button type="submit" class="full-green">continuar</button>
+        <br>
+        <br>
       </form>
     </div>
   </main>
+  <a href="excel/home.html">Ir para excel</a>
   <script type="text/javascript">
+    function openPDF() {
+      const pdf = window.open("https://app.projetomarvin.com/assets/pdf/Marvin+-+fase+00.pdf", '_blank');
+      $(".loginForm").show();
+      pdf.focus();
+    }
+
     $('.loginForm').on('submit', function(e) {
       e.preventDefault()
       const usr = $('input[name=username]').val();
@@ -42,8 +51,10 @@
         crossDomain: true,
         success: function(responseData, textStatus, jqXHR) {
           console.log(responseData);
-          if (responseData === "not found") {
-            alert('Usuário ou repositório não encontrado. Verifique e tente novamente.')
+          if (responseData === "user not found") {
+            alert('Usuário não encontrado. Verifique o PDF e tente novamente.');
+          } else if (responseData === "repo not found") {
+            alert('Repositório "marvin" não encontrado no seu GitHub. Verifique o PDF e tente novamente.');
           } else {
             console.log(responseData);
             alert('Conta vinculada com sucesso e você conseguiu suas primeiras 42 moedas! Agora você deve vincular sua conta com o Github.')
