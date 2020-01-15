@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="../css/master.css">
+  <link rel="stylesheet" href="../css/index.css">
+  <link rel="shortcut icon" href="../assets/favicon.ico">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <title>Detalhe Nota</title>
+  <script src="../helper.js" charset="utf-8"></script>
+</head>
+
+<body>
+  <header class="header editor">
+    <a class="white_back" href="home.html">
+      &#11013;
+    </a>
+    Detalhe da avaliação
+  </header>
+  <main class="vertical">
+    <div>
+      <p id="content">
+
+      </p>
+    </div>
+  </main>
+  <script type="text/javascript">
+    let msg;
+    $(document).ready(function() {
+      const id = location.search.replace("?", '')
+      $.ajax({
+        type: 'GET',
+        url: url + 'corrections/' + id +
+          '?access_token=' + localStorage.access_token,
+        crossDomain: true,
+        success: function(responseData, textStatus, jqXHR) {
+          console.log(responseData);
+          msg = responseData.message
+          msg = msg.replace(/\n/g, "<br>")
+          $("#content").append(msg)
+        },
+        error: function(responseData, textStatus,
+          errorThrown) {
+          alert('Algo deu errado.');
+          history.back();
+        }
+      })
+    })
+  </script>
+</body>
+
+</html>

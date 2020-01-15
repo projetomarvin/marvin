@@ -94,7 +94,6 @@
               type: 'post',
               url: url + 'corrections/' + location.search.replace("?", '') + '/excel/finish',
               crossDomain: true,
-              data: payload,
               success: function(responseData, textStatus, jqXHR) {
                 alert('Pronto. Atividade finalizada com sucesso!')
                 window.location.href = 'home.html'
@@ -160,7 +159,7 @@
                   lvlNumber = res.studentActivity.student.activityNumber;
                   $("#level").append(r.name)
                   $(".intro-text p").prepend("Você está corrigindo <b>" + res.studentActivity.student.email +"</b> na fase "+ res.studentActivity.student.activityNumber)
-                  $("#pdf").attr("href", r.pdfURL)
+                  $("#pdf").attr("href", r.PDFUrl)
                   $("#files").attr("href", res.studentActivity.fileUrl)
                   numberOfExercises = r.excelExNumber;
                   let i = 0;
