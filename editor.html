@@ -34,7 +34,7 @@
               <input
                 type="text"
                 name="message"
-                placeholder="mensagem do commit"
+                placeholder="msg do commit (descrição)"
               />
               <br />
               <br />
@@ -42,7 +42,7 @@
             </form>
           </div>
           <br />
-          <p style="color: darkred;">
+          <p style="color: red;">
             LEMBRE-SE DE NÃO INCLUIR A LINHA DE INVOCAÇÃO DA FUNÇÃO
           </p>
         </div>
@@ -482,6 +482,8 @@
 
       function pushToGit(code, path) {
         const msg = $('input[name=message]').val();
+        const btn = $ ('#upload button');
+        btn.attr("disabled", true);
         $.ajax({
           type: 'post',
           url:
@@ -502,6 +504,7 @@
             $('#upload').toggle();
             $('input[name=githubPath]').val('');
             $('input[name=message]').val('');
+            btn.attr("disabled", false);
           },
           error: function(res, txt, jsXHR) {
             if (res.responseJSON.error.statusCode === 401) {
