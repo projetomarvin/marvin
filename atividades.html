@@ -105,6 +105,7 @@
             $('.loading').hide();
             $('#finish').show();
             $('#error-file').show();
+            $('#finishButton').attr('disabled', true);
             $('#error-file span').html(
               responseData.responseJSON.error.message.split(' ')[3],
             );
