@@ -26,13 +26,14 @@
   </main>
   <script type="text/javascript">
     const regex = /(^https:\/\/drive\.google\.com\/open\?id=(.+)$)/i;
+    const regex2 = /(^https\:\/\/drive\.google\.com\/drive\/folders\/(.+)\?usp\=sharing$)/i;
     $('.loginForm').on('submit', function(e) {
       e.preventDefault();
       const folderUrl = $('input[name=url]').val();
-      const path = folderUrl.match(regex);
+      const path = folderUrl.match(regex) || folderUrl.match(regex2);
       console.log(path);
       if (!path || !path[1]) {
-        return alert('Ops, parece que você não colocou o link de compartilhamento certo');
+        return alert('Ops, parece que você não colocou um link de compartilhamento válido');
       }
       $.ajax({
         type: 'POST',
