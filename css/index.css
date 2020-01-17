@@ -1162,3 +1162,20 @@ input:checked + .slider:before {
     margin-top: 2.4vw;
   }
 }
+
+#blocked {
+  min-width: 100vw;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: #969696;
+  cursor: not-allowed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 48px;
+  color: darkgreen;
+}
