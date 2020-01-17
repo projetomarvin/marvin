@@ -194,17 +194,18 @@
               localStorage.access_token,
             crossDomain: true,
             data: {
-              token: token
+              token: token,
+              username: localStorage.username,
             },
             success: function(responseData, textStatus, jqXHR) {
               console.log(responseData);
+              window.href= "home.html";
             },
             error: function(responseData, textStatus, errorThrown) {
               console.log(responseData);
             }
           });
-        }
-        if (!localStorage.access_token) {
+        } else if (!localStorage.access_token) {
           localStorage.removeItem("userId");
           localStorage.removeItem("access_token");
           location.href = "/index.html";
