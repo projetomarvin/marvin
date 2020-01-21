@@ -187,7 +187,9 @@
         if (code) {
           try {
             run = window.atob(code);
-          } catch (e) {}
+          } catch (e) {
+            run = false
+          }
           editor.setValue(run || localStorage.js || '');
           setInterval(function() {
             saveCode();
@@ -519,6 +521,13 @@
         });
       }
 
+      function selectOpenedFile(fileName) {
+        console.log(fileName);
+        const lvl = /ex0(\d)/g.exec(fileName)[1];
+        console.log(lvl);
+        $(`.exercise:eq(${lvl})`).click();
+      }
+
       function checkFileIsCurrent(obj) {
         return (
           obj.mode === '100644' &&
@@ -585,6 +594,7 @@
             editor.getSession().setValue(atob(res.content));
             $('#closeButton').trigger('click');
             $('input[name=githubPath]').val(path);
+            selectOpenedFile(path);
           },
         });
       }
