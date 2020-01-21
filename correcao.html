@@ -78,7 +78,7 @@
           }
         }
         let comm = $('textarea').val();
-        if (comm) {
+        if (comm.length < 4) {
           payload.comment = comm
         } else {
           alert("Oops, o campo de comentários é obrigatório");
