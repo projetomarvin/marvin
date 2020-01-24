@@ -64,10 +64,15 @@
       let isManual = false;
 
       function submit() {
-        toggleLoadingDialog();
         const sure = confirm("Tem certeza que quer terminar a correção?");
         if (!sure) return false;
         let payload = {};
+        let comm = $('textarea').val();
+        if (comm.length > 3) {
+          payload.comment = comm;
+        } else {
+          return alert("Oops, o campo de comentários é obrigatório");
+        }
         for (var i = 0; i < numberOfExercises; i++) {
           let asr = $(`input[name=ex${i}]:checked`).val();
           if (asr) {
@@ -77,13 +82,7 @@
             return false;
           }
         }
-        let comm = $('textarea').val();
-        if (comm.length < 4) {
-          payload.comment = comm
-        } else {
-          alert("Oops, o campo de comentários é obrigatório");
-          return false;
-        }
+        toggleLoadingDialog();
         payload.cheat = $(`input[name=final]:checked`).val();
         console.log(payload);
         $.ajax({
