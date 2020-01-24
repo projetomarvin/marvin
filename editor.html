@@ -190,12 +190,12 @@
           } catch (e) {
             run = false
           }
-          editor.setValue(run || localStorage.js || '');
           setInterval(function() {
             saveCode();
           }, 30000);
         }
 
+        editor.setValue(run || localStorage.js || '');
         const res = await $.ajax({
           url:
             url +
