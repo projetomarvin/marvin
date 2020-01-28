@@ -213,7 +213,7 @@
           (a) => a.levelNumber === currentActivity,
         );
         activity = currentActivity;
-        const exs = activity.exercises.sort((a, b) => (a > b ? -1 : 1));
+        const exs = activity.exercises.sort((a, b) => (a.number > b.number ? 1 : -1));
         exs.forEach((e) => {
           let code = `
           <button onclick="selectExercise(${e.number})" class="exercise">
