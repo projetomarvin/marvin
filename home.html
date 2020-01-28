@@ -74,6 +74,24 @@
         return false;
       }
 
+      function playSound() {
+        $.ajax({
+          url:
+            url +
+            "students/" +
+            localStorage.userId +
+            "?filter=%7B%22include%22%3A%20%22notifications%22%7D&access_token=" +
+            localStorage.access_token,
+          crossDomain: true,
+          dataType: 'json',
+          contentType: 'application/json',
+          data: JSON.stringify({passed: false}),
+          type: 'patch'
+        });
+        const audio = new Audio('./assets/cheer.wav');
+        audio.play();
+      }
+
       function getMessages() {
         $.ajax({
           url:
@@ -87,6 +105,9 @@
             if (!responseData.notifications.length) return $("#msg").hide();
             $("#msg").show();
             $(".messages").empty();
+            if (responseData.passed) {
+              playSound();
+            }
             responseData.notifications.map((msg, i) => {
               let btn = "";
               if (
