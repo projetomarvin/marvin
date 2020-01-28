@@ -38,7 +38,7 @@
         success: function(responseData, textStatus, jqXHR) {
           console.log(responseData);
           msg = responseData.message
-          msg = msg.replace(/\n/g, "<br>")
+          msg = msg.replace(/\n/g, "<br>").replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
           msg += `<br><br><a href="https://s3-sa-east-1.amazonaws.com/marvin-files/${
             responseData.studentActivityId
           }.zip">Código avaliado</a> às ${responseData.correctedAt}`
