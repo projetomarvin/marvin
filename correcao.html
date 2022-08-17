@@ -174,7 +174,7 @@
                   }
                   $("#level").append(r.name)
                   $(".intro-text p").prepend("Você está corrigindo <b>" + res.studentActivity.student.username +"</b> na fase "+ res.studentActivity.student.activityNumber)
-                  $("#pdf").attr("href", `/pdf.html?${res.studentActivity.activityId}`)
+                  $("#pdf").attr("href", `/pdf?${res.studentActivity.activityId}`)
                   $("#files").attr("href", 'https://s3-sa-east-1.amazonaws.com/marvin-files/' + res.studentActivityId + '.zip')
                   numberOfExercises = r.exercises.length;
                   r.exercises.map((q, i) => {
